@@ -6,7 +6,7 @@
 
         <div class="mb-8 flex items-center gap-5 rounded-2xl bg-[#eaddd5] px-8 py-6">
             <div
-                class="flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#9ca3af] text-white">
+                class="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#9ca3af] text-white">
                 @if (Auth::user()->foto_profil)
                     <img src="{{ asset('storage/' . Auth::user()->foto_profil) }}" alt="Foto Profil"
                         class="h-full w-full object-cover">
@@ -120,7 +120,7 @@
 
                         <!-- PREVIEW FOTO -->
                         <div
-                            class="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#9ca3af] text-white">
+                            class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#9ca3af] text-white">
 
                             <!-- jika hapus -->
                             <template x-if="removePhoto">

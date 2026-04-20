@@ -1,4 +1,3 @@
-<x-layouts.public>
-    <x-home.navbar />
-    ini admin
-</x-layouts.public>
+<x-layouts.admin>
+
+</x-layouts.admin>

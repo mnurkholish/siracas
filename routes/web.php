@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\PasswordResetLinkController;
@@ -50,7 +51,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', function () {
             return view('admin.dashboard');
         })->name('dashboard');
+
+        Route::get('/akun-customer', [CustomerAccountController::class, 'index'])->name('customer.index');
+        Route::get('/akun-customer/{id}', [CustomerAccountController::class, 'show'])->name('customer.show');
     });
+
 
     // -- Customer Routes --
     Route::middleware('role:customer')->prefix('customer')->name('customer.')->group(function () {
