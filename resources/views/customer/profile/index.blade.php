@@ -59,11 +59,6 @@
                     Edit Profile
                 </button>
 
-                <a href="{{ route('password.request') }}"
-                    class="cursor-pointer inline-flex items-center rounded-lg bg-[#9e836f] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#8a725f]">
-                    Ubah Password
-                </a>
-
                 <button form="logout-form" type="submit"
                     class="cursor-pointer rounded-lg bg-[#ef4444] px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-[#dc2626]">
                     Logout

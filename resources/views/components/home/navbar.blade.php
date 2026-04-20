@@ -33,7 +33,7 @@
                 @endforeach
             </nav>
 
-            <div class="flex items-center gap-2 sm:gap-3 text-black">
+            <div class="flex items-center gap-2 sm:gap-3 text-[#4d443f]">
                 <a href="#"
                     class="relative inline-flex items-center justify-center rounded-full p-2 transition-colors hover:bg-[#f7f1eb] focus:outline-none focus:ring-2 focus:ring-[#d8c9bc]"
                     aria-label="Keranjang">
