@@ -65,7 +65,7 @@
     </div>
 
     <div id="detailModal"
-        class="fixed inset-0 z-50 hidden flex items-center justify-center 
+        class="fixed inset-0 z-50 hidden items-center justify-center 
            bg-white/10 backdrop-brightness-50">
 
         <div class="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 border border-gray-200">
@@ -124,6 +124,7 @@
         function openModal(id) {
             // Tampilkan Modal
             document.getElementById('detailModal').classList.remove('hidden');
+            document.getElementById('detailModal').classList.add('flex');
 
             // Fetch data ke server Laravel menggunakan Route Show
             fetch(`/admin/akun-customer/${id}`)
@@ -147,6 +148,7 @@
 
         function closeModal() {
             document.getElementById('detailModal').classList.add('hidden');
+            document.getElementById('detailModal').classList.remove('flex');
         }
     </script>
 </x-layouts.admin>
