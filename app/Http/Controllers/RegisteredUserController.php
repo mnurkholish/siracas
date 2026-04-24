@@ -53,7 +53,7 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         // return redirect()->route('customer.dashboard');
-        return redirect()->route('home');
+        return redirect()->route('home')->with('success', 'Akun berhasil dibuat. Login Sukses.');
     }
 
     /**

@@ -2,7 +2,7 @@
 
     <body class="min-h-screen bg-[#f7f2ed] text-[#6d5b50] antialiased">
         {{ $slot }}
-        {{-- <script>
+        <script>
             @if (session('success'))
                 Swal.fire({
                     icon: "success",
@@ -20,6 +20,6 @@
                     timer: 1000
                 });
             @endif
-        </script> --}}
+        </script>
     </body>
 </x-layouts.app>

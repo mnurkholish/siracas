@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
@@ -19,8 +21,7 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
 
-        // ✅ 1. VALIDASI
-        $validated = $request->validate([
+        $validated = $request->validateWithBag('profileUpdate', [
             'username' => ['required', 'string', 'max:255'],
             'email' => [
                 'required',
@@ -34,15 +35,11 @@ class ProfileController extends Controller
             'hapus_foto' => ['nullable', 'boolean'],
         ]);
 
-        // ✅ 2. HANDLE HAPUS FOTO
-
-        // ✅ 2. HANDLE HAPUS FOTO (PRIORITAS UTAMA)
         if ($request->boolean('hapus_foto')) {
             $this->deleteOldPhoto($user->foto_profil);
             $user->foto_profil = null;
         }
 
-        // ✅ 3. HANDLE UPLOAD (HANYA JIKA TIDAK HAPUS)
         elseif ($request->hasFile('foto_profil')) {
             $file = $request->file('foto_profil');
 
@@ -76,8 +73,6 @@ class ProfileController extends Controller
             }
         }
 
-
-        // ✅ 4. UPDATE DATA USER
         $user->fill([
             'username' => $validated['username'],
             'email' => $validated['email'],
@@ -90,7 +85,20 @@ class ProfileController extends Controller
         return back()->with('success', 'Profil berhasil diperbarui!');
     }
 
-    // 🔥 HELPER METHOD (biar reusable & clean)
+    public function updatePassword(Request $request)
+    {
+        $validated = $request->validateWithBag('passwordUpdate', [
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ]);
+
+        Auth::user()->forceFill([
+            'password' => Hash::make($validated['password']),
+        ])->save();
+
+        return back()->with('success', 'Password berhasil diperbarui!');
+    }
+
     private function deleteOldPhoto($path)
     {
         try {
