@@ -54,6 +54,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/akun-customer', [CustomerAccountController::class, 'index'])->name('customer.index');
         Route::get('/akun-customer/{id}', [CustomerAccountController::class, 'show'])->name('customer.show');
+
+        Route::get('/profile', [ProfileController::class, 'adminIndex'])->name('profile');
+        Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+        Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     });
 
 

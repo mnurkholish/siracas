@@ -22,8 +22,7 @@ class CustomerAccountController extends Controller
             });
         }
 
-        // Paginasi: Tampilkan 10 data per halaman (sesuaikan kebutuhan)
-        $customers = $query->latest()->paginate(10);
+        $customers = $query->latest()->paginate(8)->withQueryString();
 
         return view('admin.customer.index', compact('customers'));
     }

@@ -17,6 +17,11 @@ class ProfileController extends Controller
         return view('customer.profile.index');
     }
 
+    public function adminIndex()
+    {
+        return view('admin.profile.index');
+    }
+
     public function update(Request $request)
     {
         $user = Auth::user();
@@ -38,9 +43,7 @@ class ProfileController extends Controller
         if ($request->boolean('hapus_foto')) {
             $this->deleteOldPhoto($user->foto_profil);
             $user->foto_profil = null;
-        }
-
-        elseif ($request->hasFile('foto_profil')) {
+        } elseif ($request->hasFile('foto_profil')) {
             $file = $request->file('foto_profil');
 
             if ($file->isValid()) {
