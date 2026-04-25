@@ -16,12 +16,12 @@
         @endphp
 
         <aside class="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col bg-[#a98c77] px-3 py-7 text-white shadow-lg">
-            <div class="mb-5 flex h-10 items-center gap-4 px-2">
+            <a href="/" class="mb-5 flex h-10 items-center gap-4 px-2">
                 <img src="{{ asset('images/logo.png') }}" alt="Logo SIRACAS"
                     class="h-8 w-8 shrink-0 rounded-full bg-white object-cover">
 
                 <h1 class="truncate text-2xl font-bold tracking-wide">SIRACAS</h1>
-            </div>
+            </a>
 
             <div class="mb-4 px-3 text-sm text-white/95">
                 Main menu

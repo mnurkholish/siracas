@@ -18,7 +18,7 @@ class HomeController extends Controller
         // 2. Jika Admin
         if ($user->role === 'admin') {
             // Kita bisa sekalian passing data untuk dashboard admin di sini
-            return view('admin.dashboard');
+            return redirect()->route('admin.dashboard');
         }
 
         // 3. Jika Customer
