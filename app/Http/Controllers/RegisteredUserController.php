@@ -41,11 +41,13 @@ class RegisteredUserController extends Controller
             'tanggal_lahir' => ['date'],
         ], [
             'username.required' => 'Username tidak boleh kosong',
+            'username.unique' => 'Username sudah dipakai, gunakan yang lain',
             'email.required' => 'Email tidak boleh kosong',
             'password.required' => 'Password tidak boleh kosong',
             'jenis_kelamin.required' => 'Jenis kelamin tidak boleh kosong',
             'jenis_kelamin.select' => 'Jenis kelamin tidak boleh kosong',
             'tanggal_lahir.date' => 'Tanggal lahir tidak boleh kosong',
+            'password.min' => 'Password minimal 8 karakter',
         ]);
 
         $user = User::create([
@@ -57,10 +59,8 @@ class RegisteredUserController extends Controller
             'role' => 'customer', // Otomatis menjadi customer
         ]);
 
-        Auth::login($user);
-
         // return redirect()->route('customer.dashboard');
-        return redirect()->route('home')->with('success', 'Akun berhasil dibuat!');
+        return redirect()->route('login')->with('success', 'Akun berhasil dibuat!');
     }
 
     /**

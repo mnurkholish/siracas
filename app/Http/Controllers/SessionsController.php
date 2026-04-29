@@ -30,7 +30,7 @@ class SessionsController extends Controller
             'password' => $request->password
         ], $request->boolean('remember'))) {
             return back()
-                ->with('error_alert', 'Login gagal, harap mengisi ulang!')
+                ->withErrors(['password' => 'Login gagal, harap mengisi ulang!'])
                 ->withInput();
         }
 
