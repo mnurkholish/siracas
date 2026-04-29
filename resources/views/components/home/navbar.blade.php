@@ -87,7 +87,7 @@
                                 <a href="{{ route('customer.profile') }}"
                                     class="flex px-4 py-2.5 text-sm text-[#4d443f] transition-colors hover:bg-[#f7f1eb] hover:text-[#a98e79]"
                                     role="menuitem" tabindex="-1">
-                                    Edit Profil
+                                    Lihat Akun
                                 </a>
                                 <form action="/logout" method="post" class="w-full">
                                     @csrf
