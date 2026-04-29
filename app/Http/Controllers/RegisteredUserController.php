@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -38,7 +39,7 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
             'password' => ['required', Password::defaults()],
             'jenis_kelamin' => ['required', 'in:laki-laki,perempuan'],
-            'tanggal_lahir' => ['date'],
+            'tanggal_lahir' => ['date', 'before_or_equal:' . Carbon::now()->subYears(17)->format('Y-m-d'),],
         ], [
             'username.required' => 'Username tidak boleh kosong',
             'username.unique' => 'Username sudah dipakai, gunakan yang lain',
@@ -49,6 +50,7 @@ class RegisteredUserController extends Controller
             'jenis_kelamin.select' => 'Jenis kelamin tidak boleh kosong',
             'tanggal_lahir.date' => 'Tanggal lahir tidak boleh kosong',
             'password.min' => 'Password minimal 8 karakter',
+            'tanggal_lahir.before_or_equal' => 'Umur minimal 17 tahun.',
         ]);
 
         $user = User::create([

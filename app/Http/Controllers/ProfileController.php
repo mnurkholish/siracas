@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -34,8 +35,8 @@ class ProfileController extends Controller
                 'max:255',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
-            'tanggal_lahir' => ['nullable', 'date'],
-            'jenis_kelamin' => ['nullable', 'in:laki-laki,perempuan'],
+            'tanggal_lahir' => ['required', 'date', 'before_or_equal:' . Carbon::now()->subYears(17)->format('Y-m-d'),],
+            'jenis_kelamin' => ['required', 'in:laki-laki,perempuan'],
             'foto_profil' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'hapus_foto' => ['nullable', 'boolean'],
         ], [
@@ -52,6 +53,8 @@ class ProfileController extends Controller
             'foto_profil.mimes' => 'Format gambar harus jpeg, png, atau jpg.',
             'foto_profil.max' => 'Ukuran gambar maksimal 2MB.',
             'hapus_foto.boolean' => 'Format hapus foto tidak valid.',
+            'tanggal_lahir.before_or_equal' => 'Umur minimal 17 tahun.',
+            'tanggal_lahir.required' => 'Tanggal lahir harus diisi',
         ]);
 
         if ($request->boolean('hapus_foto')) {
