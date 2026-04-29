@@ -20,6 +20,10 @@ class NewPasswordController extends Controller
             'token' => ['required'],
             'email' => ['required', 'email'],
             'password' => ['required', 'confirmed', 'min:8'],
+        ], [
+            'password.confirmed' => 'Password tidak sesuai!',
+            'password.min' => 'Password minimal 8 karakter',
+            'password.required' => 'Password tidak boleh kosong!',
         ]);
 
         // Proses mengubah password di database
@@ -34,7 +38,7 @@ class NewPasswordController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
+                    ? redirect()->route('login')->with('success', 'Password telah diperbarui. Silahkan login kembali!')
                     : back()->withErrors(['email' => __($status)]);
     }
 }

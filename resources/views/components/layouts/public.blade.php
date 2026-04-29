@@ -15,9 +15,9 @@
             @elseif (session('error_alert'))
                 Swal.fire({
                     icon: "error",
-                    title: "{{ session('error') }}",
+                    title: "{{ session('error_alert') }}",
                     showConfirmButton: false,
-                    timer: 1000
+                    timer: 1500
                 });
             @endif
         </script>

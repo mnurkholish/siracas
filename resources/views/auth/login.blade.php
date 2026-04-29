@@ -6,7 +6,7 @@
         <form method="POST" action="/login">
             @csrf
 
-            <x-auth.input label="Email/Username" name="login" placeholder="Masukkan email/username" />
+            <x-auth.input label="Email" name="email" placeholder="Masukkan email" />
 
             <x-auth.input :forget="true" label="Password" name="password" type="password"
                 placeholder="Masukkan password" />

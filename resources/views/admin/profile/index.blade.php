@@ -3,23 +3,23 @@
     $profilePhoto = $user->foto_profil ? asset('storage/' . $user->foto_profil) : null;
     $birthValue = $user->tanggal_lahir ? \Carbon\Carbon::parse($user->tanggal_lahir)->format('Y-m-d') : '';
     $birthDisplay = $user->tanggal_lahir ? \Carbon\Carbon::parse($user->tanggal_lahir)->format('d - F - Y') : '-';
-    $genderDisplay = $user->jenis_kelamin === 'laki-laki' ? 'Laki-laki' : ($user->jenis_kelamin === 'perempuan' ? 'Perempuan' : '-');
+    $genderDisplay =
+        $user->jenis_kelamin === 'laki-laki' ? 'Laki-laki' : ($user->jenis_kelamin === 'perempuan' ? 'Perempuan' : '-');
 @endphp
 
 <x-layouts.admin>
-    <div
-        x-data="{ activeModal: '{{ $errors->profileUpdate->any() ? 'edit' : ($errors->passwordUpdate->any() ? 'password' : '') }}' }"
-        @keydown.escape.window="activeModal = ''"
-        class="px-6 py-8 sm:px-8 lg:px-6">
+    <div x-data="{ activeModal: '{{ $errors->profileUpdate->any() ? 'edit' : ($errors->passwordUpdate->any() ? 'password' : '') }}' }" @keydown.escape.window="activeModal = ''" class="px-6 py-8 sm:px-8 lg:px-6">
         <section class="mx-auto max-w-6xl">
             <h1 class="mb-7 text-2xl font-bold text-black">Akun Saya</h1>
 
             <div class="mb-5 rounded-lg bg-[#e3d9d1] px-6 py-6 sm:px-8">
                 <h2 class="mb-5 text-sm font-bold text-black">Profil</h2>
                 <div class="flex items-center gap-5">
-                    <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#9ca3af] text-white">
+                    <div
+                        class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#9ca3af] text-white">
                         @if ($profilePhoto)
-                            <img src="{{ $profilePhoto }}" alt="Foto profil {{ $user->username }}" class="h-full w-full object-cover">
+                            <img src="{{ $profilePhoto }}" alt="Foto profil {{ $user->username }}"
+                                class="h-full w-full object-cover">
                         @else
                             <x-icons.user />
                         @endif
@@ -92,8 +92,7 @@
         <div x-show="activeModal === 'edit'" x-cloak
             class="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8"
             x-transition.opacity>
-            <div @click.outside="activeModal = ''"
-                class="w-full max-w-2xl rounded-lg bg-white p-6 shadow-2xl sm:p-8"
+            <div @click.outside="activeModal = ''" class="w-full max-w-2xl rounded-lg bg-white p-6 shadow-2xl sm:p-8"
                 x-transition:enter="transition ease-out duration-200"
                 x-transition:enter-start="opacity-0 translate-y-3 scale-95"
                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
@@ -121,14 +120,17 @@
                             this.$refs.photoInput.value = '';
                         }
                     }">
-                        <div class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#9ca3af] text-white">
+                        <div
+                            class="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[#9ca3af] text-white">
                             <template x-if="photoPreview && !removePhoto">
-                                <img :src="photoPreview" alt="Preview foto profil" class="h-full w-full object-cover">
+                                <img :src="photoPreview" alt="Preview foto profil"
+                                    class="h-full w-full object-cover">
                             </template>
 
                             <template x-if="!photoPreview && !removePhoto">
                                 @if ($profilePhoto)
-                                    <img src="{{ $profilePhoto }}" alt="Foto profil {{ $user->username }}" class="h-full w-full object-cover">
+                                    <img src="{{ $profilePhoto }}" alt="Foto profil {{ $user->username }}"
+                                        class="h-full w-full object-cover">
                                 @else
                                     <div class="flex h-full w-full items-center justify-center">
                                         <x-icons.user />
@@ -171,7 +173,7 @@
                     <div class="space-y-5">
                         <div>
                             <label class="mb-2 block text-sm font-bold text-black">Username</label>
-                            <input type="text" name="username" value="{{ old('username', $user->username) }}" required
+                            <input type="text" name="username" value="{{ old('username', $user->username) }}"
                                 class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
                             @error('username', 'profileUpdate')
                                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
@@ -180,7 +182,8 @@
 
                         <div>
                             <label class="mb-2 block text-sm font-bold text-black">Tanggal Lahir</label>
-                            <input type="date" name="tanggal_lahir" value="{{ old('tanggal_lahir', $birthValue) }}"
+                            <input type="date" name="tanggal_lahir"
+                                value="{{ old('tanggal_lahir', $birthValue) }}"
                                 class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
                             @error('tanggal_lahir', 'profileUpdate')
                                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
@@ -202,7 +205,7 @@
 
                         <div>
                             <label class="mb-2 block text-sm font-bold text-black">Email</label>
-                            <input type="email" name="email" value="{{ old('email', $user->email) }}" required
+                            <input type="email" name="email" value="{{ old('email', $user->email) }}"
                                 class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
                             @error('email', 'profileUpdate')
                                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
@@ -227,8 +230,7 @@
         <div x-show="activeModal === 'password'" x-cloak
             class="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8"
             x-transition.opacity>
-            <div @click.outside="activeModal = ''"
-                class="w-full max-w-lg rounded-lg bg-white p-6 shadow-2xl sm:p-8"
+            <div @click.outside="activeModal = ''" class="w-full max-w-lg rounded-lg bg-white p-6 shadow-2xl sm:p-8"
                 x-transition:enter="transition ease-out duration-200"
                 x-transition:enter-start="opacity-0 translate-y-3 scale-95"
                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
@@ -245,7 +247,7 @@
                     <div class="space-y-5">
                         <div>
                             <label class="mb-2 block text-sm font-bold text-black">Password Saat Ini</label>
-                            <input type="password" name="current_password" autocomplete="current-password" required
+                            <input type="password" name="current_password" autocomplete="current-password"
                                 class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
                             @error('current_password', 'passwordUpdate')
                                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
@@ -254,7 +256,7 @@
 
                         <div>
                             <label class="mb-2 block text-sm font-bold text-black">Password Baru</label>
-                            <input type="password" name="password" autocomplete="new-password" required
+                            <input type="password" name="password" autocomplete="new-password"
                                 class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
                             @error('password', 'passwordUpdate')
                                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
@@ -263,7 +265,7 @@
 
                         <div>
                             <label class="mb-2 block text-sm font-bold text-black">Konfirmasi Password Baru</label>
-                            <input type="password" name="password_confirmation" autocomplete="new-password" required
+                            <input type="password" name="password_confirmation" autocomplete="new-password"
                                 class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
                         </div>
                     </div>

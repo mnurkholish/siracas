@@ -19,7 +19,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Password Baru</label>
-                    <input type="password" name="password" required
+                    <input type="password" name="password"
                         class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-siracas-primary">
                     @error('password')
                         <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
@@ -28,7 +28,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Konfirmasi Password</label>
-                    <input type="password" name="password_confirmation" required
+                    <input type="password" name="password_confirmation"
                         class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-siracas-primary">
                 </div>
 

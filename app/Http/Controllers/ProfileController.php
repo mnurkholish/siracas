@@ -38,6 +38,20 @@ class ProfileController extends Controller
             'jenis_kelamin' => ['nullable', 'in:laki-laki,perempuan'],
             'foto_profil' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'hapus_foto' => ['nullable', 'boolean'],
+        ], [
+            'username.required' => 'Username tidak boleh kosong.',
+            'username.string' => 'Username harus berupa teks.',
+            'username.max' => 'Username maksimal 255 karakter.',
+            'email.required' => 'Email tidak boleh kosong.',
+            'email.email' => 'Format email tidak valid.',
+            'email.max' => 'Email maksimal 255 karakter.',
+            'email.unique' => 'Email sudah digunakan, silakan gunakan email lain.',
+            'tanggal_lahir.date' => 'Tanggal lahir harus berupa tanggal yang valid.',
+            'jenis_kelamin.in' => 'Jenis kelamin harus laki-laki atau perempuan.',
+            'foto_profil.image' => 'File harus berupa gambar.',
+            'foto_profil.mimes' => 'Format gambar harus jpeg, png, atau jpg.',
+            'foto_profil.max' => 'Ukuran gambar maksimal 2MB.',
+            'hapus_foto.boolean' => 'Format hapus foto tidak valid.',
         ]);
 
         if ($request->boolean('hapus_foto')) {
@@ -85,7 +99,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return back()->with('success', 'Profil berhasil diperbarui!');
+        return back()->with('success', 'Data berhasil diperbarui!');
     }
 
     public function updatePassword(Request $request)
@@ -93,6 +107,13 @@ class ProfileController extends Controller
         $validated = $request->validateWithBag('passwordUpdate', [
             'current_password' => ['required', 'current_password'],
             'password' => ['required', 'confirmed', Password::defaults()],
+        ], [
+            'current_password.required' => 'Password saat ini tidak boleh kosong.',
+            'current_password.current_password' => 'Password saat ini tidak sesuai.',
+
+            'password.required' => 'Password baru tidak boleh kosong.',
+            'password.confirmed' => 'Konfirmasi password tidak cocok.',
+            'password.min' => 'Password minimal :min karakter.',
         ]);
 
         Auth::user()->forceFill([

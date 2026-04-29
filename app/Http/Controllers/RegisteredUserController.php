@@ -39,6 +39,13 @@ class RegisteredUserController extends Controller
             'password' => ['required', Password::defaults()],
             'jenis_kelamin' => ['required', 'in:laki-laki,perempuan'],
             'tanggal_lahir' => ['date'],
+        ], [
+            'username.required' => 'Username tidak boleh kosong',
+            'email.required' => 'Email tidak boleh kosong',
+            'password.required' => 'Password tidak boleh kosong',
+            'jenis_kelamin.required' => 'Jenis kelamin tidak boleh kosong',
+            'jenis_kelamin.select' => 'Jenis kelamin tidak boleh kosong',
+            'tanggal_lahir.date' => 'Tanggal lahir tidak boleh kosong',
         ]);
 
         $user = User::create([
@@ -53,7 +60,7 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         // return redirect()->route('customer.dashboard');
-        return redirect()->route('home')->with('success', 'Akun berhasil dibuat. Login Sukses.');
+        return redirect()->route('home')->with('success', 'Akun berhasil dibuat!');
     }
 
     /**

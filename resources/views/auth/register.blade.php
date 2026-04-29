@@ -30,7 +30,7 @@
 
                 @error('jenis_kelamin')
                     <p class="text-red-500 text-sm mt-1">
-                        Select the gender field
+                        {{ $message }}
                     </p>
                 @enderror
             </div>

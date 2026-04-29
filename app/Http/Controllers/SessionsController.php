@@ -16,16 +16,20 @@ class SessionsController extends Controller
     public function store(Request $request)
     {
         $credentials = $request->validate([
-            'login' => ['required', 'string'], // Bisa username atau email
+            'email' => ['required', 'email'],
             'password' => ['required', 'string'],
+        ], [
+            'email.required' => 'Email tidak boleh kosong.',
+            'email.email' => 'Format email tidak valid.',
+            'password.required' => 'Password tidak boleh kosong.',
         ]);
 
-        // Cek apakah input adalah email atau username
-        $fieldType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
-
-        if (!Auth::attempt([$fieldType => $request->login, 'password' => $request->password], $request->boolean('remember'))) {
+        if (!Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password
+        ], $request->boolean('remember'))) {
             return back()
-                ->withErrors(['password' => 'We were unable to authenticate using the providers credentials'])
+                ->with('error_alert', 'Login gagal, harap mengisi ulang!')
                 ->withInput();
         }
 
