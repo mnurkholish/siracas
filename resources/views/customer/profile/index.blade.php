@@ -81,7 +81,7 @@
                 <div class="mt-10 flex flex-wrap items-center justify-end gap-3">
                     <button type="button" @click="activeModal = 'edit'"
                         class="h-10 rounded-lg bg-[#9e836f] px-6 text-sm font-semibold text-white transition hover:bg-[#8a725f] focus:outline-none focus:ring-2 focus:ring-[#c9b5a7]">
-                        Ubah Akun
+                        Edit Akun
                     </button>
                     <button type="button" @click="activeModal = 'password'"
                         class="h-10 rounded-lg bg-[#9e836f] px-6 text-sm font-semibold text-white transition hover:bg-[#8a725f] focus:outline-none focus:ring-2 focus:ring-[#c9b5a7]">
@@ -109,7 +109,7 @@
                 x-transition:leave="transition ease-in duration-150"
                 x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                 x-transition:leave-end="opacity-0 translate-y-3 scale-95">
-                <h2 class="mb-6 text-lg font-bold text-black">Ubah Akun</h2>
+                <h2 class="mb-6 text-lg font-bold text-black">Edit Akun</h2>
 
                 <form action="{{ route('customer.profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
