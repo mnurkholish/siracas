@@ -15,7 +15,7 @@
                 @csrf
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Alamat Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}" required autofocus
+                    <input name="email" value="{{ old('email') }}" autofocus
                         class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-siracas-primary focus:border-siracas-primary transition-all">
                     @error('email')
                         <span class="text-red-500 text-xs mt-1">{{ $message }}</span>

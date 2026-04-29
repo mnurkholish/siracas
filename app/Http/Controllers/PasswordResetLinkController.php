@@ -18,7 +18,7 @@ class PasswordResetLinkController extends Controller
             'email' => ['required', 'email'],
         ], [
             'email.required' => 'Email tidak boleh kosong',
-            'email.email' => 'Format email harus benar'
+            'email.email' => 'Format email tidak valid',
         ]);
 
         // Mengirim link reset ke email

@@ -73,7 +73,7 @@
 
                     <div>
                         <label class="mb-2 block text-sm font-bold text-black">Email</label>
-                        <input type="email" value="{{ $user->email }}" readonly
+                        <input value="{{ $user->email }}" readonly
                             class="h-12 w-full rounded-md border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 outline-none">
                     </div>
                 </div>
@@ -215,7 +215,7 @@
 
                         <div>
                             <label class="mb-2 block text-sm font-bold text-black">Email</label>
-                            <input type="email" name="email" value="{{ old('email', $user->email) }}"
+                            <input name="email" value="{{ old('email', $user->email) }}"
                                 class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
                             @error('email', 'profileUpdate')
                                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>

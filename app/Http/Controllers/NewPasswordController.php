@@ -24,6 +24,7 @@ class NewPasswordController extends Controller
             'password.confirmed' => 'Password tidak sesuai!',
             'password.min' => 'Password minimal 8 karakter',
             'password.required' => 'Password tidak boleh kosong!',
+            'email.email' => 'Format email tidak valid',
         ]);
 
         // Proses mengubah password di database

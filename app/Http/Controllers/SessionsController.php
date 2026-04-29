@@ -36,7 +36,7 @@ class SessionsController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('home'))->with('success', 'Login berhasil');
+        return redirect()->intended(route('home'));
     }
 
     public function destroy(Request $request)

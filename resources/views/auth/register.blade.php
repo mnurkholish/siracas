@@ -8,7 +8,7 @@
 
             <x-auth.input label="Username" name="username" placeholder="Masukkan username" />
 
-            <x-auth.input label="Email" name="email" type="email" placeholder="Masukkan email" />
+            <x-auth.input label="Email" name="email" placeholder="Masukkan email" />
 
             {{-- Select --}}
             <div class="mb-4">

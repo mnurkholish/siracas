@@ -9,7 +9,7 @@
 
                 <div>
                     <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input type="email" name="email" value="{{ old('email', $request->email) }}" required
+                    <input name="email" value="{{ old('email', $request->email) }}" required
                         class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-siracas-primary bg-slate-50"
                         readonly>
                     @error('email')

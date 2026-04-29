@@ -43,6 +43,7 @@ class RegisteredUserController extends Controller
             'username.required' => 'Username tidak boleh kosong',
             'username.unique' => 'Username sudah dipakai, gunakan yang lain',
             'email.required' => 'Email tidak boleh kosong',
+            'email.email' => 'Format email tidak valid',
             'password.required' => 'Password tidak boleh kosong',
             'jenis_kelamin.required' => 'Jenis kelamin tidak boleh kosong',
             'jenis_kelamin.select' => 'Jenis kelamin tidak boleh kosong',
