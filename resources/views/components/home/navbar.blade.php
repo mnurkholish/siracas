@@ -7,7 +7,7 @@
         <div class="flex h-16 items-center justify-between gap-4">
 
             <div class="flex shrink-0 items-center gap-3">
-                <a href="/" class="flex items-center gap-3 transition-transform hover:scale-105">
+                <a href="/" class="flex items-center gap-3">
                     <img src="{{ asset('images/logo.png') }}" alt="Logo SIRACAS"
                         class="h-10 w-10 rounded-full object-cover shadow-sm">
                     <span class="hidden text-2xl font-bold tracking-[0.06em] text-primary sm:block">

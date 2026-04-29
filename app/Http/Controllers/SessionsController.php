@@ -17,11 +17,12 @@ class SessionsController extends Controller
     {
         $credentials = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
+            'password' => ['required', 'string', 'min:8'],
         ], [
             'email.required' => 'Email tidak boleh kosong.',
             'email.email' => 'Format email tidak valid.',
             'password.required' => 'Password tidak boleh kosong.',
+            'password.min' => 'Password minimal 8 karakter',
         ]);
 
         if (!Auth::attempt([
