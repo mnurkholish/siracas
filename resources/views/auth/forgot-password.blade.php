@@ -14,18 +14,12 @@
             <form action="{{ route('password.email') }}" method="POST" class="space-y-5">
                 @csrf
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Alamat Email</label>
-                    <input name="email" value="{{ old('email') }}" autofocus
-                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-siracas-primary focus:border-siracas-primary transition-all">
-                    @error('email')
-                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                    @enderror
-                </div>
+                    <x-auth.input label="Alamat Email" name="email" placeholder="Masukkan email" />
 
-                <button type="submit"
-                    class="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all">
-                    Kirim Link Reset
-                </button>
+                    <button type="submit"
+                        class="w-full bg-primary text-white py-3 rounded-xl font-bold hover:bg-opacity-90 transition-all">
+                        Kirim Link Reset
+                    </button>
             </form>
         </div>
     </div>

@@ -13,14 +13,4 @@
 
     </div>
 
-    <!-- NAV -->
-    <button id="prevBtn" onclick="prevSlide()"
-        class="nav-btn absolute left-5 top-1/2 -translate-y-1/2 bg-white/80 p-3 rounded-full shadow z-50 transition-all duration-500">
-        < </button>
-
-            <button id="nextBtn" onclick="nextSlide()"
-                class="nav-btn absolute right-5 top-1/2 -translate-y-1/2 bg-white/80 p-3 rounded-full shadow z-50 transition-all duration-500">
-                >
-            </button>
-
 </section>

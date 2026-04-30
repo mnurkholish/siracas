@@ -37,7 +37,7 @@
 
             <x-auth.input label="Tanggal Lahir" name="tanggal_lahir" type="date" />
 
-            <x-auth.input label="Password" name="password" type="password" />
+            <x-auth.input label="Password" name="password" type="password" placeholder="Masukkan Password" />
 
             <x-auth.button type="submit">
                 Buat akun

@@ -245,28 +245,17 @@
                     @method('PUT')
 
                     <div class="space-y-5">
-                        <div>
-                            <label class="mb-2 block text-sm font-bold text-black">Password Saat Ini</label>
-                            <input type="password" name="current_password" autocomplete="current-password"
-                                class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
-                            @error('current_password', 'passwordUpdate')
-                                <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                        <div class="space-y-5">
+                            <x-auth.input label="Password Saat Ini" name="current_password" type="password"
+                                placeholder="Masukkan password saat ini" autocomplete="current-password"
+                                error-bag="passwordUpdate" />
 
-                        <div>
-                            <label class="mb-2 block text-sm font-bold text-black">Password Baru</label>
-                            <input type="password" name="password" autocomplete="new-password"
-                                class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
-                            @error('password', 'passwordUpdate')
-                                <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
+                            <x-auth.input label="Password Baru" name="password" type="password"
+                                placeholder="Masukkan password baru" autocomplete="new-password"
+                                error-bag="passwordUpdate" />
 
-                        <div>
-                            <label class="mb-2 block text-sm font-bold text-black">Konfirmasi Password Baru</label>
-                            <input type="password" name="password_confirmation" autocomplete="new-password"
-                                class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
+                            <x-auth.input label="Konfirmasi Password Baru" name="password_confirmation"
+                                type="password" placeholder="Konfirmasi password baru" autocomplete="new-password" />
                         </div>
                     </div>
 

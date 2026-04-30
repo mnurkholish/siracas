@@ -8,28 +8,18 @@
                 <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Email</label>
-                    <input name="email" value="{{ old('email', $request->email) }}" required
-                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-siracas-primary bg-slate-50"
-                        readonly>
-                    @error('email')
-                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                    @enderror
+                    <x-auth.input label="Email" name="email" type="text" :value="old('email', $request->email)" placeholder="Email"
+                        :readonly="true" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Password Baru</label>
-                    <input type="password" name="password"
-                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-siracas-primary">
-                    @error('password')
-                        <span class="text-red-500 text-xs mt-1">{{ $message }}</span>
-                    @enderror
+                    <x-auth.input label="Password Baru" name="password" type="password"
+                        placeholder="Masukkan password baru" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-slate-700 mb-1">Konfirmasi Password</label>
-                    <input type="password" name="password_confirmation"
-                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-siracas-primary">
+                    <x-auth.input label="Konfirmasi Password" name="password_confirmation" type="password"
+                        placeholder="Konfirmasi password" />
                 </div>
 
                 <button type="submit"
