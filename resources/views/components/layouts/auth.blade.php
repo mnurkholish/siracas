@@ -1,9 +1,9 @@
 <x-layouts.app>
 
-    <body class="min-h-screen bg-gray-100 flex items-center justify-center">
+    <body class="min-h-screen bg-gray-100 flex items-center justify-center p-4">
 
         {{-- CONTAINER UTAMA --}}
-        <div class="w-full max-w-4xl h-175 bg-white rounded-xl shadow-xl overflow-hidden flex">
+        <div class="w-full max-w-4xl min-h-[725px] bg-white rounded-xl shadow-xl overflow-hidden flex">
 
             <x-auth.back />
 
@@ -16,6 +16,7 @@
             <div class="w-full md:w-1/2 flex items-center justify-center p-8 bg-gray-50">
                 {{ $slot }}
             </div>
+
         </div>
 
         <script>

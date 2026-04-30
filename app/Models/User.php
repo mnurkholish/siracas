@@ -32,6 +32,7 @@ class User extends Authenticatable
         'password',
         'jenis_kelamin',
         'tanggal_lahir',
+        'nomor_hp',
         'role',
         'foto_profil'
     ];

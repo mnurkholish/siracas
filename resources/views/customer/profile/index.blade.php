@@ -76,6 +76,12 @@
                         <input value="{{ $user->email }}" readonly
                             class="h-12 w-full rounded-md border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 outline-none">
                     </div>
+
+                    <div>
+                        <label class="mb-2 block text-sm font-bold text-black">Nomor HP</label>
+                        <input type="text" value="{{ $user->nomor_hp ?? '-' }}" readonly
+                            class="h-12 w-full rounded-md border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 outline-none">
+                    </div>
                 </div>
 
                 <div class="mt-10 flex flex-wrap items-center justify-end gap-3">
@@ -218,6 +224,16 @@
                             <input name="email" value="{{ old('email', $user->email) }}"
                                 class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
                             @error('email', 'profileUpdate')
+                                <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="mb-2 block text-sm font-bold text-black">Nomor HP</label>
+                            <input type="text" name="nomor_hp" value="{{ old('nomor_hp', $user->nomor_hp) }}"
+                                class="h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">
+
+                            @error('nomor_hp', 'profileUpdate')
                                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
                             @enderror
                         </div>

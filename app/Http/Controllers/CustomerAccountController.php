@@ -42,7 +42,8 @@ class CustomerAccountController extends Controller
             'email' => $customer->email,
             'tanggal_lahir' => $customer->tanggal_lahir ? \Carbon\Carbon::parse($customer->tanggal_lahir)->format('d - F - Y') : '-',
             'jenis_kelamin' => $customer->jenis_kelamin ? ucfirst($customer->jenis_kelamin) : '-',
-            'foto_url' => $fotoUrl
+            'foto_url' => $fotoUrl,
+            'nomor_hp' => $customer->nomor_hp,
         ]);
     }
 }

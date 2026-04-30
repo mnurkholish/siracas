@@ -6,12 +6,14 @@
         <form method="POST" action="/register">
             @csrf
 
-            <x-auth.input label="Username" name="username" placeholder="Masukkan username" />
+            <x-auth.input label="Username" name="username" placeholder="Masukkan username" mb="3" />
 
-            <x-auth.input label="Email" name="email" placeholder="Masukkan email" />
+            <x-auth.input label="Email" name="email" placeholder="Masukkan email" mb="3" />
+
+            <x-auth.input label="Nomor HP" name="nomor_hp" placeholder="Masukkan nomor HP" mb="3" />
 
             {{-- Select --}}
-            <div class="mb-4">
+            <div class="mb-3">
                 <label class="block text-sm mb-1 text-gray-700 font-medium">Jenis Kelamin</label>
                 <select name="jenis_kelamin"
                     class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#9E826D] focus:shadow-md outline-none transition">
@@ -35,16 +37,17 @@
                 @enderror
             </div>
 
-            <x-auth.input label="Tanggal Lahir" name="tanggal_lahir" type="date" />
+            <x-auth.input label="Tanggal Lahir" name="tanggal_lahir" type="date" mb="3" />
 
-            <x-auth.input label="Password" name="password" type="password" placeholder="Masukkan Password" />
+            <x-auth.input label="Password" name="password" type="password" placeholder="Masukkan Password"
+                mb="3" />
 
             <x-auth.button type="submit">
                 Buat akun
             </x-auth.button>
         </form>
 
-        <p class="text-sm mt-4 text-center">
+        <p class="text-sm mt-2 text-center">
             Sudah punya akun? <a href="/login" class="text-primary underline">Login</a>
         </p>
     </x-auth.card>

@@ -8,9 +8,10 @@
     'readonly' => false,
     'autocomplete' => null,
     'errorBag' => 'default',
+    'mb' => 4,
 ])
 
-<div class="mb-4">
+<div class="mb-{{ $mb }}">
     <!-- LABEL -->
     <label for="{{ $name }}" class="block text-sm mb-1 text-gray-700">
         {{ $label }}

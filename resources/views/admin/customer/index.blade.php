@@ -1,6 +1,6 @@
 <x-layouts.admin>
     <div class="px-6 py-6 sm:px-8 lg:px-6">
-        <header class="mb-16 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+        <header class="mb-8 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
             <h2 class="text-2xl font-bold text-black">Data Akun</h2>
 
             <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -199,6 +199,11 @@
                         <input type="text" id="modalEmail" readonly
                             class="h-11 w-full rounded-md border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 outline-none">
                     </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold text-gray-700">Nomor HP</label>
+                        <input type="text" id="modalNomorHp" readonly
+                            class="h-11 w-full rounded-md border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 outline-none">
+                    </div>
                 </div>
             </div>
 
@@ -227,6 +232,7 @@
                     document.getElementById('modalTanggalLahir').value = data.tanggal_lahir;
                     document.getElementById('modalJenisKelamin').value = data.jenis_kelamin;
                     document.getElementById('modalEmail').value = data.email;
+                    document.getElementById('modalNomorHp').value = data.nomor_hp ?? '-';
                 })
                 .catch(() => {
                     closeModal();

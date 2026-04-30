@@ -16,7 +16,7 @@
             </x-auth.button>
         </form>
 
-        <p class="text-sm mt-4 text-center">
+        <p class="text-sm mt-2 text-center">
             Belum punya akun? <a href="/register" class="text-primary underline">Daftar</a>
         </p>
     </x-auth.card>
