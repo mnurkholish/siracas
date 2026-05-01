@@ -8,8 +8,11 @@
 ])
 
 <article
-    class="flex h-full flex-col overflow-hidden rounded-[18px] border border-[#dfd4c9] bg-white shadow-[0_14px_28px_rgba(145,117,97,0.08)] transition-transform duration-300 hover:-translate-y-1">
-    <img src="{{ $image }}" alt="{{ $name }}" class="h-36 w-full object-cover">
+    class="group flex h-full flex-col overflow-hidden rounded-[18px] border border-[#dfd4c9] bg-white shadow-[0_14px_28px_rgba(145,117,97,0.08)] transition duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_38px_rgba(145,117,97,0.16)]">
+    <div class="overflow-hidden bg-[#eee6df]">
+        <img src="{{ $image }}" alt="{{ $name }}"
+            class="h-36 w-full object-cover transition duration-500 group-hover:scale-105">
+    </div>
 
     <div class="flex flex-1 flex-col p-4">
         <h3 class="text-sm font-bold text-[#6b584d]">{{ $name }}</h3>
@@ -28,7 +31,7 @@
             </div>
 
             <a href="{{ $url }}"
-                class="rounded-full bg-[#a6866d] px-4 py-2 text-[11px] font-semibold text-white transition hover:bg-[#8f715b]">
+                class="rounded-full bg-[#a6866d] px-4 py-2 text-[11px] font-semibold text-white transition hover:-translate-y-0.5 hover:bg-[#8f715b]">
                 {{ $buttonText }}
             </a>
         </div>
