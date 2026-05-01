@@ -1,31 +1,4 @@
 @php
-    $products = [
-        [
-            'name' => 'Cacing Tanah Segar',
-            'description' => 'Cacing tanah segar berkualitas untuk kebutuhan budidaya, pakan, dan pengolahan organik.',
-            'price' => 'Rp4.000',
-            'image' => asset('images/hero.png'),
-        ],
-        [
-            'name' => 'Cacing Tanah Kering',
-            'description' => 'Cacing tanah kering yang higienis, cocok untuk campuran pakan bernutrisi tinggi.',
-            'price' => 'Rp4.000',
-            'image' => asset('images/hero.png'),
-        ],
-        [
-            'name' => 'Pupuk Kascing',
-            'description' => 'Pupuk organik padat hasil olahan cacing untuk membantu tanah lebih subur dan gembur.',
-            'price' => 'Rp10.000',
-            'image' => asset('images/hero.png'),
-        ],
-        [
-            'name' => 'Tepung Cacing',
-            'description' => 'Tepung cacing bernutrisi tinggi untuk pakan ternak, ikan, dan unggas.',
-            'price' => 'Rp10.000',
-            'image' => asset('images/hero.png'),
-        ],
-    ];
-
     $reviews = [
         [
             'name' => 'Kholis',
@@ -71,11 +44,11 @@
             'route' => '/',
         ],
         [
-            'nav' => 'Tentang Kami',
-            'route' => '#tentang',
+            'nav' => 'Produk',
+            'route' => route('customer.product.index'),
         ],
         [
-            'nav' => 'Produk',
+            'nav' => 'Transaksi',
             'route' => '#',
         ],
     ];
@@ -87,7 +60,7 @@
     <main>
         <x-home.hero-section />
         <x-home.about-section />
-        <x-home.products-section :products="$products" />
+        <x-home.products-section :products="$products" :allLink="route('customer.product.index')" />
         <x-home.reviews-section :reviews="$reviews" />
     </main>
 

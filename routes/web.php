@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\CustomerAccountController;
+use App\Http\Controllers\CustomerProductController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\PasswordResetLinkController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionsController;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +56,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/akun-customer', [CustomerAccountController::class, 'index'])->name('customer.index');
         Route::get('/akun-customer/{id}', [CustomerAccountController::class, 'show'])->name('customer.show');
 
+        Route::resource('/product', ProductController::class)->except(['create', 'edit']);
+
         Route::get('/profile', [ProfileController::class, 'adminIndex'])->name('profile');
         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
@@ -62,9 +66,9 @@ Route::middleware('auth')->group(function () {
 
     // -- Customer Routes --
     Route::middleware('role:customer')->prefix('customer')->name('customer.')->group(function () {
-        Route::get('/dashboard', function () {
-            return view('customer.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [HomeController::class, 'customerDashboard'])->name('dashboard');
+        Route::get('/product', [CustomerProductController::class, 'index'])->name('product.index');
+        Route::get('/product/{product}', [CustomerProductController::class, 'show'])->name('product.show');
 
         Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 

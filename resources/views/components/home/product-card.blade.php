@@ -3,6 +3,8 @@
     'name',
     'description',
     'price',
+    'url' => '#',
+    'buttonText' => 'Lihat Detail',
 ])
 
 <article
@@ -25,9 +27,9 @@
                 <p class="text-base font-extrabold text-[#b37323]">{{ $price }}</p>
             </div>
 
-            <a href="#"
+            <a href="{{ $url }}"
                 class="rounded-full bg-[#a6866d] px-4 py-2 text-[11px] font-semibold text-white transition hover:bg-[#8f715b]">
-                Beli Sekarang
+                {{ $buttonText }}
             </a>
         </div>
     </div>

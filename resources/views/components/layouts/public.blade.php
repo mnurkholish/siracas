@@ -1,4 +1,8 @@
-<x-layouts.app>
+@props([
+    'title' => 'SIRACAS',
+])
+
+<x-layouts.app :title="$title">
 
     <body class="min-h-screen bg-[#f7f2ed] text-[#6d5b50] antialiased">
         {{ $slot }}

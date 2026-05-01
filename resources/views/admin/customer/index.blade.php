@@ -1,25 +1,20 @@
-<x-layouts.admin>
-    <div class="px-6 py-6 sm:px-8 lg:px-6">
-        <header class="mb-8 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-            <h2 class="text-2xl font-bold text-black">Data Akun</h2>
-
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-                <form action="{{ route('admin.customer.index') }}" method="GET" class="relative w-full sm:w-[410px]">
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="Cari berdasarkan nama atau id"
-                        class="h-12 w-full rounded-full border-0 bg-white px-8 pr-14 text-base text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-[#d5c6ba]">
-                    <button type="submit"
-                        class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-[#7d6758]"
-                        aria-label="Cari customer">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" />
-                        </svg>
-                    </button>
-                </form>
-            </div>
-        </header>
+<x-layouts.admin title="Data Akun">
+    <x-slot:actions>
+        <form action="{{ route('admin.customer.index') }}" method="GET" class="relative w-full sm:w-[410px]">
+            <input type="text" name="search" value="{{ request('search') }}"
+                placeholder="Cari berdasarkan nama atau id"
+                class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-[#d5c6ba] sm:px-8 sm:text-base">
+            <button type="submit"
+                class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-[#7d6758]"
+                aria-label="Cari customer">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" />
+                </svg>
+            </button>
+        </form>
+    </x-slot:actions>
 
         <section class="overflow-hidden rounded-md bg-white shadow-sm">
             <div class="overflow-x-auto">
@@ -75,8 +70,8 @@
                 $separatorShown = false;
             @endphp
 
-            <div class="grid gap-4 border-t border-gray-100 px-0 py-6 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-                <div class="flex justify-center sm:justify-start">
+            <div class="grid gap-4 border-t border-gray-100 px-4 py-6 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
+                <div class="flex justify-center lg:justify-start">
                     @if ($customers->onFirstPage())
                         <span
                             class="inline-flex h-11 cursor-not-allowed items-center gap-3 rounded-lg bg-white px-4 text-base text-gray-400 shadow-sm ring-1 ring-gray-100">
@@ -98,7 +93,7 @@
                     @endif
                 </div>
 
-                <div class="flex flex-wrap items-center justify-center gap-3">
+                <div class="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
                     @for ($page = 1; $page <= $lastPage; $page++)
                         @php
                             $showPage =
@@ -132,7 +127,7 @@
                     @endfor
                 </div>
 
-                <div class="flex justify-center sm:justify-end">
+                <div class="flex justify-center lg:justify-end">
                     @if ($customers->hasMorePages())
                         <a href="{{ $customers->nextPageUrl() }}"
                             class="inline-flex h-11 items-center gap-3 rounded-lg bg-white px-4 text-base text-black shadow-sm ring-1 ring-gray-100 transition hover:bg-gray-50">
@@ -155,10 +150,9 @@
                 </div>
             </div>
         </section>
-    </div>
 
-    <div id="detailModal" class="fixed inset-0 z-[70] hidden items-center justify-center bg-black/35 px-4 py-8">
-        <div class="w-full max-w-2xl rounded-lg border border-gray-100 bg-white shadow-2xl">
+    <div id="detailModal" class="fixed inset-0 z-[70] hidden items-center justify-center overflow-y-auto bg-black/35 px-4 py-6">
+        <div class="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-lg border border-gray-100 bg-white shadow-2xl">
             <div class="flex items-center justify-between border-b px-6 py-4">
                 <h3 class="text-xl font-bold text-black">Detail Profil Customer</h3>
                 <button type="button" onclick="closeModal()"
@@ -168,7 +162,7 @@
                 </button>
             </div>
 
-            <div class="p-6">
+            <div class="p-5 sm:p-6">
                 <div class="mb-6 flex items-center gap-4">
                     <img id="modalFoto" src="" alt="Foto customer"
                         class="h-16 w-16 rounded-full border border-gray-200 object-cover">
@@ -207,7 +201,7 @@
                 </div>
             </div>
 
-            <div class="flex justify-end px-6 pb-6">
+            <div class="flex justify-end px-5 pb-5 sm:px-6 sm:pb-6">
                 <button type="button" onclick="closeModal()"
                     class="h-10 rounded-lg border border-gray-200 bg-white px-6 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
                     Kembali

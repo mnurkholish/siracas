@@ -21,7 +21,8 @@
                 @foreach ($navLinks as $link)
                     @php
                         // Memeriksa apakah URL saat ini cocok dengan route navigasi
-                        $isActive = request()->is(trim($link['route'], '/'));
+                        $linkPath = parse_url($link['route'], PHP_URL_PATH) ?: $link['route'];
+                        $isActive = $linkPath === '/' ? request()->is('/') : request()->is(trim($linkPath, '/'));
                     @endphp
                     <a href="{{ $link['route'] }}"
                         class="relative py-2 transition-colors duration-200 hover:text-primary {{ $isActive ? 'text-primary' : '' }}">
@@ -79,7 +80,7 @@
 
                             <div class="border-b border-gray-100 px-4 py-3">
                                 <p class="text-sm text-gray-500">Login sebagai</p>
-                                <p class="truncate text-sm font-medium text-gray-900">{{ auth()->user()->name ?? 'User' }}
+                                <p class="truncate text-sm font-medium text-gray-900">{{ auth()->user()->username ?? 'User' }}
                                 </p>
                             </div>
 
@@ -120,7 +121,8 @@
             <div class="flex min-w-full gap-6 px-2 text-sm font-medium text-[#4d443f]">
                 @foreach ($navLinks as $link)
                     @php
-                        $isActive = request()->is(trim($link['route'], '/'));
+                        $linkPath = parse_url($link['route'], PHP_URL_PATH) ?: $link['route'];
+                        $isActive = $linkPath === '/' ? request()->is('/') : request()->is(trim($linkPath, '/'));
                     @endphp
                     <a href="{{ $link['route'] }}"
                         class="whitespace-nowrap transition-colors hover:text-primary {{ $isActive ? 'text-primary font-semibold' : '' }}">

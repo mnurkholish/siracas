@@ -7,11 +7,9 @@
         $user->jenis_kelamin === 'laki-laki' ? 'Laki-laki' : ($user->jenis_kelamin === 'perempuan' ? 'Perempuan' : '-');
 @endphp
 
-<x-layouts.admin>
-    <div x-data="{ activeModal: '{{ $errors->profileUpdate->any() ? 'edit' : ($errors->passwordUpdate->any() ? 'password' : '') }}' }" @keydown.escape.window="activeModal = ''" class="px-6 py-8 sm:px-8 lg:px-6">
-        <section class="mx-auto max-w-6xl">
-            <h1 class="mb-7 text-2xl font-bold text-black">Akun Saya</h1>
-
+<x-layouts.admin title="Akun Saya">
+    <div x-data="{ activeModal: '{{ $errors->profileUpdate->any() ? 'edit' : ($errors->passwordUpdate->any() ? 'password' : '') }}' }" @keydown.escape.window="activeModal = ''">
+        <section>
             <div class="mb-5 rounded-lg bg-[#e3d9d1] px-6 py-6 sm:px-8">
                 <h2 class="mb-5 text-sm font-bold text-black">Profil</h2>
                 <div class="flex items-center gap-5">
@@ -74,7 +72,7 @@
                     </div>
                 </div>
 
-                <div class="mt-10 flex flex-wrap items-center justify-end gap-3">
+                <div class="mt-10 grid gap-3 sm:flex sm:flex-wrap sm:items-center sm:justify-end">
                     <button type="button" @click="activeModal = 'edit'"
                         class="h-10 rounded-lg bg-[#9e836f] px-6 text-sm font-semibold text-white transition hover:bg-[#8a725f] focus:outline-none focus:ring-2 focus:ring-[#c9b5a7]">
                         Ubah Akun
@@ -98,7 +96,7 @@
         <div x-show="activeModal === 'edit'" x-cloak
             class="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8"
             x-transition.opacity>
-            <div @click.outside="activeModal = ''" class="w-full max-w-2xl rounded-lg bg-white p-6 shadow-2xl sm:p-8"
+            <div @click.outside="activeModal = ''" class="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8"
                 x-transition:enter="transition ease-out duration-200"
                 x-transition:enter-start="opacity-0 translate-y-3 scale-95"
                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
@@ -229,7 +227,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-8 flex flex-wrap justify-end gap-3">
+                    <div class="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:justify-end">
                         <button type="submit"
                             class="h-10 rounded-lg bg-[#9e836f] px-6 text-sm font-semibold text-white transition hover:bg-[#8a725f] focus:outline-none focus:ring-2 focus:ring-[#c9b5a7]">
                             Simpan Perubahan
@@ -246,7 +244,7 @@
         <div x-show="activeModal === 'password'" x-cloak
             class="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8"
             x-transition.opacity>
-            <div @click.outside="activeModal = ''" class="w-full max-w-lg rounded-lg bg-white p-6 shadow-2xl sm:p-8"
+            <div @click.outside="activeModal = ''" class="max-h-[calc(100vh-3rem)] w-full max-w-lg overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8"
                 x-transition:enter="transition ease-out duration-200"
                 x-transition:enter-start="opacity-0 translate-y-3 scale-95"
                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
@@ -275,7 +273,7 @@
                         </div>
                     </div>
 
-                    <div class="mt-8 flex flex-wrap justify-end gap-3">
+                    <div class="mt-8 grid gap-3 sm:flex sm:flex-wrap sm:justify-end">
                         <button type="submit"
                             class="h-10 rounded-lg bg-[#9e836f] px-6 text-sm font-semibold text-white transition hover:bg-[#8a725f] focus:outline-none focus:ring-2 focus:ring-[#c9b5a7]">
                             Simpan Password
