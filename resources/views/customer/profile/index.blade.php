@@ -2,8 +2,7 @@
     $user = Auth::user();
     $navLinks = [
         ['nav' => 'Beranda', 'route' => '/'],
-        ['nav' => 'Tentang Kami', 'route' => '/#tentang'],
-        ['nav' => 'Produk', 'route' => '#'],
+        ['nav' => 'Produk', 'route' => route('customer.product.index')],
         ['nav' => 'Transaksi', 'route' => '#'],
     ];
 

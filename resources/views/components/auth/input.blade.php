@@ -69,6 +69,11 @@
         @endif
     </div>
 
+    <!-- ERROR -->
+    @error($name, $errorBag)
+        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+    @enderror
+
     <!-- FORGOT PASSWORD -->
     @if ($type === 'password' && $forget)
         <div class="mt-2 text-right">
@@ -77,9 +82,4 @@
             </a>
         </div>
     @endif
-
-    <!-- ERROR -->
-    @error($name, $errorBag)
-        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-    @enderror
 </div>

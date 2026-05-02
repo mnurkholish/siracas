@@ -75,7 +75,7 @@
             <select name="satuan" @if ($isEdit) x-model="selected.satuan" @endif
                 class="{{ $inputBase }}">
                 <option value="">Pilih</option>
-                @foreach (['kg' => 'Kg', 'gram' => 'Gram', 'pcs' => 'Pcs', 'paket' => 'Paket', 'karung' => 'Karung'] as $value => $label)
+                @foreach (App\Models\Product::SATUAN as $value => $label)
                     <option value="{{ $value }}" @selected(!$isEdit && old('satuan') === $value)>{{ $label }}</option>
                 @endforeach
             </select>
