@@ -30,8 +30,22 @@ class UserSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
+
+        DB::table('users')->insert([
+            'username' => 'Customer',
+            'email' => 'customer@gmail.com',
+            'password' => Hash::make('00000000'),
+            'foto_profil' => null,
+            'tanggal_lahir' => '1990-01-01',
+            'nomor_hp' => '081234567890',
+            'jenis_kelamin' => 'Laki-laki',
+            'role' => 'customer',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+
         // Customer pakai factory (misal 10 data)
         User::factory()->count(10)->create();
-
     }
 }

@@ -44,7 +44,7 @@
                     <p class="mt-4 text-sm leading-6 text-[#8f8178]">Cari cacing, kascing, dan olahan organik yang tersedia.</p>
                 </a>
 
-                <a href="#" @mouseenter="active = 'keranjang'"
+                <a href="{{ route('cart.index') }}" @mouseenter="active = 'keranjang'"
                     class="group rounded-lg border border-[#e4d7cc] bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#c9b5a7] hover:shadow-[0_18px_34px_rgba(145,117,97,0.12)]"
                     data-reveal style="transition-delay: 160ms">
                     <div class="flex items-center justify-between gap-4">
@@ -57,7 +57,7 @@
                             <x-icons.cart class="h-5 w-5" />
                         </span>
                     </div>
-                    <p class="mt-4 text-sm leading-6 text-[#8f8178]">Fitur keranjang dan checkout siap disambungkan berikutnya.</p>
+                    <p class="mt-4 text-sm leading-6 text-[#8f8178]">Simpan produk pilihan dan atur jumlah pesanan sebelum checkout.</p>
                 </a>
 
                 <a href="{{ route('customer.profile') }}" @mouseenter="active = 'akun'"

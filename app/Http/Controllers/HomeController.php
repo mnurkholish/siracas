@@ -42,8 +42,8 @@ class HomeController extends Controller
                     'route' => route('customer.product.index'),
                 ],
                 [
-                    'nav' => 'Transaksi',
-                    'route' => '#',
+                    'nav' => 'Keranjang',
+                    'route' => route('cart.index'),
                 ],
             ],
         ]);

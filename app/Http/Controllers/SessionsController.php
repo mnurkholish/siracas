@@ -36,6 +36,10 @@ class SessionsController extends Controller
 
         $request->session()->regenerate();
 
+        if (Auth::user()->role === 'customer') {
+            Auth::user()->cart()->firstOrCreate([]);
+        }
+
         return redirect()->intended(route('home'));
     }
 

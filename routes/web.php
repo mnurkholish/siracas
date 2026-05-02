@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\CustomerProductController;
 use App\Http\Controllers\DashboardController;
@@ -65,6 +66,13 @@ Route::middleware('auth')->group(function () {
 
 
     // -- Customer Routes --
+    Route::middleware('role:customer')->group(function () {
+        Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+        Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
+        Route::patch('/cart/items/{cartItem}', [CartController::class, 'update'])->name('cart.items.update');
+        Route::delete('/cart/items/{cartItem}', [CartController::class, 'destroy'])->name('cart.items.destroy');
+    });
+
     Route::middleware('role:customer')->prefix('customer')->name('customer.')->group(function () {
         Route::get('/dashboard', [HomeController::class, 'customerDashboard'])->name('dashboard');
         Route::get('/product', [CustomerProductController::class, 'index'])->name('product.index');

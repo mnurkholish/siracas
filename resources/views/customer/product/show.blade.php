@@ -12,6 +12,10 @@
             'nav' => 'Produk',
             'route' => route('customer.product.index'),
         ],
+        [
+            'nav' => 'Keranjang',
+            'route' => route('cart.index'),
+        ],
     ];
 @endphp
 
@@ -55,9 +59,26 @@
                         </p>
                     </div>
 
-                    <div class="mt-8 rounded-lg border border-dashed border-[#d8c8bb] bg-[#fbf8f5] px-4 py-4 text-sm text-[#8f8178]">
-                        Keranjang, checkout, dan review akan disambungkan pada tahap berikutnya.
-                    </div>
+                    @if ($errors->any())
+                        <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                            {{ $errors->first() }}
+                        </div>
+                    @endif
+
+                    <form action="{{ route('cart.store', $product) }}" method="POST"
+                        class="mt-8 rounded-lg border border-[#eadfd7] bg-[#fbf8f5] p-4">
+                        @csrf
+                        <label for="quantity" class="text-sm font-bold text-[#5f4f45]">Quantity</label>
+                        <div class="mt-3 flex flex-col gap-3 sm:flex-row">
+                            <input type="number" id="quantity" name="quantity" min="1" max="{{ $product->stok }}"
+                                value="{{ old('quantity', 1) }}" @disabled($product->stok <= 0)
+                                class="h-12 rounded-lg border border-[#e1d5cb] bg-white px-4 text-sm font-bold text-[#5d5048] outline-none transition focus:border-[#a6866d] focus:ring-2 focus:ring-[#eadfd7] sm:w-32">
+                            <button type="submit" @disabled($product->stok <= 0)
+                                class="inline-flex h-12 items-center justify-center rounded-lg bg-[#9e836f] px-5 text-sm font-bold text-white transition hover:bg-[#8a725f] disabled:cursor-not-allowed disabled:bg-[#c9b9ac]">
+                                {{ $product->stok > 0 ? 'Tambahkan ke Keranjang' : 'Stok Habis' }}
+                            </button>
+                        </div>
+                    </form>
                 </section>
             </div>
         </div>

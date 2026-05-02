@@ -48,6 +48,7 @@ return new class () extends Migration {
      */
     public function down(): void
     {
+        Schema::dropIfExists('cart_items');
         Schema::dropIfExists('carts');
     }
 };

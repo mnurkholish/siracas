@@ -2,6 +2,15 @@
     'navLinks' => [],
 ])
 
+@php
+    $cartItemsCount = 0;
+
+    if (auth()->check() && auth()->user()->role === 'customer') {
+        $cart = auth()->user()->cart;
+        $cartItemsCount = $cart ? $cart->cartItems()->sum('quantity') : 0;
+    }
+@endphp
+
 <header class="sticky top-0 z-40 w-full border-b border-[#e7ddd4] bg-white/95 backdrop-blur-sm">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between gap-4">
@@ -35,12 +44,15 @@
             </nav>
 
             <div class="flex items-center gap-2 sm:gap-3 text-[#4d443f]">
-                <a href="#"
+                <a href="{{ route('cart.index') }}"
                     class="relative inline-flex items-center justify-center rounded-full p-2 transition-colors hover:bg-[#f7f1eb] focus:outline-none focus:ring-2 focus:ring-[#d8c9bc]"
                     aria-label="Keranjang">
                     <x-icons.cart class="h-5 w-5 text-[#4d443f]" />
-                    {{-- Opsional: Badge Notifikasi Keranjang --}}
-                    {{-- <span class="absolute right-1 top-1 flex h-2 w-2 rounded-full bg-red-500"></span> --}}
+                    @if ($cartItemsCount > 0)
+                        <span class="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-[#b37323] px-1.5 text-[11px] font-bold leading-none text-white">
+                            {{ $cartItemsCount > 99 ? '99+' : $cartItemsCount }}
+                        </span>
+                    @endif
                 </a>
 
                 <a href="#"
