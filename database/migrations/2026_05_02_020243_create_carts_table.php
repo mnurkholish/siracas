@@ -11,6 +11,7 @@ return new class () extends Migration {
     public function up(): void
     {
 
+
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')
@@ -20,25 +21,26 @@ return new class () extends Migration {
             $table->timestamps();
         });
 
-
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('cart_id')
                 ->constrained()
                 ->cascadeOnDelete();
 
             $table->foreignId('product_id')
                 ->constrained()
-                ->cascadeOnDelete();
+                ->restrictOnDelete();
 
-            $table->integer('qty')->default(1);
+            $table->integer('quantity')->default(1);
 
-            $table->decimal('price', 12, 2); // harga saat dimasukkan ke cart
+            $table->decimal('harga_saat_dimasukkan', 12, 2);
 
             $table->timestamps();
 
             $table->unique(['cart_id', 'product_id']);
         });
+
     }
 
     /**
