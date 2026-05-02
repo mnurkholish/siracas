@@ -1,47 +1,35 @@
-<section x-data="{ active: 0, total: 2, timer: null }"
-    x-init="timer = setInterval(() => active = (active + 1) % total, 5200)"
-    @mouseenter="clearInterval(timer)" @mouseleave="timer = setInterval(() => active = (active + 1) % total, 5200)"
-    class="relative h-[620px] overflow-hidden sm:h-[680px] lg:h-[720px]">
+<section class="relative min-h-[620px] overflow-hidden sm:min-h-[680px] lg:min-h-[720px]">
+    <img src="{{ asset('images/banners/banner-2.webp') }}" alt="SIRACAS"
+        class="absolute inset-0 h-full w-full object-cover">
+    <div class="absolute inset-0 bg-gradient-to-r from-[#352820]/85 via-[#6f5a4c]/55 to-[#352820]/15"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_75%_35%,rgba(255,255,255,0.2),transparent_28%)]"></div>
 
-    <div id="slider" class="flex h-full transition-transform duration-700 ease-in-out"
-        :style="`transform: translateX(-${active * 100}%);`">
+    <div class="relative z-10 mx-auto flex min-h-[620px] max-w-7xl items-center px-6 py-28 text-white sm:min-h-[680px] lg:min-h-[720px] lg:px-10">
+        <div class="max-w-2xl drop-shadow-lg" data-reveal>
+            <p class="mb-4 text-sm font-semibold uppercase tracking-[0.35em] text-white/85">
+                Selamat Datang di
+            </p>
 
-        <!-- SLIDE 1 -->
-        <x-home.hero-slide image="{{ asset('images/banners/banner-2.webp') }}" subtitle="Selamat Datang di" title="SIRACAS"
-            description="Rumah alam yang menghadirkan produk cacing, pupuk organik, dan olahan bernilai guna."
-            :showButton="true" buttonText="Belanja Sekarang" buttonLink="#produk" />
+            <h1 class="text-4xl font-black italic leading-tight sm:text-5xl lg:text-6xl">
+                SIRACAS
+            </h1>
 
-        <!-- SLIDE 2 -->
-        <x-home.hero-slide image="{{ asset('images/banners/banner-2.webp') }}" subtitle="Produk Unggulan"
-            title="Pupuk Kascing" description="Pupuk organik berkualitas tinggi untuk meningkatkan kesuburan tanah." />
+            <p class="mt-5 max-w-xl text-sm leading-7 text-white/90 sm:text-base">
+                Rumah alam yang menghadirkan produk cacing, pupuk organik, dan olahan bernilai guna untuk pertanian
+                yang lebih sehat.
+            </p>
 
+            <div class="mt-8 flex flex-wrap gap-4">
+                <a href="#produk"
+                    class="siracas-pulse-soft rounded-full bg-white px-6 py-3 text-sm font-bold text-[#8d715e] shadow transition hover:-translate-y-1 hover:bg-[#fff8f1]">
+                    Belanja Sekarang
+                </a>
+
+                <a href="#tentang"
+                    class="rounded-full border border-white/80 px-6 py-3 text-sm font-semibold transition hover:-translate-y-1 hover:bg-white/10">
+                    Lihat Profil
+                </a>
+            </div>
+        </div>
     </div>
-
-    <div class="absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 items-center gap-3">
-        <template x-for="index in total" :key="index">
-            <button type="button" @click="active = index - 1"
-                class="h-2.5 rounded-full transition-all duration-300"
-                :class="active === index - 1 ? 'w-9 bg-white' : 'w-2.5 bg-white/55 hover:bg-white/80'"
-                :aria-label="`Tampilkan slide ${index}`"></button>
-        </template>
-    </div>
-
-    <button type="button" @click="active = active === 0 ? total - 1 : active - 1"
-        class="absolute left-4 top-1/2 z-30 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-white/15 text-white backdrop-blur transition hover:bg-white/25 sm:inline-flex"
-        aria-label="Slide sebelumnya">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19 8 12l7-7" />
-        </svg>
-    </button>
-
-    <button type="button" @click="active = (active + 1) % total"
-        class="absolute right-4 top-1/2 z-30 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-white/15 text-white backdrop-blur transition hover:bg-white/25 sm:inline-flex"
-        aria-label="Slide berikutnya">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m9 5 7 7-7 7" />
-        </svg>
-    </button>
-
 </section>

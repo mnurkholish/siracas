@@ -1,18 +1,18 @@
-<div class="relative w-full h-full">
-    <img src="{{ asset('images/banners/banner-1.webp') }}" class="absolute inset-0 w-full h-full object-cover">
+<div class="relative h-full w-full overflow-hidden">
+    <img src="{{ asset('images/banners/banner-1.webp') }}" alt="Rumah Alam Sejahtera"
+        class="absolute inset-0 h-full w-full object-cover">
 
-    <div class="absolute inset-0 bg-[#AD998A]/10 backdrop-blur-sm"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-[#3b2e27]/35 via-[#3b2e27]/55 to-[#3b2e27]/80"></div>
 
-    <div class="absolute inset-0 bg-black/50 flex flex-col items-center justify-center text-white text-center px-6">
+    <div class="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center text-white">
         <a href="/">
-            <img src="/images/logo.png" alt="Logo Siracas" class="w-16 mb-2">
+            <img src="/images/logo.png" alt="Logo Siracas" class="mb-4 w-16">
         </a>
 
-        <h1 class="text-2xl font-bold">SIRACAS</h1>
-        <h2 class="mt-1 text-1xl font-medium">Sistem Informasi Rumah Alam Sejahtera</h2>
-        <p class="mt-2 text-xs opacity-90 max-w-sm mx-auto">
-            Manage your worm farming business with ease. Track products, order, and grow your sustainable agriculture
-            business.
+        <p class="text-xs font-semibold uppercase tracking-[0.28em] text-white/75">Rumah Alam Sejahtera</p>
+        <h1 class="mt-3 text-3xl font-black italic">SIRACAS</h1>
+        <p class="mt-4 max-w-sm text-sm leading-6 text-white/90">
+            Kelola produk, pesanan, dan aktivitas usaha cacing secara rapi dalam satu sistem yang mudah digunakan.
         </p>
     </div>
 </div>
