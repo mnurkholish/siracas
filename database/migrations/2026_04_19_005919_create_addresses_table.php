@@ -11,29 +11,44 @@ return new class () extends Migration {
     public function up(): void
     {
         // Region tables (Provinsi, Kota, Kecamatan)
+
+
         Schema::create('provinsis', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->unique();
             $table->string('nama');
+            $table->timestamps();
         });
 
         Schema::create('kotas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('provinsi_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('provinsi_id')->constrained('provinsis')->cascadeOnDelete();
+            $table->string('code')->unique();
             $table->string('nama');
+            $table->timestamps();
         });
 
         Schema::create('kecamatans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('kota_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('kota_id')->constrained('kotas')->cascadeOnDelete();
+            $table->string('code')->unique();
             $table->string('nama');
+            $table->timestamps();
         });
 
-        // Addresses table
         Schema::create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('kecamatan_id')->constrained()->restrictOnDelete();
+
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->foreignId('kecamatan_id')
+                ->constrained('kecamatans')
+                ->restrictOnDelete();
+
             $table->text('detail_alamat');
+
             $table->timestamps();
         });
     }
