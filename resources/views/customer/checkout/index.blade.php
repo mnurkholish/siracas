@@ -70,6 +70,10 @@
 
                     <aside class="rounded-lg border border-[#e2d6cc] bg-white p-5 shadow-sm">
                         <label for="address_id" class="text-sm font-bold text-[#5f4f45]">Alamat</label>
+                        <a href="{{ route('addresses.create', ['return_to' => request()->getRequestUri()]) }}"
+                            class="float-right text-sm font-bold text-[#8c725f] transition hover:text-[#6f5a4c]">
+                            Buat alamat
+                        </a>
                         <select id="address_id" name="address_id"
                             class="mt-2 h-12 w-full rounded-lg border border-[#e1d5cb] bg-[#fbf8f5] px-4 text-sm text-[#5d5048] outline-none focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7]">
                             <option value="">Pilih alamat</option>
@@ -79,6 +83,11 @@
                                 </option>
                             @endforeach
                         </select>
+                        @if ($addresses->isEmpty())
+                            <p class="mt-2 text-xs font-semibold text-[#d94b4b]">
+                                Anda belum punya alamat. Buat alamat terlebih dahulu.
+                            </p>
+                        @endif
 
                         <label for="catatan" class="mt-5 block text-sm font-bold text-[#5f4f45]">Catatan</label>
                         <textarea id="catatan" name="catatan" rows="4"

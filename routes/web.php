@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminTransactionController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\CustomerProductController;
@@ -82,6 +83,10 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/checkout', [TransactionController::class, 'checkoutForm'])->name('checkout.form');
         Route::post('/checkout', [TransactionController::class, 'checkoutProcess'])->name('checkout.process');
+        Route::get('/addresses/create', [AddressController::class, 'create'])->name('addresses.create');
+        Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
+        Route::get('/addresses/wilayah/kotas', [AddressController::class, 'kotas'])->name('addresses.wilayah.kotas');
+        Route::get('/addresses/wilayah/kecamatans', [AddressController::class, 'kecamatans'])->name('addresses.wilayah.kecamatans');
         Route::get('/products/{product}/buy-now', [TransactionController::class, 'buyNowForm'])->name('products.buy-now.form');
         Route::post('/products/{product}/buy-now', [TransactionController::class, 'buyNowProcess'])->name('products.buy-now.process');
         Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
