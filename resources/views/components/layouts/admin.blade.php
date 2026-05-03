@@ -12,7 +12,7 @@
                 ['name' => 'Akun', 'route' => 'admin.profile', 'icon' => 'profile'],
                 ['name' => 'Akun Customer', 'route' => 'admin.customer.index', 'icon' => 'customer'],
                 ['name' => 'Produk', 'route' => 'admin.product.index', 'icon' => 'product'],
-                ['name' => 'Transaksi', 'route' => 'home', 'icon' => 'transaksi'],
+                ['name' => 'Transaksi', 'route' => 'admin.transactions.index', 'icon' => 'transaksi'],
                 ['name' => 'Riwayat Transaksi', 'route' => 'home', 'icon' => 'riwayat'],
                 ['name' => 'Ulasan', 'route' => 'home', 'icon' => 'ulasan'],
                 ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],

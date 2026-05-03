@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\CustomerProductController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionsController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
@@ -61,6 +63,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('/product/archives/{product}/restore', [ProductController::class, 'restore'])->name('product.restore');
         Route::resource('/product', ProductController::class)->except(['create', 'edit']);
 
+        Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions.index');
+        Route::get('/transactions/{transaction}', [AdminTransactionController::class, 'show'])->name('transactions.show');
+        Route::patch('/transactions/{transaction}/status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.status');
+
         Route::get('/profile', [ProfileController::class, 'adminIndex'])->name('profile');
         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
@@ -73,6 +79,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
         Route::patch('/cart/items/{cartItem}', [CartController::class, 'update'])->name('cart.items.update');
         Route::delete('/cart/items/{cartItem}', [CartController::class, 'destroy'])->name('cart.items.destroy');
+
+        Route::get('/checkout', [TransactionController::class, 'checkoutForm'])->name('checkout.form');
+        Route::post('/checkout', [TransactionController::class, 'checkoutProcess'])->name('checkout.process');
+        Route::get('/products/{product}/buy-now', [TransactionController::class, 'buyNowForm'])->name('products.buy-now.form');
+        Route::post('/products/{product}/buy-now', [TransactionController::class, 'buyNowProcess'])->name('products.buy-now.process');
+        Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+        Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
+        Route::patch('/transactions/{transaction}/cancel', [TransactionController::class, 'cancel'])->name('transactions.cancel');
     });
 
     Route::middleware('role:customer')->prefix('customer')->name('customer.')->group(function () {

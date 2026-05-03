@@ -12,6 +12,10 @@
             'nav' => 'Keranjang',
             'route' => route('cart.index'),
         ],
+        [
+            'nav' => 'Transaksi',
+            'route' => route('transactions.index'),
+        ],
     ];
 
     $subtotal = $cartItems->sum(fn ($item) => $item->quantity * (float) $item->harga_saat_dimasukkan);
@@ -138,8 +142,12 @@
                             </div>
                         </div>
                         <div class="mt-5 rounded-lg border border-dashed border-[#d8c8bb] bg-[#fbf8f5] px-4 py-4 text-sm leading-6 text-[#8f8178]">
-                            Checkout akan disambungkan ke transaksi pada tahap berikutnya.
+                            Pastikan quantity dan stok sudah sesuai sebelum melanjutkan transaksi.
                         </div>
+                        <a href="{{ route('checkout.form') }}"
+                            class="mt-4 inline-flex h-12 w-full items-center justify-center rounded-lg bg-[#9e836f] px-5 text-sm font-bold text-white transition hover:bg-[#8a725f]">
+                            Checkout
+                        </a>
                     </aside>
                 </div>
             @endif

@@ -1,0 +1,80 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Transaction extends Model
+{
+    protected $table = 'transactions';
+
+    public const STATUSES = [
+        'pending',
+        'paid',
+        'processing',
+        'completed',
+        'cancelled',
+        'expired',
+    ];
+
+    protected $fillable = [
+        'user_id',
+        'address_id',
+        'tanggal',
+        'catatan',
+        'status',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'tanggal' => 'date',
+        ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function address(): BelongsTo
+    {
+        return $this->belongsTo(Address::class);
+    }
+
+    public function transactionDetails(): HasMany
+    {
+        return $this->hasMany(TransactionDetail::class);
+    }
+
+    public function totalHarga(): float
+    {
+        return (float) $this->transactionDetails->sum(function (TransactionDetail $detail) {
+            return $detail->quantity * (float) $detail->harga_saat_transaksi;
+        });
+    }
+
+    public function totalQuantity(): int
+    {
+        return (int) $this->transactionDetails->sum('quantity');
+    }
+
+    public function ringkasanProduk(): string
+    {
+        $products = $this->transactionDetails
+            ->map(fn (TransactionDetail $detail) => $detail->product?->nama_produk)
+            ->filter()
+            ->values();
+
+        if ($products->isEmpty()) {
+            return '-';
+        }
+
+        $first = $products->first();
+        $remaining = $products->count() - 1;
+
+        return $remaining > 0 ? "{$first} +{$remaining} produk" : $first;
+    }
+}

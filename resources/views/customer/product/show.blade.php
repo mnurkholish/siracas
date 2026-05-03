@@ -16,6 +16,10 @@
             'nav' => 'Keranjang',
             'route' => route('cart.index'),
         ],
+        [
+            'nav' => 'Transaksi',
+            'route' => route('transactions.index'),
+        ],
     ];
 @endphp
 
@@ -76,6 +80,11 @@
                             <button type="submit" @disabled($product->stok <= 0)
                                 class="inline-flex h-12 items-center justify-center rounded-lg bg-[#9e836f] px-5 text-sm font-bold text-white transition hover:bg-[#8a725f] disabled:cursor-not-allowed disabled:bg-[#c9b9ac]">
                                 {{ $product->stok > 0 ? 'Tambahkan ke Keranjang' : 'Stok Habis' }}
+                            </button>
+                            <button type="submit" formmethod="GET" formaction="{{ route('products.buy-now.form', $product) }}"
+                                @disabled($product->stok <= 0)
+                                class="inline-flex h-12 items-center justify-center rounded-lg border border-[#d8c9bc] bg-white px-5 text-sm font-bold text-[#6f5a4c] transition hover:bg-[#f7f1eb] disabled:cursor-not-allowed disabled:bg-[#eee4dc] disabled:text-[#a9988c]">
+                                Beli Sekarang
                             </button>
                         </div>
                     </form>
