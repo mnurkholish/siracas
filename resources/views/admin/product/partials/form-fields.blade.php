@@ -1,7 +1,5 @@
 @php
     $isEdit = $mode === 'edit';
-    $inputBase =
-        'h-12 w-full rounded-md border border-gray-200 bg-white px-4 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]';
 @endphp
 
 <div class="space-y-5" x-data="{ preview: null }">
@@ -43,9 +41,9 @@
     </div>
 
     <div>
-        <label class="mb-2 block text-sm font-bold text-black">Nama Produk</label>
+        <label class="siracas-label text-black">Nama Produk</label>
         <input type="text" name="nama_produk" maxlength="64" value="{{ $isEdit ? '' : old('nama_produk') }}"
-            @if ($isEdit) x-model="selected.nama_produk" @endif class="{{ $inputBase }}">
+            @if ($isEdit) x-model="selected.nama_produk" @endif class="siracas-input siracas-input-control bg-white">
         @error('nama_produk')
             <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
         @enderror
@@ -53,27 +51,27 @@
 
     <div class="grid gap-5 sm:grid-cols-3">
         <div>
-            <label class="mb-2 block text-sm font-bold text-black">Harga</label>
+            <label class="siracas-label text-black">Harga</label>
             <input type="number" name="harga" min="0" step="1" value="{{ $isEdit ? '' : old('harga') }}"
-                @if ($isEdit) x-model="selected.harga" @endif class="{{ $inputBase }}">
+                @if ($isEdit) x-model="selected.harga" @endif class="siracas-input siracas-input-control bg-white">
             @error('harga')
                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
             @enderror
         </div>
 
         <div>
-            <label class="mb-2 block text-sm font-bold text-black">Stok</label>
+            <label class="siracas-label text-black">Stok</label>
             <input type="number" name="stok" min="0" step="1" value="{{ $isEdit ? '' : old('stok') }}"
-                @if ($isEdit) x-model="selected.stok" @endif class="{{ $inputBase }}">
+                @if ($isEdit) x-model="selected.stok" @endif class="siracas-input siracas-input-control bg-white">
             @error('stok')
                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
             @enderror
         </div>
 
         <div>
-            <label class="mb-2 block text-sm font-bold text-black">Satuan</label>
+            <label class="siracas-label text-black">Satuan</label>
             <select name="satuan" @if ($isEdit) x-model="selected.satuan" @endif
-                class="{{ $inputBase }}">
+                class="siracas-input siracas-input-control bg-white">
                 <option value="">Pilih</option>
                 @foreach (App\Models\Product::SATUAN as $value => $label)
                     <option value="{{ $value }}" @selected(!$isEdit && old('satuan') === $value)>{{ $label }}</option>
@@ -86,22 +84,20 @@
     </div>
 
     <div>
-        <label class="mb-2 block text-sm font-bold text-black">Deskripsi</label>
+        <label class="siracas-label text-black">Deskripsi</label>
         <textarea name="deskripsi" rows="4" @if ($isEdit) x-model="selected.deskripsi" @endif
-            class="w-full rounded-md border border-gray-200 bg-white px-4 py-3 text-sm text-gray-700 outline-none transition focus:border-[#9e836f] focus:ring-2 focus:ring-[#e6d8ce]">{{ $isEdit ? '' : old('deskripsi') }}</textarea>
+            class="siracas-input siracas-textarea bg-white">{{ $isEdit ? '' : old('deskripsi') }}</textarea>
         @error('deskripsi')
             <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
         @enderror
     </div>
 
     <div class="grid gap-3 pt-2 sm:flex sm:justify-end">
-        <button type="submit"
-            class="h-10 rounded-lg bg-[#9e836f] px-6 text-sm font-semibold text-white transition hover:bg-[#8a725f] focus:outline-none focus:ring-2 focus:ring-[#c9b5a7]">
+        <x-ui.button type="submit">
             Simpan
-        </button>
-        <button type="button" @click="closeModal()"
-            class="h-10 rounded-lg border border-gray-200 bg-white px-6 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
+        </x-ui.button>
+        <x-ui.button type="button" variant="ghost" @click="closeModal()">
             Batal
-        </button>
+        </x-ui.button>
     </div>
 </div>

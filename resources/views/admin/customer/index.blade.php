@@ -16,30 +16,30 @@
         </form>
     </x-slot:actions>
 
-        <section class="overflow-hidden rounded-md bg-white shadow-sm">
+        <section class="siracas-table-wrap">
             <div class="overflow-x-auto">
-                <table class="w-full min-w-[760px] border-collapse text-center text-black">
+                <table class="siracas-admin-table min-w-[760px] text-center">
                     <thead>
-                        <tr class="bg-[#e3d9d1] text-base">
-                            <th class="px-6 py-5 font-medium">Username</th>
-                            <th class="px-6 py-5 font-medium">Foto Profil</th>
-                            <th class="px-6 py-5 font-medium">Email</th>
-                            <th class="px-6 py-5 font-medium">Aksi</th>
+                        <tr>
+                            <th>Username</th>
+                            <th>Foto Profil</th>
+                            <th>Email</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 text-base">
+                    <tbody>
                         @forelse($customers as $customer)
-                            <tr class="transition hover:bg-gray-50">
-                                <td class="px-6 py-4">{{ $customer->username }}</td>
-                                <td class="px-6 py-4">
+                            <tr>
+                                <td>{{ $customer->username }}</td>
+                                <td>
                                     <div class="flex justify-center">
                                         <img src="{{ $customer->foto_profil ? asset('storage/' . $customer->foto_profil) : asset('images/default-avatar.png') }}"
                                             alt="Foto profil {{ $customer->username }}"
                                             class="h-8 w-8 rounded-full object-cover">
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">{{ $customer->email }}</td>
-                                <td class="px-6 py-4">
+                                <td>{{ $customer->email }}</td>
+                                <td>
                                     <button type="button" onclick="openModal({{ $customer->id }})"
                                         class="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#5b5cff] transition hover:bg-[#f0f0ff] hover:text-[#3f3fff]"
                                         aria-label="Lihat detail {{ $customer->username }}">
@@ -55,7 +55,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+                                <td colspan="4" class="py-12 text-center text-gray-500">
                                     Tidak ada data akun customer ditemukan.
                                 </td>
                             </tr>

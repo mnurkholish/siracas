@@ -14,18 +14,18 @@
 <x-layouts.public title="Buat Alamat - SIRACAS">
     <x-home.navbar :nav-links="$navLinks" />
 
-    <main class="bg-[#f7f2ed] px-6 py-10 lg:px-10">
+    <main class="siracas-page">
         <section class="mx-auto max-w-3xl">
             <a href="{{ $returnTo }}" class="text-sm font-semibold text-[#8c725f] transition hover:text-[#6f5a4c]">
                 Kembali
             </a>
 
-            <div class="mt-4 rounded-lg border border-[#e2d6cc] bg-white p-6 shadow-sm">
-                <p class="text-xs font-bold uppercase tracking-[0.35em] text-[#b7a69a]">Alamat</p>
-                <h1 class="mt-2 text-3xl font-black text-[#6f5a4c]">Buat Alamat Baru</h1>
+            <div class="siracas-card mt-4 p-6">
+                <p class="siracas-eyebrow">Alamat</p>
+                <h1 class="siracas-page-title">Buat Alamat Baru</h1>
 
                 @if ($errors->any())
-                    <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                    <div class="siracas-alert-danger mt-6">
                         {{ $errors->first() }}
                     </div>
                 @endif
@@ -44,9 +44,9 @@
                     <input type="hidden" name="return_to" value="{{ old('return_to', $returnTo) }}">
 
                     <div>
-                        <label for="provinsi" class="mb-2 block text-sm font-bold text-[#5f4f45]">Provinsi</label>
+                        <label for="provinsi" class="siracas-label">Provinsi</label>
                         <select id="provinsi" name="provinsi_id" x-model="provinsiId" @change="onProvinsiChange"
-                            class="h-12 w-full rounded-lg border border-[#e1d5cb] bg-[#fbf8f5] px-4 text-sm text-[#5d5048] outline-none transition focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7]">
+                            class="siracas-input siracas-input-control">
                             <option value="">Pilih provinsi</option>
                             @foreach ($provinsis as $provinsi)
                                 <option value="{{ $provinsi->id }}" @selected((string) $oldProvinsiId === (string) $provinsi->id)>
@@ -57,9 +57,9 @@
                     </div>
 
                     <div>
-                        <label for="kota" class="mb-2 block text-sm font-bold text-[#5f4f45]">Kota</label>
+                        <label for="kota" class="siracas-label">Kota</label>
                         <select id="kota" name="kota_id" x-model="kotaId" @change="onKotaChange" :disabled="!provinsiId || loadingKotas"
-                            class="h-12 w-full rounded-lg border border-[#e1d5cb] bg-[#fbf8f5] px-4 text-sm text-[#5d5048] outline-none transition focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7] disabled:cursor-not-allowed disabled:bg-[#eee4dc]">
+                            class="siracas-input siracas-input-control">
                             <option value="" x-text="loadingKotas ? 'Memuat kota...' : 'Pilih kota'"></option>
                             <template x-for="kota in kotas" :key="kota.id">
                                 <option :value="kota.id" x-text="kota.nama"></option>
@@ -68,9 +68,9 @@
                     </div>
 
                     <div>
-                        <label for="kecamatan_id" class="mb-2 block text-sm font-bold text-[#5f4f45]">Kecamatan</label>
+                        <label for="kecamatan_id" class="siracas-label">Kecamatan</label>
                         <select id="kecamatan_id" name="kecamatan_id" x-model="kecamatanId" :disabled="!kotaId || loadingKecamatans"
-                            class="h-12 w-full rounded-lg border border-[#e1d5cb] bg-[#fbf8f5] px-4 text-sm text-[#5d5048] outline-none transition focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7] disabled:cursor-not-allowed disabled:bg-[#eee4dc]">
+                            class="siracas-input siracas-input-control">
                             <option value="" x-text="loadingKecamatans ? 'Memuat kecamatan...' : 'Pilih kecamatan'"></option>
                             <template x-for="kecamatan in kecamatans" :key="kecamatan.id">
                                 <option :value="kecamatan.id" x-text="kecamatan.nama"></option>
@@ -79,21 +79,19 @@
                     </div>
 
                     <div>
-                        <label for="detail_alamat" class="mb-2 block text-sm font-bold text-[#5f4f45]">Detail Alamat</label>
+                        <label for="detail_alamat" class="siracas-label">Detail Alamat</label>
                         <textarea id="detail_alamat" name="detail_alamat" rows="5"
-                            class="w-full rounded-lg border border-[#e1d5cb] bg-[#fbf8f5] px-4 py-3 text-sm text-[#5d5048] outline-none transition focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7]"
+                            class="siracas-input siracas-textarea"
                             placeholder="Nama jalan, nomor rumah, RT/RW, patokan">{{ old('detail_alamat') }}</textarea>
                     </div>
 
                     <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
-                        <button type="submit"
-                            class="inline-flex h-11 items-center justify-center rounded-lg bg-[#9e836f] px-6 text-sm font-bold text-white transition hover:bg-[#8a725f]">
+                        <x-ui.button type="submit" size="lg">
                             Simpan Alamat
-                        </button>
-                        <a href="{{ $returnTo }}"
-                            class="inline-flex h-11 items-center justify-center rounded-lg border border-[#d8c9bc] bg-white px-6 text-sm font-bold text-[#6f5a4c] transition hover:bg-[#f7f1eb]">
+                        </x-ui.button>
+                        <x-ui.button :href="$returnTo" variant="secondary" size="lg">
                             Batal
-                        </a>
+                        </x-ui.button>
                     </div>
                 </form>
             </div>

@@ -6,25 +6,16 @@
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 
-    $badge = [
-        'pending' => 'bg-yellow-100 text-yellow-800',
-        'paid' => 'bg-blue-100 text-blue-800',
-        'processing' => 'bg-indigo-100 text-indigo-800',
-        'completed' => 'bg-green-100 text-green-800',
-        'cancelled' => 'bg-red-100 text-red-800',
-        'expired' => 'bg-gray-100 text-gray-700',
-    ];
-
     $statusLabel = $transaction->status === 'paid' ? 'Sudah Dibayar' : $transaction->status;
 @endphp
 
 <x-layouts.public title="Detail Transaksi - SIRACAS">
     <x-home.navbar :nav-links="$navLinks" />
 
-    <main class="bg-[#f7f2ed] px-6 py-10 lg:px-10">
+    <main class="siracas-page">
         <section class="mx-auto max-w-6xl">
             @if ($errors->any())
-                <div class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                <div class="siracas-alert-danger mb-6">
                     {{ $errors->first() }}
                 </div>
             @endif
@@ -35,13 +26,13 @@
                     <h1 class="mt-2 text-3xl font-black text-[#6f5a4c]">Detail Transaksi #{{ $transaction->id }}</h1>
                     <p class="mt-1 text-sm text-[#9a8b81]">{{ $transaction->tanggal->format('d M Y') }}</p>
                 </div>
-                <span class="w-fit rounded-full px-3 py-1 text-xs font-bold capitalize {{ $badge[$transaction->status] ?? 'bg-gray-100 text-gray-700' }}">
+                <x-ui.badge :status="$transaction->status">
                     {{ $statusLabel }}
-                </span>
+                </x-ui.badge>
             </div>
 
             <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_340px] lg:items-start">
-                <div class="overflow-hidden rounded-lg border border-[#e2d6cc] bg-white shadow-sm">
+                <div class="siracas-card overflow-hidden">
                     <div class="border-b border-[#eadfd7] px-5 py-4 font-black text-[#5f4f45]">Produk</div>
                     <div class="divide-y divide-[#eadfd7]">
                         @foreach ($transaction->transactionDetails as $detail)
@@ -66,7 +57,7 @@
                     </div>
                 </div>
 
-                <aside class="rounded-lg border border-[#e2d6cc] bg-white p-5 shadow-sm">
+                <aside class="siracas-card p-5">
                     <p class="text-xs font-bold uppercase tracking-[0.3em] text-[#b7a69a]">Alamat</p>
                     <p class="mt-2 text-sm leading-6 text-[#5f4f45]">{{ $transaction->address?->fullAddress() ?: '-' }}</p>
 
@@ -85,18 +76,16 @@
                     @endif
 
                     @if ($transaction->status === 'pending')
-                        <button type="button" id="pay-now-button"
-                            class="mt-5 inline-flex h-11 w-full items-center justify-center rounded-lg bg-[#9e836f] px-5 text-sm font-bold text-white transition hover:bg-[#846d5c]">
+                        <x-ui.button type="button" id="pay-now-button" size="lg" :block="true" class="mt-5">
                             Bayar Sekarang
-                        </button>
+                        </x-ui.button>
 
                         <form action="{{ route('transactions.cancel', $transaction) }}" method="POST" class="cancel-transaction-form mt-5">
                             @csrf
                             @method('PATCH')
-                            <button type="submit"
-                                class="inline-flex h-11 w-full items-center justify-center rounded-lg border border-red-200 bg-red-50 px-5 text-sm font-bold text-red-600 transition hover:bg-red-100">
+                            <x-ui.button type="submit" variant="danger-soft" size="lg" :block="true">
                                 Batalkan Transaksi
-                            </button>
+                            </x-ui.button>
                         </form>
                     @endif
                 </aside>

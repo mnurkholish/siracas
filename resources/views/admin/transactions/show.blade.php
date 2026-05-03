@@ -1,13 +1,4 @@
 @php
-    $badge = [
-        'pending' => 'bg-yellow-100 text-yellow-800',
-        'paid' => 'bg-blue-100 text-blue-800',
-        'processing' => 'bg-indigo-100 text-indigo-800',
-        'completed' => 'bg-green-100 text-green-800',
-        'cancelled' => 'bg-red-100 text-red-800',
-        'expired' => 'bg-gray-100 text-gray-700',
-    ];
-
     $adminStatusOptions = match ($transaction->status) {
         'paid' => ['processing', 'completed'],
         'processing' => ['completed'],
@@ -17,13 +8,13 @@
 
 <x-layouts.admin title="Detail Transaksi #{{ $transaction->id }}" subtitle="Customer: {{ $transaction->user?->username ?? '-' }}">
     @if ($errors->any())
-        <div class="mb-5 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <div class="siracas-alert-danger mb-5">
             {{ $errors->first() }}
         </div>
     @endif
 
     <div class="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
-        <section class="overflow-hidden rounded-md bg-white shadow-sm">
+        <section class="siracas-card overflow-hidden">
             <div class="border-b border-gray-100 px-6 py-5">
                 <h2 class="font-bold text-black">Produk</h2>
             </div>
@@ -48,12 +39,10 @@
             </div>
         </section>
 
-        <aside class="rounded-md bg-white p-6 shadow-sm">
+        <aside class="siracas-card p-6">
             <div class="flex items-center justify-between gap-4">
                 <span class="text-sm font-semibold text-gray-500">Status</span>
-                <span class="rounded-full px-3 py-1 text-xs font-bold capitalize {{ $badge[$transaction->status] ?? 'bg-gray-100 text-gray-700' }}">
-                    {{ $transaction->status }}
-                </span>
+                <x-ui.badge :status="$transaction->status" />
             </div>
 
             <div class="mt-5 border-t border-gray-100 pt-5">
@@ -77,17 +66,16 @@
                     @method('PATCH')
                     <label for="status" class="text-sm font-bold text-black">Ubah Status</label>
                     <select id="status" name="status"
-                        class="mt-2 h-12 w-full rounded-lg border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 outline-none focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7]">
+                        class="siracas-input siracas-input-control mt-2">
                         @foreach ($adminStatusOptions as $status)
                             <option value="{{ $status }}" @selected(old('status') === $status)>
                                 {{ ucfirst($status) }}
                             </option>
                         @endforeach
                     </select>
-                    <button type="submit"
-                        class="mt-4 inline-flex h-11 w-full items-center justify-center rounded-lg bg-[#9e836f] px-5 text-sm font-bold text-white transition hover:bg-[#8a725f]">
+                    <x-ui.button type="submit" size="lg" :block="true" class="mt-4">
                         Simpan Status
-                    </button>
+                    </x-ui.button>
                 </form>
             @else
                 <div class="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-600">

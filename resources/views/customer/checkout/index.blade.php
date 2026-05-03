@@ -12,32 +12,31 @@
 <x-layouts.public title="Checkout - SIRACAS">
     <x-home.navbar :nav-links="$navLinks" />
 
-    <main class="bg-[#f7f2ed] px-6 py-10 lg:px-10">
+    <main class="siracas-page">
         <section class="mx-auto max-w-6xl">
             <div>
-                <p class="text-xs font-bold uppercase tracking-[0.35em] text-[#b7a69a]">Checkout</p>
-                <h1 class="mt-2 text-3xl font-black text-[#6f5a4c]">Konfirmasi Pesanan</h1>
+                <p class="siracas-eyebrow">Checkout</p>
+                <h1 class="siracas-page-title">Konfirmasi Pesanan</h1>
             </div>
 
             @if ($errors->any())
-                <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                <div class="siracas-alert-danger mt-6">
                     {{ $errors->first() }}
                 </div>
             @endif
 
             @if ($cartItems->isEmpty())
-                <div class="mt-8 rounded-lg border border-dashed border-[#d8c8bb] bg-white px-6 py-14 text-center shadow-sm">
+                <div class="siracas-empty mt-8">
                     <h2 class="text-xl font-black text-[#6f5a4c]">Keranjang masih kosong</h2>
-                    <a href="{{ route('customer.product.index') }}"
-                        class="mt-5 inline-flex h-11 items-center justify-center rounded-lg bg-[#9e836f] px-5 text-sm font-bold text-white transition hover:bg-[#8a725f]">
+                    <x-ui.button :href="route('customer.product.index')" size="lg" class="mt-5">
                         Pilih Produk
-                    </a>
+                    </x-ui.button>
                 </div>
             @else
                 <form action="{{ route('checkout.process') }}" method="POST" class="checkout-form mt-8 grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
                     @csrf
 
-                    <div class="overflow-hidden rounded-lg border border-[#e2d6cc] bg-white shadow-sm">
+                    <div class="siracas-card overflow-hidden">
                         <div class="border-b border-[#eadfd7] px-5 py-4">
                             <h2 class="font-black text-[#5f4f45]">Produk</h2>
                         </div>
@@ -68,14 +67,14 @@
                         </div>
                     </div>
 
-                    <aside class="rounded-lg border border-[#e2d6cc] bg-white p-5 shadow-sm">
+                    <aside class="siracas-card p-5">
                         <label for="address_id" class="text-sm font-bold text-[#5f4f45]">Alamat</label>
                         <a href="{{ route('addresses.create', ['return_to' => request()->getRequestUri()]) }}"
                             class="float-right text-sm font-bold text-[#8c725f] transition hover:text-[#6f5a4c]">
                             Buat alamat
                         </a>
                         <select id="address_id" name="address_id"
-                            class="mt-2 h-12 w-full rounded-lg border border-[#e1d5cb] bg-[#fbf8f5] px-4 text-sm text-[#5d5048] outline-none focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7]">
+                            class="siracas-input siracas-input-control mt-2">
                             <option value="">Pilih alamat</option>
                             @foreach ($addresses as $address)
                                 <option value="{{ $address->id }}" @selected(old('address_id') == $address->id)>
@@ -91,7 +90,7 @@
 
                         <label for="catatan" class="mt-5 block text-sm font-bold text-[#5f4f45]">Catatan</label>
                         <textarea id="catatan" name="catatan" rows="4"
-                            class="mt-2 w-full rounded-lg border border-[#e1d5cb] bg-[#fbf8f5] px-4 py-3 text-sm text-[#5d5048] outline-none focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7]"
+                            class="siracas-input siracas-textarea mt-2"
                             placeholder="Opsional">{{ old('catatan') }}</textarea>
 
                         <div class="mt-5 flex items-center justify-between border-t border-[#eadfd7] pt-5">
@@ -99,10 +98,9 @@
                             <span class="text-xl font-black text-[#b37323]">Rp{{ number_format($total, 0, ',', '.') }}</span>
                         </div>
 
-                        <button type="submit"
-                            class="mt-5 inline-flex h-12 w-full items-center justify-center rounded-lg bg-[#9e836f] px-5 text-sm font-bold text-white transition hover:bg-[#8a725f]">
+                        <x-ui.button type="submit" size="xl" :block="true" class="mt-5">
                             Buat Pesanan
-                        </button>
+                        </x-ui.button>
                     </aside>
                 </form>
             @endif

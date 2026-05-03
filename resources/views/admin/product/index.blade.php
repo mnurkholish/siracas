@@ -56,46 +56,44 @@
             </div>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <a href="{{ route('admin.product.archives') }}"
-                    class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-[#d5c6ba] bg-white px-5 text-sm font-semibold text-[#7d6758] shadow-sm transition hover:bg-[#f6f1ee] focus:outline-none focus:ring-2 focus:ring-[#d5c6ba]">
+                <x-ui.button :href="route('admin.product.archives')" variant="secondary" size="lg" class="gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 6v6l4 2m5-2a9 9 0 1 1-3.65-7.24M21 3v6h-6" />
                     </svg>
                     Arsip Produk
-                </a>
-                <button type="button" @click="openCreate()"
-                    class="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#9e836f] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8a725f] focus:outline-none focus:ring-2 focus:ring-[#c9b5a7]">
+                </x-ui.button>
+                <x-ui.button type="button" @click="openCreate()" size="lg" class="gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5" />
                     </svg>
                     Tambah Produk
-                </button>
+                </x-ui.button>
             </div>
         </section>
 
-        <section class="overflow-hidden rounded-md bg-white shadow-sm">
+        <section class="siracas-table-wrap">
             <div class="overflow-x-auto">
-                <table class="w-full min-w-[920px] border-collapse text-left text-black">
+                <table class="siracas-admin-table min-w-[920px]">
                     <thead>
-                        <tr class="bg-[#e3d9d1] text-sm">
-                            <th class="w-20 px-6 py-5 text-center font-semibold">No.</th>
-                            <th class="px-6 py-5 font-semibold">Produk</th>
-                            <th class="px-6 py-5 font-semibold">Harga</th>
-                            <th class="px-6 py-5 font-semibold">Stok</th>
-                            <th class="px-6 py-5 font-semibold">Satuan</th>
-                            <th class="px-6 py-5 text-center font-semibold">Aksi</th>
+                        <tr>
+                            <th class="w-20 text-center">No.</th>
+                            <th>Produk</th>
+                            <th>Harga</th>
+                            <th>Stok</th>
+                            <th>Satuan</th>
+                            <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-gray-200 text-sm">
+                    <tbody>
                         @forelse ($products as $product)
-                            <tr class="transition hover:bg-gray-50">
-                                <td class="px-6 py-4 text-center">
+                            <tr>
+                                <td class="text-center">
                                     {{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}
                                 </td>
-                                <td class="px-6 py-4">
+                                <td>
                                     <div class="flex items-center gap-3">
                                         <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('images/logo.png') }}"
                                             alt="Foto {{ $product->nama_produk }}"
@@ -109,10 +107,10 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4">Rp{{ number_format((float) $product->harga, 0, ',', '.') }}</td>
-                                <td class="px-6 py-4">{{ $product->stok }}</td>
-                                <td class="px-6 py-4">{{ strtoupper($product->satuan) }}</td>
-                                <td class="px-6 py-4">
+                                <td>Rp{{ number_format((float) $product->harga, 0, ',', '.') }}</td>
+                                <td>{{ $product->stok }}</td>
+                                <td>{{ strtoupper($product->satuan) }}</td>
+                                <td>
                                     <div class="flex items-center justify-center gap-2">
                                         <button type="button" @click="openDetail({{ $product->id }})"
                                             class="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#5b5cff] transition hover:bg-[#f0f0ff]"
@@ -150,7 +148,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+                                <td colspan="6" class="py-12 text-center text-gray-500">
                                     Tidak ada data produk ditemukan.
                                 </td>
                             </tr>
@@ -252,11 +250,9 @@
             @endif
         </section>
 
-        <div x-show="activeModal === 'create'" x-cloak
-            class="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8"
-            x-transition.opacity>
+        <div x-show="activeModal === 'create'" x-cloak class="siracas-modal-backdrop" x-transition.opacity>
             <div @click.outside="closeModal()"
-                class="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8">
+                class="siracas-modal-panel max-w-2xl">
                 <h2 class="mb-6 text-lg font-bold text-black">Tambah Produk</h2>
                 <form action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -266,11 +262,9 @@
             </div>
         </div>
 
-        <div x-show="activeModal === 'detail'" x-cloak
-            class="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8"
-            x-transition.opacity>
+        <div x-show="activeModal === 'detail'" x-cloak class="siracas-modal-backdrop" x-transition.opacity>
             <div @click.outside="closeModal()"
-                class="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8">
+                class="siracas-modal-panel max-w-2xl">
                 <div class="mb-6 flex items-start justify-between gap-4">
                     <h2 class="text-lg font-bold text-black">Detail Produk</h2>
                     <button type="button" @click="closeModal()"
@@ -318,11 +312,9 @@
             </div>
         </div>
 
-        <div x-show="activeModal === 'edit'" x-cloak
-            class="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8"
-            x-transition.opacity>
+        <div x-show="activeModal === 'edit'" x-cloak class="siracas-modal-backdrop" x-transition.opacity>
             <div @click.outside="closeModal()"
-                class="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8">
+                class="siracas-modal-panel max-w-2xl">
                 <h2 class="mb-6 text-lg font-bold text-black">Ubah Produk</h2>
                 <template x-if="selected">
                     <form :action="selected.update_url" method="POST" enctype="multipart/form-data">
@@ -336,9 +328,7 @@
             </div>
         </div>
 
-        <div x-show="activeModal === 'delete'" x-cloak
-            class="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8"
-            x-transition.opacity>
+        <div x-show="activeModal === 'delete'" x-cloak class="siracas-modal-backdrop" x-transition.opacity>
             <div @click.outside="closeModal()" class="w-full max-w-md rounded-lg bg-white p-6 shadow-2xl">
                 <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-[#ef3f46]">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
