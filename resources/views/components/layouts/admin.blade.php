@@ -51,7 +51,12 @@
             <nav class="flex flex-1 flex-col gap-2 overflow-y-auto pr-1 text-base">
                 @foreach ($menus as $menu)
                     @php
-                        $active = request()->routeIs($menu['route'] . '*');
+                        $routeParts = explode('.', $menu['route']);
+                        $activePattern =
+                            count($routeParts) > 2
+                                ? $routeParts[0] . '.' . $routeParts[1] . '.*'
+                                : $menu['route'] . '*';
+                        $active = request()->routeIs($activePattern);
                     @endphp
 
                     <a href="{{ route($menu['route']) }}" title="{{ $menu['name'] }}" @click="sidebarOpen = false"
