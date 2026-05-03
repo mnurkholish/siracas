@@ -8,13 +8,13 @@
 
 <x-layouts.admin title="Detail Transaksi #{{ $transaction->id }}" subtitle="Customer: {{ $transaction->user?->username ?? '-' }}">
     @if ($errors->any())
-        <div class="siracas-alert-danger mb-5">
+        <div class="alert-danger mb-5">
             {{ $errors->first() }}
         </div>
     @endif
 
     <div class="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
-        <section class="siracas-card overflow-hidden">
+        <section class="card overflow-hidden">
             <div class="border-b border-gray-100 px-6 py-5">
                 <h2 class="font-bold text-black">Produk</h2>
             </div>
@@ -26,9 +26,9 @@
                                 alt="{{ $detail->product?->nama_produk ?? 'Produk' }}"
                                 class="h-16 w-16 rounded-md border border-gray-200 object-cover">
                             <div>
-                                <h3 class="font-bold text-[#3f3935]">{{ $detail->product?->nama_produk ?? 'Produk tidak tersedia' }}</h3>
+                                <h3 class="font-bold text-muted-dark">{{ $detail->product?->nama_produk ?? 'Produk tidak tersedia' }}</h3>
                                 <p class="mt-1 text-sm text-gray-500">Quantity: {{ $detail->quantity }}</p>
-                                <p class="mt-1 text-sm font-semibold text-[#9e836f]">
+                                <p class="mt-1 text-sm font-semibold text-primary">
                                     Rp{{ number_format((float) $detail->harga_saat_transaksi, 0, ',', '.') }}
                                 </p>
                             </div>
@@ -39,10 +39,10 @@
             </div>
         </section>
 
-        <aside class="siracas-card p-6">
+        <aside class="card p-6">
             <div class="flex items-center justify-between gap-4">
                 <span class="text-sm font-semibold text-gray-500">Status</span>
-                <x-ui.badge :status="$transaction->status" />
+                <x-badge :status="$transaction->status" />
             </div>
 
             <div class="mt-5 border-t border-gray-100 pt-5">
@@ -57,7 +57,7 @@
 
             <div class="mt-5 flex items-center justify-between border-t border-gray-100 pt-5">
                 <span class="text-sm font-semibold text-gray-500">Total Harga</span>
-                <span class="text-xl font-bold text-[#9e836f]">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
+                <span class="text-xl font-bold text-primary">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
             </div>
 
             @if ($adminStatusOptions !== [])
@@ -66,16 +66,16 @@
                     @method('PATCH')
                     <label for="status" class="text-sm font-bold text-black">Ubah Status</label>
                     <select id="status" name="status"
-                        class="siracas-input siracas-input-control mt-2">
+                        class="form-control input-control mt-2">
                         @foreach ($adminStatusOptions as $status)
                             <option value="{{ $status }}" @selected(old('status') === $status)>
                                 {{ ucfirst($status) }}
                             </option>
                         @endforeach
                     </select>
-                    <x-ui.button type="submit" size="lg" :block="true" class="mt-4">
+                    <x-button type="submit" size="lg" :block="true" class="mt-4">
                         Simpan Status
-                    </x-ui.button>
+                    </x-button>
                 </form>
             @else
                 <div class="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-600">
@@ -99,8 +99,8 @@
                     showCancelButton: true,
                     confirmButtonText: 'Ya, perbarui',
                     cancelButtonText: 'Batal',
-                    confirmButtonColor: '#9e836f',
-                    cancelButtonColor: '#d94b4b',
+                    confirmButtonColor: themeColor('primary'),
+                    cancelButtonColor: themeColor('danger'),
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();

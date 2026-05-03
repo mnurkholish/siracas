@@ -4,7 +4,7 @@
 
 <x-layouts.app :title="$title">
 
-    <body class="min-h-screen bg-[#f7f2ed] text-[#6d5b50] antialiased">
+    <body class="min-h-screen bg-secondary-soft text-text-body antialiased">
         {{ $slot }}
         <script>
             @if (session('success'))

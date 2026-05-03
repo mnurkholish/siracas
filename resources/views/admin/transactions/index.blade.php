@@ -1,7 +1,7 @@
 <x-layouts.admin title="Transaksi" subtitle="Kelola semua pesanan customer SIRACAS.">
-    <section class="siracas-table-wrap">
+    <section class="table-wrap">
         <div class="overflow-x-auto">
-            <table class="siracas-admin-table min-w-[760px]">
+            <table class="admin-table min-w-[760px]">
                 <thead>
                     <tr>
                         <th>Customer</th>
@@ -13,17 +13,17 @@
                 <tbody>
                     @forelse ($transactions as $transaction)
                         <tr>
-                            <td class="font-semibold text-[#3f3935]">
+                            <td class="font-semibold text-muted-dark">
                                 {{ $transaction->user?->username ?? '-' }}
                             </td>
                             <td class="text-gray-600">{{ $transaction->tanggal->format('d M Y') }}</td>
                             <td>
-                                <x-ui.badge :status="$transaction->status" />
+                                <x-badge :status="$transaction->status" />
                             </td>
                             <td class="text-right">
-                                <x-ui.button :href="route('admin.transactions.show', $transaction)" size="sm">
+                                <x-button :href="route('admin.transactions.show', $transaction)" size="sm">
                                     Detail
-                                </x-ui.button>
+                                </x-button>
                             </td>
                         </tr>
                     @empty

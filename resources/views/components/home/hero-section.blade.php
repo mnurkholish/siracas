@@ -1,7 +1,7 @@
 <section class="relative min-h-[620px] overflow-hidden sm:min-h-[680px] lg:min-h-[720px]">
     <img src="{{ asset('images/banners/banner-2.webp') }}" alt="SIRACAS"
         class="absolute inset-0 h-full w-full object-cover">
-    <div class="absolute inset-0 bg-gradient-to-r from-[#352820]/85 via-[#6f5a4c]/55 to-[#352820]/15"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-stone-950/85 via-text-body/55 to-stone-950/15"></div>
     <div class="absolute inset-0 bg-[radial-gradient(circle_at_75%_35%,rgba(255,255,255,0.2),transparent_28%)]"></div>
 
     <div class="relative z-10 mx-auto flex min-h-[620px] max-w-7xl items-center px-6 py-28 text-white sm:min-h-[680px] lg:min-h-[720px] lg:px-10">
@@ -21,7 +21,7 @@
 
             <div class="mt-8 flex flex-wrap gap-4">
                 <a href="#produk"
-                    class="siracas-pulse-soft rounded-full bg-white px-6 py-3 text-sm font-bold text-[#8d715e] shadow transition hover:-translate-y-1 hover:bg-[#fff8f1]">
+                    class="pulse-soft rounded-full bg-white px-6 py-3 text-sm font-bold text-primary-dark shadow transition hover:-translate-y-1 hover:bg-primary-soft">
                     Belanja Sekarang
                 </a>
 

@@ -17,15 +17,15 @@
     transform: translateY(0);
 }
 
-.siracas-float {
-    animation: siracas-float 4.8s ease-in-out infinite;
+.float-soft {
+    animation: float-soft 4.8s ease-in-out infinite;
 }
 
-.siracas-pulse-soft {
-    animation: siracas-pulse-soft 2.8s ease-in-out infinite;
+.pulse-soft {
+    animation: pulse-soft 2.8s ease-in-out infinite;
 }
 
-@keyframes siracas-float {
+@keyframes float-soft {
     0%,
     100% {
         transform: translateY(0);
@@ -36,7 +36,7 @@
     }
 }
 
-@keyframes siracas-pulse-soft {
+@keyframes pulse-soft {
     0%,
     100% {
         box-shadow: 0 0 0 0 rgba(166, 134, 109, 0.28);
@@ -74,117 +74,147 @@
         "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
         "Noto Color Emoji";
 
-    /* Warna kustom SIRACAS */
-    --color-primary: #9e826d;
-    --color-secondary: #eae6df;
+    --color-primary: #9e836f;
+    --color-primary-dark: #8a725f;
+    --color-primary-soft: #f7f1eb;
+
+    --color-secondary: #e3d9d1;
+    --color-secondary-soft: #f7f2ed;
+
+    --color-accent: #b37323;
+    --color-accent-soft: #f1e7df;
+
+    --color-muted: #9a8b81;
+    --color-muted-dark: #5f4f45;
+    --color-muted-light: #b7a69a;
+
+    --color-danger: #ef3f46;
+    --color-danger-dark: #dc2626;
+    --color-danger-soft: #fef2f2;
+
+    --color-success: #166534;
+    --color-success-soft: #dcfce7;
+
+    --color-warning: #854d0e;
+    --color-warning-soft: #fef3c7;
+
+    --color-info: #1d4ed8;
+    --color-info-soft: #dbeafe;
+
+    --color-surface: #fbf8f5;
+    --color-surface-disabled: #eee4dc;
+    --color-border: #e2d6cc;
+    --color-border-soft: #eadfd7;
+    --color-border-strong: #d8c9bc;
 
     --color-background: #fafafa;
 
     --color-text-primary: #222222;
+    --color-text-body: #6d5b50;
 }
 
 @layer components {
-    .siracas-page {
-        @apply bg-[#f7f2ed] px-5 py-10 sm:px-6 lg:px-10;
+    .page {
+        @apply bg-secondary-soft px-5 py-10 sm:px-6 lg:px-10;
     }
 
-    .siracas-container {
+    .page-container {
         @apply mx-auto w-full max-w-7xl;
     }
 
-    .siracas-eyebrow {
-        @apply text-xs font-bold uppercase tracking-[0.35em] text-[#b7a69a];
+    .eyebrow {
+        @apply text-xs font-bold uppercase tracking-[0.35em] text-muted-light;
     }
 
-    .siracas-page-title {
-        @apply mt-2 text-3xl font-black text-[#6f5a4c];
+    .page-title {
+        @apply mt-2 text-3xl font-black text-text-body;
     }
 
-    .siracas-card {
-        @apply rounded-lg border border-[#e2d6cc] bg-white shadow-sm;
+    .card {
+        @apply rounded-lg border border-border bg-white shadow-sm;
     }
 
-    .siracas-empty {
-        @apply rounded-lg border border-dashed border-[#d8c8bb] bg-white px-6 py-14 text-center shadow-sm;
+    .empty-state {
+        @apply rounded-lg border border-dashed border-border-strong bg-white px-6 py-14 text-center shadow-sm;
     }
 
-    .siracas-table-wrap {
-        @apply overflow-hidden rounded-lg border border-[#e2d6cc] bg-white shadow-sm;
+    .table-wrap {
+        @apply overflow-hidden rounded-lg border border-border bg-white shadow-sm;
     }
 
-    .siracas-table {
+    .data-table {
         @apply w-full text-left text-sm;
     }
 
-    .siracas-table thead {
-        @apply bg-[#e3d9d1] text-[#4f443d];
+    .data-table thead {
+        @apply bg-secondary text-muted-dark;
     }
 
-    .siracas-table th {
+    .data-table th {
         @apply px-5 py-4 font-bold;
     }
 
-    .siracas-table td {
+    .data-table td {
         @apply px-5 py-4;
     }
 
-    .siracas-table tbody {
-        @apply divide-y divide-[#eadfd7];
+    .data-table tbody {
+        @apply divide-y divide-border-soft;
     }
 
-    .siracas-table tbody tr {
-        @apply transition hover:bg-[#fbf8f5];
+    .data-table tbody tr {
+        @apply transition hover:bg-surface;
     }
 
-    .siracas-admin-table {
+    .admin-table {
         @apply w-full border-collapse text-left text-sm text-black;
     }
 
-    .siracas-admin-table thead tr {
-        @apply bg-[#e3d9d1];
+    .admin-table thead tr {
+        @apply bg-secondary;
     }
 
-    .siracas-admin-table th {
+    .admin-table th {
         @apply px-6 py-5 font-semibold;
     }
 
-    .siracas-admin-table td {
+    .admin-table td {
         @apply px-6 py-4;
     }
 
-    .siracas-admin-table tbody {
+    .admin-table tbody {
         @apply divide-y divide-gray-200;
     }
 
-    .siracas-admin-table tbody tr {
+    .admin-table tbody tr {
         @apply transition hover:bg-gray-50;
     }
 
-    .siracas-label {
-        @apply mb-2 block text-sm font-bold text-[#5f4f45];
+    .form-label {
+        @apply mb-2 block text-sm font-bold text-muted-dark;
     }
 
-    .siracas-input {
-        @apply w-full rounded-lg border border-[#e1d5cb] bg-[#fbf8f5] px-4 text-sm text-[#5d5048] outline-none transition focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7] disabled:cursor-not-allowed disabled:bg-[#eee4dc];
+    .form-control {
+        @apply w-full rounded-lg border border-border-strong bg-surface px-4 text-sm text-muted-dark outline-none transition focus:border-primary focus:bg-white focus:ring-2 focus:ring-border-soft disabled:cursor-not-allowed disabled:bg-surface-disabled;
     }
 
-    .siracas-input-control {
+    .input-control {
         @apply h-12;
     }
 
-    .siracas-textarea {
+    .textarea-control {
         @apply min-h-28 py-3;
     }
 
-    .siracas-alert-danger {
-        @apply rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700;
+    .alert-danger {
+        @apply rounded-lg border border-red-200 bg-danger-soft px-4 py-3 text-sm font-semibold text-red-700;
     }
 
-    .siracas-modal-backdrop {
+    .modal-backdrop {
         @apply fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8;
     }
 
-    .siracas-modal-panel {
+    .modal-panel {
         @apply max-h-[calc(100vh-3rem)] w-full overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8;
     }
 }

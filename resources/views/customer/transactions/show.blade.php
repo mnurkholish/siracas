@@ -12,44 +12,44 @@
 <x-layouts.public title="Detail Transaksi - SIRACAS">
     <x-home.navbar :nav-links="$navLinks" />
 
-    <main class="siracas-page">
+    <main class="page">
         <section class="mx-auto max-w-6xl">
             @if ($errors->any())
-                <div class="siracas-alert-danger mb-6">
+                <div class="alert-danger mb-6">
                     {{ $errors->first() }}
                 </div>
             @endif
 
             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                    <a href="{{ route('transactions.index') }}" class="text-sm font-semibold text-[#8c725f]">Kembali</a>
-                    <h1 class="mt-2 text-3xl font-black text-[#6f5a4c]">Detail Transaksi #{{ $transaction->id }}</h1>
-                    <p class="mt-1 text-sm text-[#9a8b81]">{{ $transaction->tanggal->format('d M Y') }}</p>
+                    <a href="{{ route('transactions.index') }}" class="text-sm font-semibold text-primary-dark">Kembali</a>
+                    <h1 class="mt-2 text-3xl font-black text-text-body">Detail Transaksi #{{ $transaction->id }}</h1>
+                    <p class="mt-1 text-sm text-muted">{{ $transaction->tanggal->format('d M Y') }}</p>
                 </div>
-                <x-ui.badge :status="$transaction->status">
+                <x-badge :status="$transaction->status">
                     {{ $statusLabel }}
-                </x-ui.badge>
+                </x-badge>
             </div>
 
             <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_340px] lg:items-start">
-                <div class="siracas-card overflow-hidden">
-                    <div class="border-b border-[#eadfd7] px-5 py-4 font-black text-[#5f4f45]">Produk</div>
-                    <div class="divide-y divide-[#eadfd7]">
+                <div class="card overflow-hidden">
+                    <div class="border-b border-border-soft px-5 py-4 font-black text-muted-dark">Produk</div>
+                    <div class="divide-y divide-border-soft">
                         @foreach ($transaction->transactionDetails as $detail)
                             <article class="grid gap-4 px-5 py-5 sm:grid-cols-[1fr_auto] sm:items-center">
                                 <div class="flex gap-4">
                                     <img src="{{ $detail->product?->foto ? asset('storage/' . $detail->product->foto) : asset('images/banners/banner-2.webp') }}"
                                         alt="{{ $detail->product?->nama_produk ?? 'Produk' }}"
-                                        class="h-20 w-20 rounded-lg border border-[#eadfd7] object-cover">
+                                        class="h-20 w-20 rounded-lg border border-border-soft object-cover">
                                     <div>
-                                        <h2 class="font-black text-[#5f4f45]">{{ $detail->product?->nama_produk ?? 'Produk tidak tersedia' }}</h2>
-                                        <p class="mt-1 text-sm text-[#8f8178]">Qty: {{ $detail->quantity }}</p>
-                                        <p class="mt-1 text-sm font-bold text-[#b37323]">
+                                        <h2 class="font-black text-muted-dark">{{ $detail->product?->nama_produk ?? 'Produk tidak tersedia' }}</h2>
+                                        <p class="mt-1 text-sm text-muted">Qty: {{ $detail->quantity }}</p>
+                                        <p class="mt-1 text-sm font-bold text-accent">
                                             Rp{{ number_format((float) $detail->harga_saat_transaksi, 0, ',', '.') }}
                                         </p>
                                     </div>
                                 </div>
-                                <p class="text-lg font-black text-[#6f5a4c]">
+                                <p class="text-lg font-black text-text-body">
                                     Rp{{ number_format($detail->subtotal(), 0, ',', '.') }}
                                 </p>
                             </article>
@@ -57,16 +57,16 @@
                     </div>
                 </div>
 
-                <aside class="siracas-card p-5">
-                    <p class="text-xs font-bold uppercase tracking-[0.3em] text-[#b7a69a]">Alamat</p>
-                    <p class="mt-2 text-sm leading-6 text-[#5f4f45]">{{ $transaction->address?->fullAddress() ?: '-' }}</p>
+                <aside class="card p-5">
+                    <p class="text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Alamat</p>
+                    <p class="mt-2 text-sm leading-6 text-muted-dark">{{ $transaction->address?->fullAddress() ?: '-' }}</p>
 
-                    <p class="mt-5 text-xs font-bold uppercase tracking-[0.3em] text-[#b7a69a]">Catatan</p>
-                    <p class="mt-2 text-sm leading-6 text-[#5f4f45]">{{ $transaction->catatan ?: '-' }}</p>
+                    <p class="mt-5 text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Catatan</p>
+                    <p class="mt-2 text-sm leading-6 text-muted-dark">{{ $transaction->catatan ?: '-' }}</p>
 
-                    <div class="mt-5 flex items-center justify-between border-t border-[#eadfd7] pt-5">
-                        <span class="text-sm font-semibold text-[#8f8178]">Total</span>
-                        <span class="text-xl font-black text-[#b37323]">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
+                    <div class="mt-5 flex items-center justify-between border-t border-border-soft pt-5">
+                        <span class="text-sm font-semibold text-muted">Total</span>
+                        <span class="text-xl font-black text-accent">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
                     </div>
 
                     @if ($transaction->status === 'paid')
@@ -76,16 +76,16 @@
                     @endif
 
                     @if ($transaction->status === 'pending')
-                        <x-ui.button type="button" id="pay-now-button" size="lg" :block="true" class="mt-5">
+                        <x-button type="button" id="pay-now-button" size="lg" :block="true" class="mt-5">
                             Bayar Sekarang
-                        </x-ui.button>
+                        </x-button>
 
                         <form action="{{ route('transactions.cancel', $transaction) }}" method="POST" class="cancel-transaction-form mt-5">
                             @csrf
                             @method('PATCH')
-                            <x-ui.button type="submit" variant="danger-soft" size="lg" :block="true">
+                            <x-button type="submit" variant="danger-soft" size="lg" :block="true">
                                 Batalkan Transaksi
-                            </x-ui.button>
+                            </x-button>
                         </form>
                     @endif
                 </aside>
@@ -162,8 +162,8 @@
                     showCancelButton: true,
                     confirmButtonText: 'Ya, batalkan',
                     cancelButtonText: 'Batal',
-                    confirmButtonColor: '#9e836f',
-                    cancelButtonColor: '#d94b4b',
+                    confirmButtonColor: themeColor('primary'),
+                    cancelButtonColor: themeColor('danger'),
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();

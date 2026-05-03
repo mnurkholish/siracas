@@ -22,7 +22,7 @@
         <input id="{{ $name }}" type="{{ $type }}" name="{{ $name }}"
             placeholder="{{ $placeholder }}" value="{{ $value ?: old($name) }}" {{ $readonly ? 'readonly' : '' }}
             autocomplete="{{ $autocomplete }}"
-            class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#9E826D] focus:shadow-md outline-none transition">
+            class="w-full px-4 py-3 pr-12 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:shadow-md outline-none transition">
 
         <!-- ICON PASSWORD -->
         @if ($type === 'password')

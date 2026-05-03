@@ -24,9 +24,9 @@
     <x-slot:actions>
         <form action="{{ route('admin.product.index') }}" method="GET" class="relative w-full sm:w-[430px]">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk berdasarkan nama"
-                class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-[#d5c6ba] sm:px-8 sm:text-base">
+                class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-border-strong sm:px-8 sm:text-base">
             <button type="submit"
-                class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-[#7d6758]"
+                class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-primary-dark"
                 aria-label="Cari produk">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -56,27 +56,27 @@
             </div>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <x-ui.button :href="route('admin.product.archives')" variant="secondary" size="lg" class="gap-2">
+                <x-button :href="route('admin.product.archives')" variant="secondary" size="lg" class="gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 6v6l4 2m5-2a9 9 0 1 1-3.65-7.24M21 3v6h-6" />
                     </svg>
                     Arsip Produk
-                </x-ui.button>
-                <x-ui.button type="button" @click="openCreate()" size="lg" class="gap-2">
+                </x-button>
+                <x-button type="button" @click="openCreate()" size="lg" class="gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5" />
                     </svg>
                     Tambah Produk
-                </x-ui.button>
+                </x-button>
             </div>
         </section>
 
-        <section class="siracas-table-wrap">
+        <section class="table-wrap">
             <div class="overflow-x-auto">
-                <table class="siracas-admin-table min-w-[920px]">
+                <table class="admin-table min-w-[920px]">
                     <thead>
                         <tr>
                             <th class="w-20 text-center">No.</th>
@@ -99,7 +99,7 @@
                                             alt="Foto {{ $product->nama_produk }}"
                                             class="h-12 w-12 rounded-md border border-gray-200 object-cover">
                                         <div class="min-w-0">
-                                            <p class="truncate font-semibold text-[#3f3935]">{{ $product->nama_produk }}
+                                            <p class="truncate font-semibold text-muted-dark">{{ $product->nama_produk }}
                                             </p>
                                             <p class="line-clamp-1 text-xs text-gray-500">
                                                 {{ $product->deskripsi ?: 'Belum ada deskripsi' }}
@@ -113,7 +113,7 @@
                                 <td>
                                     <div class="flex items-center justify-center gap-2">
                                         <button type="button" @click="openDetail({{ $product->id }})"
-                                            class="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#5b5cff] transition hover:bg-[#f0f0ff]"
+                                            class="inline-flex h-9 w-9 items-center justify-center rounded-full text-indigo-600 transition hover:bg-indigo-50"
                                             aria-label="Lihat {{ $product->nama_produk }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -124,7 +124,7 @@
                                             </svg>
                                         </button>
                                         <button type="button" @click="openEdit({{ $product->id }})"
-                                            class="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#d49a00] transition hover:bg-[#fff8df]"
+                                            class="inline-flex h-9 w-9 items-center justify-center rounded-full text-warning transition hover:bg-warning-soft"
                                             aria-label="Ubah {{ $product->nama_produk }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -135,7 +135,7 @@
                                             </svg>
                                         </button>
                                         <button type="button" @click="openDelete({{ $product->id }})"
-                                            class="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#ef3f46] transition hover:bg-red-50"
+                                            class="inline-flex h-9 w-9 items-center justify-center rounded-full text-danger transition hover:bg-red-50"
                                             aria-label="Hapus {{ $product->nama_produk }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -204,12 +204,12 @@
                                 @php $separatorShown = false; @endphp
                                 @if ($page === $currentPage)
                                     <span
-                                        class="inline-flex h-9 min-w-9 items-center justify-center rounded bg-[#e3d9d1] px-3 text-sm font-semibold text-black">
+                                        class="inline-flex h-9 min-w-9 items-center justify-center rounded bg-secondary px-3 text-sm font-semibold text-black">
                                         {{ $page }}
                                     </span>
                                 @else
                                     <a href="{{ $products->url($page) }}"
-                                        class="inline-flex h-9 min-w-9 items-center justify-center rounded border border-gray-300 bg-white px-3 text-sm text-black transition hover:border-[#a98c77] hover:bg-[#f6f1ee]">
+                                        class="inline-flex h-9 min-w-9 items-center justify-center rounded border border-gray-300 bg-white px-3 text-sm text-black transition hover:border-primary hover:bg-primary-soft">
                                         {{ $page }}
                                     </a>
                                 @endif
@@ -250,9 +250,9 @@
             @endif
         </section>
 
-        <div x-show="activeModal === 'create'" x-cloak class="siracas-modal-backdrop" x-transition.opacity>
+        <div x-show="activeModal === 'create'" x-cloak class="modal-backdrop" x-transition.opacity>
             <div @click.outside="closeModal()"
-                class="siracas-modal-panel max-w-2xl">
+                class="modal-panel max-w-2xl">
                 <h2 class="mb-6 text-lg font-bold text-black">Tambah Produk</h2>
                 <form action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -262,9 +262,9 @@
             </div>
         </div>
 
-        <div x-show="activeModal === 'detail'" x-cloak class="siracas-modal-backdrop" x-transition.opacity>
+        <div x-show="activeModal === 'detail'" x-cloak class="modal-backdrop" x-transition.opacity>
             <div @click.outside="closeModal()"
-                class="siracas-modal-panel max-w-2xl">
+                class="modal-panel max-w-2xl">
                 <div class="mb-6 flex items-start justify-between gap-4">
                     <h2 class="text-lg font-bold text-black">Detail Produk</h2>
                     <button type="button" @click="closeModal()"
@@ -279,7 +279,7 @@
                             <img :src="selected.foto_url"
                                 class="h-48 w-48 rounded-lg border border-gray-200 object-cover">
 
-                            <h3 class="mt-4 text-xl font-bold text-[#3f3935]" x-text="selected.nama_produk"></h3>
+                            <h3 class="mt-4 text-xl font-bold text-muted-dark" x-text="selected.nama_produk"></h3>
                         </div>
 
                         <!-- STOK & SATUAN -->
@@ -296,9 +296,9 @@
                         </div>
 
                         <!-- HARGA (FULL WIDTH) -->
-                        <div class="mt-4 rounded-md border border-gray-100 bg-[#f6f1ee] px-4 py-4 text-center">
+                        <div class="mt-4 rounded-md border border-gray-100 bg-primary-soft px-4 py-4 text-center">
                             <p class="text-xs font-semibold uppercase text-gray-500">Harga</p>
-                            <p class="mt-1 text-lg font-bold text-[#9e836f]" x-text="currency(selected.harga)"></p>
+                            <p class="mt-1 text-lg font-bold text-primary" x-text="currency(selected.harga)"></p>
                         </div>
 
                         <!-- DESKRIPSI -->
@@ -312,9 +312,9 @@
             </div>
         </div>
 
-        <div x-show="activeModal === 'edit'" x-cloak class="siracas-modal-backdrop" x-transition.opacity>
+        <div x-show="activeModal === 'edit'" x-cloak class="modal-backdrop" x-transition.opacity>
             <div @click.outside="closeModal()"
-                class="siracas-modal-panel max-w-2xl">
+                class="modal-panel max-w-2xl">
                 <h2 class="mb-6 text-lg font-bold text-black">Ubah Produk</h2>
                 <template x-if="selected">
                     <form :action="selected.update_url" method="POST" enctype="multipart/form-data">
@@ -328,9 +328,9 @@
             </div>
         </div>
 
-        <div x-show="activeModal === 'delete'" x-cloak class="siracas-modal-backdrop" x-transition.opacity>
+        <div x-show="activeModal === 'delete'" x-cloak class="modal-backdrop" x-transition.opacity>
             <div @click.outside="closeModal()" class="w-full max-w-md rounded-lg bg-white p-6 shadow-2xl">
-                <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-[#ef3f46]">
+                <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-danger">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -348,7 +348,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit"
-                            class="h-10 rounded-lg bg-[#ef3f46] px-6 text-sm font-semibold text-white transition hover:bg-red-600">
+                            class="h-10 rounded-lg bg-danger px-6 text-sm font-semibold text-white transition hover:bg-red-600">
                             Yakin
                         </button>
                         <button type="button" @click="closeModal()"

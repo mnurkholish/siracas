@@ -26,7 +26,7 @@
         <!-- BUTTON -->
         <div class="text-center">
             <label for="{{ $mode }}_foto"
-                class="inline-flex h-10 cursor-pointer items-center rounded-lg bg-[#9e836f] px-5 text-sm font-semibold text-white hover:bg-[#8a725f]">
+                class="inline-flex h-10 cursor-pointer items-center rounded-lg bg-primary px-5 text-sm font-semibold text-white hover:bg-primary-dark">
                 Unggah Foto
             </label>
 
@@ -41,9 +41,9 @@
     </div>
 
     <div>
-        <label class="siracas-label text-black">Nama Produk</label>
+        <label class="form-label text-black">Nama Produk</label>
         <input type="text" name="nama_produk" maxlength="64" value="{{ $isEdit ? '' : old('nama_produk') }}"
-            @if ($isEdit) x-model="selected.nama_produk" @endif class="siracas-input siracas-input-control bg-white">
+            @if ($isEdit) x-model="selected.nama_produk" @endif class="form-control input-control bg-white">
         @error('nama_produk')
             <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
         @enderror
@@ -51,27 +51,27 @@
 
     <div class="grid gap-5 sm:grid-cols-3">
         <div>
-            <label class="siracas-label text-black">Harga</label>
+            <label class="form-label text-black">Harga</label>
             <input type="number" name="harga" min="0" step="1" value="{{ $isEdit ? '' : old('harga') }}"
-                @if ($isEdit) x-model="selected.harga" @endif class="siracas-input siracas-input-control bg-white">
+                @if ($isEdit) x-model="selected.harga" @endif class="form-control input-control bg-white">
             @error('harga')
                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
             @enderror
         </div>
 
         <div>
-            <label class="siracas-label text-black">Stok</label>
+            <label class="form-label text-black">Stok</label>
             <input type="number" name="stok" min="0" step="1" value="{{ $isEdit ? '' : old('stok') }}"
-                @if ($isEdit) x-model="selected.stok" @endif class="siracas-input siracas-input-control bg-white">
+                @if ($isEdit) x-model="selected.stok" @endif class="form-control input-control bg-white">
             @error('stok')
                 <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
             @enderror
         </div>
 
         <div>
-            <label class="siracas-label text-black">Satuan</label>
+            <label class="form-label text-black">Satuan</label>
             <select name="satuan" @if ($isEdit) x-model="selected.satuan" @endif
-                class="siracas-input siracas-input-control bg-white">
+                class="form-control input-control bg-white">
                 <option value="">Pilih</option>
                 @foreach (App\Models\Product::SATUAN as $value => $label)
                     <option value="{{ $value }}" @selected(!$isEdit && old('satuan') === $value)>{{ $label }}</option>
@@ -84,20 +84,20 @@
     </div>
 
     <div>
-        <label class="siracas-label text-black">Deskripsi</label>
+        <label class="form-label text-black">Deskripsi</label>
         <textarea name="deskripsi" rows="4" @if ($isEdit) x-model="selected.deskripsi" @endif
-            class="siracas-input siracas-textarea bg-white">{{ $isEdit ? '' : old('deskripsi') }}</textarea>
+            class="form-control textarea-control bg-white">{{ $isEdit ? '' : old('deskripsi') }}</textarea>
         @error('deskripsi')
             <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
         @enderror
     </div>
 
     <div class="grid gap-3 pt-2 sm:flex sm:justify-end">
-        <x-ui.button type="submit">
+        <x-button type="submit">
             Simpan
-        </x-ui.button>
-        <x-ui.button type="button" variant="ghost" @click="closeModal()">
+        </x-button>
+        <x-button type="button" variant="ghost" @click="closeModal()">
             Batal
-        </x-ui.button>
+        </x-button>
     </div>
 </div>

@@ -14,18 +14,18 @@
 <x-layouts.public title="Buat Alamat - SIRACAS">
     <x-home.navbar :nav-links="$navLinks" />
 
-    <main class="siracas-page">
+    <main class="page">
         <section class="mx-auto max-w-3xl">
-            <a href="{{ $returnTo }}" class="text-sm font-semibold text-[#8c725f] transition hover:text-[#6f5a4c]">
+            <a href="{{ $returnTo }}" class="text-sm font-semibold text-primary-dark transition hover:text-text-body">
                 Kembali
             </a>
 
-            <div class="siracas-card mt-4 p-6">
-                <p class="siracas-eyebrow">Alamat</p>
-                <h1 class="siracas-page-title">Buat Alamat Baru</h1>
+            <div class="card mt-4 p-6">
+                <p class="eyebrow">Alamat</p>
+                <h1 class="page-title">Buat Alamat Baru</h1>
 
                 @if ($errors->any())
-                    <div class="siracas-alert-danger mt-6">
+                    <div class="alert-danger mt-6">
                         {{ $errors->first() }}
                     </div>
                 @endif
@@ -44,9 +44,9 @@
                     <input type="hidden" name="return_to" value="{{ old('return_to', $returnTo) }}">
 
                     <div>
-                        <label for="provinsi" class="siracas-label">Provinsi</label>
+                        <label for="provinsi" class="form-label">Provinsi</label>
                         <select id="provinsi" name="provinsi_id" x-model="provinsiId" @change="onProvinsiChange"
-                            class="siracas-input siracas-input-control">
+                            class="form-control input-control">
                             <option value="">Pilih provinsi</option>
                             @foreach ($provinsis as $provinsi)
                                 <option value="{{ $provinsi->id }}" @selected((string) $oldProvinsiId === (string) $provinsi->id)>
@@ -57,9 +57,9 @@
                     </div>
 
                     <div>
-                        <label for="kota" class="siracas-label">Kota</label>
+                        <label for="kota" class="form-label">Kota</label>
                         <select id="kota" name="kota_id" x-model="kotaId" @change="onKotaChange" :disabled="!provinsiId || loadingKotas"
-                            class="siracas-input siracas-input-control">
+                            class="form-control input-control">
                             <option value="" x-text="loadingKotas ? 'Memuat kota...' : 'Pilih kota'"></option>
                             <template x-for="kota in kotas" :key="kota.id">
                                 <option :value="kota.id" x-text="kota.nama"></option>
@@ -68,9 +68,9 @@
                     </div>
 
                     <div>
-                        <label for="kecamatan_id" class="siracas-label">Kecamatan</label>
+                        <label for="kecamatan_id" class="form-label">Kecamatan</label>
                         <select id="kecamatan_id" name="kecamatan_id" x-model="kecamatanId" :disabled="!kotaId || loadingKecamatans"
-                            class="siracas-input siracas-input-control">
+                            class="form-control input-control">
                             <option value="" x-text="loadingKecamatans ? 'Memuat kecamatan...' : 'Pilih kecamatan'"></option>
                             <template x-for="kecamatan in kecamatans" :key="kecamatan.id">
                                 <option :value="kecamatan.id" x-text="kecamatan.nama"></option>
@@ -79,19 +79,19 @@
                     </div>
 
                     <div>
-                        <label for="detail_alamat" class="siracas-label">Detail Alamat</label>
+                        <label for="detail_alamat" class="form-label">Detail Alamat</label>
                         <textarea id="detail_alamat" name="detail_alamat" rows="5"
-                            class="siracas-input siracas-textarea"
+                            class="form-control textarea-control"
                             placeholder="Nama jalan, nomor rumah, RT/RW, patokan">{{ old('detail_alamat') }}</textarea>
                     </div>
 
                     <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
-                        <x-ui.button type="submit" size="lg">
+                        <x-button type="submit" size="lg">
                             Simpan Alamat
-                        </x-ui.button>
-                        <x-ui.button :href="$returnTo" variant="secondary" size="lg">
+                        </x-button>
+                        <x-button :href="$returnTo" variant="secondary" size="lg">
                             Batal
-                        </x-ui.button>
+                        </x-button>
                     </div>
                 </form>
             </div>

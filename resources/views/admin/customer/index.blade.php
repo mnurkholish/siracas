@@ -3,9 +3,9 @@
         <form action="{{ route('admin.customer.index') }}" method="GET" class="relative w-full sm:w-[410px]">
             <input type="text" name="search" value="{{ request('search') }}"
                 placeholder="Cari berdasarkan nama atau id"
-                class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-[#d5c6ba] sm:px-8 sm:text-base">
+                class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-border-strong sm:px-8 sm:text-base">
             <button type="submit"
-                class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-[#7d6758]"
+                class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-primary-dark"
                 aria-label="Cari customer">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -16,9 +16,9 @@
         </form>
     </x-slot:actions>
 
-        <section class="siracas-table-wrap">
+        <section class="table-wrap">
             <div class="overflow-x-auto">
-                <table class="siracas-admin-table min-w-[760px] text-center">
+                <table class="admin-table min-w-[760px] text-center">
                     <thead>
                         <tr>
                             <th>Username</th>
@@ -41,7 +41,7 @@
                                 <td>{{ $customer->email }}</td>
                                 <td>
                                     <button type="button" onclick="openModal({{ $customer->id }})"
-                                        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-[#5b5cff] transition hover:bg-[#f0f0ff] hover:text-[#3f3fff]"
+                                        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-indigo-600 transition hover:bg-indigo-50 hover:text-indigo-700"
                                         aria-label="Lihat detail {{ $customer->username }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -108,12 +108,12 @@
                             @php $separatorShown = false; @endphp
                             @if ($page === $currentPage)
                                 <span
-                                    class="inline-flex h-9 min-w-9 items-center justify-center rounded bg-[#e3d9d1] px-3 text-base font-semibold text-black">
+                                    class="inline-flex h-9 min-w-9 items-center justify-center rounded bg-secondary px-3 text-base font-semibold text-black">
                                     {{ $page }}
                                 </span>
                             @else
                                 <a href="{{ $customers->url($page) }}"
-                                    class="inline-flex h-9 min-w-9 items-center justify-center rounded border border-gray-300 bg-white px-3 text-base text-black transition hover:border-[#a98c77] hover:bg-[#f6f1ee]">
+                                    class="inline-flex h-9 min-w-9 items-center justify-center rounded border border-gray-300 bg-white px-3 text-base text-black transition hover:border-primary hover:bg-primary-soft">
                                     {{ $page }}
                                 </a>
                             @endif

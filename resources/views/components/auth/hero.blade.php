@@ -2,7 +2,7 @@
     <img src="{{ asset('images/banners/banner-1.webp') }}" alt="Rumah Alam Sejahtera"
         class="absolute inset-0 h-full w-full object-cover">
 
-    <div class="absolute inset-0 bg-gradient-to-b from-[#3b2e27]/35 via-[#3b2e27]/55 to-[#3b2e27]/80"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-stone-900/35 via-stone-900/55 to-stone-900/80"></div>
 
     <div class="relative z-10 flex h-full flex-col items-center justify-center px-8 text-center text-white">
         <a href="/">

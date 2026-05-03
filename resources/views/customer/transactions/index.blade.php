@@ -11,21 +11,21 @@
 <x-layouts.public title="Transaksi - SIRACAS">
     <x-home.navbar :nav-links="$navLinks" />
 
-    <main class="siracas-page">
-        <section class="siracas-container">
+    <main class="page">
+        <section class="page-container">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                    <p class="siracas-eyebrow">Transaksi</p>
-                    <h1 class="siracas-page-title">Pesanan Saya</h1>
+                    <p class="eyebrow">Transaksi</p>
+                    <h1 class="page-title">Pesanan Saya</h1>
                 </div>
-                <x-ui.button :href="route('customer.product.index')" variant="secondary" size="lg">
+                <x-button :href="route('customer.product.index')" variant="secondary" size="lg">
                     Belanja Lagi
-                </x-ui.button>
+                </x-button>
             </div>
 
-            <div class="siracas-table-wrap mt-8">
+            <div class="table-wrap mt-8">
                 <div class="overflow-x-auto">
-                    <table class="siracas-table min-w-[840px]">
+                    <table class="data-table min-w-[840px]">
                         <thead>
                             <tr>
                                 <th>Produk</th>
@@ -39,24 +39,24 @@
                         <tbody>
                             @forelse ($transactions as $transaction)
                                 <tr>
-                                    <td class="font-semibold text-[#5f4f45]">{{ $transaction->ringkasanProduk() }}</td>
-                                    <td class="text-[#8f8178]">{{ $transaction->totalQuantity() }}</td>
-                                    <td class="font-black text-[#b37323]">
+                                    <td class="font-semibold text-muted-dark">{{ $transaction->ringkasanProduk() }}</td>
+                                    <td class="text-muted">{{ $transaction->totalQuantity() }}</td>
+                                    <td class="font-black text-accent">
                                         Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}
                                     </td>
-                                    <td class="text-[#8f8178]">{{ $transaction->tanggal->format('d M Y') }}</td>
+                                    <td class="text-muted">{{ $transaction->tanggal->format('d M Y') }}</td>
                                     <td>
-                                        <x-ui.badge :status="$transaction->status" />
+                                        <x-badge :status="$transaction->status" />
                                     </td>
                                     <td class="text-right">
-                                        <x-ui.button :href="route('transactions.show', $transaction)" size="sm">
+                                        <x-button :href="route('transactions.show', $transaction)" size="sm">
                                             Detail
-                                        </x-ui.button>
+                                        </x-button>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="py-12 text-center text-[#9a8b81]">
+                                    <td colspan="6" class="py-12 text-center text-muted">
                                         Belum ada transaksi.
                                     </td>
                                 </tr>
@@ -66,7 +66,7 @@
                 </div>
 
                 @if ($transactions->hasPages())
-                    <div class="border-t border-[#eadfd7] px-5 py-4">
+                    <div class="border-t border-border-soft px-5 py-4">
                         {{ $transactions->links() }}
                     </div>
                 @endif

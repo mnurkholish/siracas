@@ -5,7 +5,7 @@
 ])
 
 <x-layouts.public :title="$title ? $title . ' - SIRACAS' : 'Admin - SIRACAS'">
-    <div x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false" class="min-h-screen bg-[#f7f7f7] text-black">
+    <div x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false" class="min-h-screen bg-background text-black">
         @php
             $menus = [
                 ['name' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => 'dashboard'],
@@ -25,7 +25,7 @@
             class="fixed inset-0 z-40 bg-black/35 lg:hidden"></div>
 
         <aside
-            class="fixed inset-y-0 left-0 z-50 flex w-[260px] max-w-[82vw] -translate-x-full flex-col bg-[#a98c77] px-3 py-5 text-white shadow-lg transition-transform duration-200 lg:translate-x-0 lg:py-7"
+            class="fixed inset-y-0 left-0 z-50 flex w-[260px] max-w-[82vw] -translate-x-full flex-col bg-primary px-3 py-5 text-white shadow-lg transition-transform duration-200 lg:translate-x-0 lg:py-7"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
             <div class="mb-5 flex h-10 items-center justify-between gap-3 px-2">
                 <a href="/" class="flex min-w-0 items-center gap-4">
@@ -100,9 +100,9 @@
         </aside>
 
         <div class="lg:pl-[260px]">
-            <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-[#e8dfd8] bg-white/95 px-4 backdrop-blur lg:hidden">
+            <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border-soft bg-white/95 px-4 backdrop-blur lg:hidden">
                 <button type="button" @click="sidebarOpen = true"
-                    class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-[#e8dfd8] text-[#6f5a4c] transition hover:bg-[#f7f1eb]"
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-soft text-text-body transition hover:bg-primary-soft"
                     aria-label="Buka menu admin">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
@@ -112,7 +112,7 @@
 
                 <div class="flex min-w-0 items-center gap-3">
                     <img src="{{ asset('images/logo.png') }}" alt="Logo SIRACAS" class="h-8 w-8 rounded-full object-cover">
-                    <span class="truncate text-lg font-bold tracking-wide text-[#6f5a4c]">SIRACAS</span>
+                    <span class="truncate text-lg font-bold tracking-wide text-text-body">SIRACAS</span>
                 </div>
 
                 <div class="h-10 w-10"></div>

@@ -2,9 +2,9 @@
     <x-slot:actions>
         <form action="{{ route('admin.product.archives') }}" method="GET" class="relative w-full sm:w-[430px]">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk yang dihapus"
-                class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-[#d5c6ba] sm:px-8 sm:text-base">
+                class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-border-strong sm:px-8 sm:text-base">
             <button type="submit"
-                class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-[#7d6758]"
+                class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-primary-dark"
                 aria-label="Cari produk arsip">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor" stroke-width="2">
@@ -28,7 +28,7 @@
         </div>
 
         <a href="{{ route('admin.product.index') }}"
-            class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-[#d5c6ba] bg-white px-5 text-sm font-semibold text-[#7d6758] shadow-sm transition hover:bg-[#f6f1ee] focus:outline-none focus:ring-2 focus:ring-[#d5c6ba]">
+            class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-border-strong bg-white px-5 text-sm font-semibold text-primary-dark shadow-sm transition hover:bg-primary-soft focus:outline-none focus:ring-2 focus:ring-border-strong">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m0 0 6 6m-6-6 6-6" />
@@ -41,7 +41,7 @@
         <div class="overflow-x-auto">
             <table class="w-full min-w-[920px] border-collapse text-left text-black">
                 <thead>
-                    <tr class="bg-[#e3d9d1] text-sm">
+                    <tr class="bg-secondary text-sm">
                         <th class="w-20 px-6 py-5 text-center font-semibold">No.</th>
                         <th class="px-6 py-5 font-semibold">Produk</th>
                         <th class="px-6 py-5 font-semibold">Harga</th>
@@ -62,7 +62,7 @@
                                         alt="Foto {{ $product->nama_produk }}"
                                         class="h-12 w-12 rounded-md border border-gray-200 object-cover">
                                     <div class="min-w-0">
-                                        <p class="truncate font-semibold text-[#3f3935]">{{ $product->nama_produk }}</p>
+                                        <p class="truncate font-semibold text-muted-dark">{{ $product->nama_produk }}</p>
                                         <p class="line-clamp-1 text-xs text-gray-500">
                                             {{ $product->deskripsi ?: 'Belum ada deskripsi' }}
                                         </p>
@@ -80,7 +80,7 @@
                                     @csrf
                                     @method('PATCH')
                                     <button type="submit"
-                                        class="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-[#59815f] px-4 text-sm font-semibold text-white transition hover:bg-[#4f7355]">
+                                        class="inline-flex h-9 items-center justify-center gap-2 rounded-lg bg-success px-4 text-sm font-semibold text-white transition hover:bg-success">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
                                             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round"

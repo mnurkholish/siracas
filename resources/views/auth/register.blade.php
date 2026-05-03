@@ -16,7 +16,7 @@
             <div class="mb-3">
                 <label class="block text-sm mb-1 text-gray-700 font-medium">Jenis Kelamin</label>
                 <select name="jenis_kelamin"
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#9E826D] focus:shadow-md outline-none transition">
+                    class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:shadow-md outline-none transition">
                     <option value="" {{ old('jenis_kelamin') ? '' : 'selected' }}>
                         Pilih jenis kelamin
                     </option>
