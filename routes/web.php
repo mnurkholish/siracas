@@ -57,6 +57,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/akun-customer', [CustomerAccountController::class, 'index'])->name('customer.index');
         Route::get('/akun-customer/{id}', [CustomerAccountController::class, 'show'])->name('customer.show');
 
+        Route::get('/product/archives', [ProductController::class, 'archives'])->name('product.archives');
+        Route::patch('/product/archives/{product}/restore', [ProductController::class, 'restore'])->name('product.restore');
         Route::resource('/product', ProductController::class)->except(['create', 'edit']);
 
         Route::get('/profile', [ProfileController::class, 'adminIndex'])->name('profile');

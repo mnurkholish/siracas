@@ -55,14 +55,25 @@
                 <p class="mt-1 text-sm text-gray-500">Kelola produk yang tampil dan dipakai dalam transaksi SIRACAS.</p>
             </div>
 
-            <button type="button" @click="openCreate()"
-                class="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#9e836f] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8a725f] focus:outline-none focus:ring-2 focus:ring-[#c9b5a7]">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5" />
-                </svg>
-                Tambah Produk
-            </button>
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <a href="{{ route('admin.product.archives') }}"
+                    class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-[#d5c6ba] bg-white px-5 text-sm font-semibold text-[#7d6758] shadow-sm transition hover:bg-[#f6f1ee] focus:outline-none focus:ring-2 focus:ring-[#d5c6ba]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 6v6l4 2m5-2a9 9 0 1 1-3.65-7.24M21 3v6h-6" />
+                    </svg>
+                    Arsip Produk
+                </a>
+                <button type="button" @click="openCreate()"
+                    class="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-[#9e836f] px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#8a725f] focus:outline-none focus:ring-2 focus:ring-[#c9b5a7]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5" />
+                    </svg>
+                    Tambah Produk
+                </button>
+            </div>
         </section>
 
         <section class="overflow-hidden rounded-md bg-white shadow-sm">

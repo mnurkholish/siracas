@@ -27,6 +27,23 @@ class ProductController extends Controller
         return view('admin.product.index', compact('products'));
     }
 
+    public function archives(Request $request)
+    {
+        $query = Product::onlyTrashed();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_produk', 'like', "%{$search}%")
+                    ->orWhere('satuan', 'like', "%{$search}%");
+            });
+        }
+
+        $products = $query->latest('deleted_at')->paginate(8)->withQueryString();
+
+        return view('admin.product.archives', compact('products'));
+    }
+
     public function store(Request $request)
     {
         $data = $this->validatedProduct($request);
@@ -124,6 +141,16 @@ class ProductController extends Controller
         return redirect()
             ->route('admin.product.index')
             ->with('success', 'Produk berhasil dihapus');
+    }
+
+    public function restore($product)
+    {
+        $product = Product::onlyTrashed()->findOrFail($product);
+        $product->restore();
+
+        return redirect()
+            ->route('admin.product.archives')
+            ->with('success', 'Produk berhasil dikembalikan');
     }
 
     private function validatedProduct(Request $request): array
