@@ -7,6 +7,12 @@
         'cancelled' => 'bg-red-100 text-red-800',
         'expired' => 'bg-gray-100 text-gray-700',
     ];
+
+    $adminStatusOptions = match ($transaction->status) {
+        'paid' => ['processing', 'completed'],
+        'processing' => ['completed'],
+        default => [],
+    };
 @endphp
 
 <x-layouts.admin title="Detail Transaksi #{{ $transaction->id }}" subtitle="Customer: {{ $transaction->user?->username ?? '-' }}">
@@ -65,23 +71,33 @@
                 <span class="text-xl font-bold text-[#9e836f]">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
             </div>
 
-            <form action="{{ route('admin.transactions.status', $transaction) }}" method="POST" class="update-status-form mt-6">
-                @csrf
-                @method('PATCH')
-                <label for="status" class="text-sm font-bold text-black">Ubah Status</label>
-                <select id="status" name="status"
-                    class="mt-2 h-12 w-full rounded-lg border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 outline-none focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7]">
-                    @foreach (\App\Models\Transaction::STATUSES as $status)
-                        <option value="{{ $status }}" @selected(old('status', $transaction->status) === $status)>
-                            {{ ucfirst($status) }}
-                        </option>
-                    @endforeach
-                </select>
-                <button type="submit"
-                    class="mt-4 inline-flex h-11 w-full items-center justify-center rounded-lg bg-[#9e836f] px-5 text-sm font-bold text-white transition hover:bg-[#8a725f]">
-                    Simpan Status
-                </button>
-            </form>
+            @if ($adminStatusOptions !== [])
+                <form action="{{ route('admin.transactions.status', $transaction) }}" method="POST" class="update-status-form mt-6">
+                    @csrf
+                    @method('PATCH')
+                    <label for="status" class="text-sm font-bold text-black">Ubah Status</label>
+                    <select id="status" name="status"
+                        class="mt-2 h-12 w-full rounded-lg border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 outline-none focus:border-[#a6866d] focus:bg-white focus:ring-2 focus:ring-[#eadfd7]">
+                        @foreach ($adminStatusOptions as $status)
+                            <option value="{{ $status }}" @selected(old('status') === $status)>
+                                {{ ucfirst($status) }}
+                            </option>
+                        @endforeach
+                    </select>
+                    <button type="submit"
+                        class="mt-4 inline-flex h-11 w-full items-center justify-center rounded-lg bg-[#9e836f] px-5 text-sm font-bold text-white transition hover:bg-[#8a725f]">
+                        Simpan Status
+                    </button>
+                </form>
+            @else
+                <div class="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-600">
+                    @if ($transaction->status === 'pending')
+                        Menunggu pembayaran customer
+                    @else
+                        Status transaksi sudah final
+                    @endif
+                </div>
+            @endif
         </aside>
     </div>
 

@@ -9,6 +9,11 @@ use Illuminate\Validation\Rule;
 
 class AdminTransactionController extends Controller
 {
+    private const ADMIN_STATUS_TRANSITIONS = [
+        'paid' => ['processing', 'completed'],
+        'processing' => ['completed'],
+    ];
+
     public function index()
     {
         $transactions = Transaction::query()
@@ -33,11 +38,19 @@ class AdminTransactionController extends Controller
 
     public function updateStatus(Request $request, Transaction $transaction)
     {
+        $allowedStatuses = self::ADMIN_STATUS_TRANSITIONS[$transaction->status] ?? [];
+
+        if ($allowedStatuses === []) {
+            return back()->withErrors([
+                'status' => 'Status transaksi belum bisa diubah',
+            ]);
+        }
+
         $validated = $request->validate([
-            'status' => ['required', Rule::in(Transaction::STATUSES)],
+            'status' => ['required', Rule::in($allowedStatuses)],
         ], [
             'status.required' => 'Status wajib dipilih.',
-            'status.in' => 'Status tidak valid.',
+            'status.in' => 'Status transaksi belum bisa diubah',
         ]);
 
         $transaction->update([
