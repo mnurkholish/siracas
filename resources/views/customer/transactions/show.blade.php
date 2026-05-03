@@ -14,6 +14,8 @@
         'cancelled' => 'bg-red-100 text-red-800',
         'expired' => 'bg-gray-100 text-gray-700',
     ];
+
+    $statusLabel = $transaction->status === 'paid' ? 'Sudah Dibayar' : $transaction->status;
 @endphp
 
 <x-layouts.public title="Detail Transaksi - SIRACAS">
@@ -34,7 +36,7 @@
                     <p class="mt-1 text-sm text-[#9a8b81]">{{ $transaction->tanggal->format('d M Y') }}</p>
                 </div>
                 <span class="w-fit rounded-full px-3 py-1 text-xs font-bold capitalize {{ $badge[$transaction->status] ?? 'bg-gray-100 text-gray-700' }}">
-                    {{ $transaction->status }}
+                    {{ $statusLabel }}
                 </span>
             </div>
 
@@ -76,7 +78,18 @@
                         <span class="text-xl font-black text-[#b37323]">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
                     </div>
 
+                    @if ($transaction->status === 'paid')
+                        <div class="mt-5 rounded-lg bg-blue-50 px-4 py-3 text-center text-sm font-bold text-blue-700">
+                            Sudah Dibayar
+                        </div>
+                    @endif
+
                     @if ($transaction->status === 'pending')
+                        <button type="button" id="pay-now-button"
+                            class="mt-5 inline-flex h-11 w-full items-center justify-center rounded-lg bg-[#9e836f] px-5 text-sm font-bold text-white transition hover:bg-[#846d5c]">
+                            Bayar Sekarang
+                        </button>
+
                         <form action="{{ route('transactions.cancel', $transaction) }}" method="POST" class="cancel-transaction-form mt-5">
                             @csrf
                             @method('PATCH')
@@ -91,7 +104,66 @@
         </section>
     </main>
 
+    @if ($transaction->status === 'pending')
+        <script src="https://app.sandbox.midtrans.com/snap/snap.js"
+            data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+    @endif
+
     <script>
+        const payNowButton = document.getElementById('pay-now-button');
+
+        if (payNowButton) {
+            payNowButton.addEventListener('click', async () => {
+                payNowButton.disabled = true;
+                payNowButton.textContent = 'Memproses...';
+
+                try {
+                    const response = await fetch("{{ route('transactions.pay', $transaction) }}", {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                        },
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        const message = data.message || Object.values(data.errors || {})?.[0]?.[0] || 'Gagal memulai pembayaran.';
+                        throw new Error(message);
+                    }
+
+                    if (!window.snap) {
+                        throw new Error('Midtrans Snap belum siap.');
+                    }
+
+                    window.snap.pay(data.snap_token, {
+                        onSuccess: () => window.location.reload(),
+                        onPending: () => window.location.reload(),
+                        onError: () => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Pembayaran gagal diproses.',
+                            });
+                        },
+                        onClose: () => {
+                            payNowButton.disabled = false;
+                            payNowButton.textContent = 'Bayar Sekarang';
+                        },
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: error.message,
+                    });
+
+                    payNowButton.disabled = false;
+                    payNowButton.textContent = 'Bayar Sekarang';
+                }
+            });
+        }
+
         document.querySelectorAll('.cancel-transaction-form').forEach((form) => {
             form.addEventListener('submit', function (event) {
                 event.preventDefault();

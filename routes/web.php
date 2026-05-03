@@ -1,16 +1,17 @@
 <?php
 
-use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\CustomerProductController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MidtransCallbackController;
 use App\Http\Controllers\NewPasswordController;
 use App\Http\Controllers\PasswordResetLinkController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\TransactionController;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 // 1. PUBLIC ROUTES
 // ==========================================
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
+Route::post('/midtrans/callback', MidtransCallbackController::class)->name('midtrans.callback');
 
 // ==========================================
 // 2. GUEST ROUTES
@@ -34,7 +35,6 @@ Route::middleware('guest')->group(function () {
     Route::get('login', [SessionsController::class, 'create'])->name('login');
     Route::post('login', [SessionsController::class, 'store']);
 
-
     // Lupa Password
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
@@ -44,7 +44,6 @@ Route::middleware('guest')->group(function () {
     Route::post('reset-password', [NewPasswordController::class, 'store'])->name('password.update');
 
 });
-
 
 // ==========================================
 // 3. AUTHENTICATED ROUTES
@@ -73,7 +72,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
     });
 
-
     // -- Customer Routes --
     Route::middleware('role:customer')->group(function () {
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
@@ -91,6 +89,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/products/{product}/buy-now', [TransactionController::class, 'buyNowProcess'])->name('products.buy-now.process');
         Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
+        Route::post('/transactions/{transaction}/pay', [TransactionController::class, 'pay'])->name('transactions.pay');
         Route::patch('/transactions/{transaction}/cancel', [TransactionController::class, 'cancel'])->name('transactions.cancel');
     });
 

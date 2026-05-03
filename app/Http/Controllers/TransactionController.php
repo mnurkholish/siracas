@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
-use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -40,13 +41,13 @@ class TransactionController extends Controller
             ->with(['cartItems.product'])
             ->first();
 
-        if (!$cart || $cart->cartItems->isEmpty()) {
+        if (! $cart || $cart->cartItems->isEmpty()) {
             throw ValidationException::withMessages([
                 'cart' => 'Keranjang tidak boleh kosong.',
             ]);
         }
 
-        DB::transaction(function () use ($cart, $validated) {
+        $transaction = DB::transaction(function () use ($cart, $validated) {
             $transaction = Transaction::create([
                 'user_id' => Auth::id(),
                 'address_id' => $validated['address_id'],
@@ -61,7 +62,7 @@ class TransactionController extends Controller
                     ->lockForUpdate()
                     ->first();
 
-                if (!$product || $product->stok < $cartItem->quantity) {
+                if (! $product || $product->stok < $cartItem->quantity) {
                     throw ValidationException::withMessages([
                         'cart' => "Stok {$cartItem->product?->nama_produk} tidak mencukupi.",
                     ]);
@@ -77,10 +78,12 @@ class TransactionController extends Controller
             }
 
             $cart->cartItems()->delete();
+
+            return $transaction;
         });
 
         return redirect()
-            ->route('transactions.index')
+            ->route('transactions.show', $transaction)
             ->with('success', 'Pesanan berhasil!');
     }
 
@@ -108,7 +111,7 @@ class TransactionController extends Controller
             'quantity.min' => 'Quantity minimal 1.',
         ]);
 
-        DB::transaction(function () use ($product, $validated) {
+        $transaction = DB::transaction(function () use ($product, $validated) {
             $lockedProduct = Product::query()
                 ->whereKey($product->id)
                 ->lockForUpdate()
@@ -135,10 +138,12 @@ class TransactionController extends Controller
             ]);
 
             $lockedProduct->decrement('stok', (int) $validated['quantity']);
+
+            return $transaction;
         });
 
         return redirect()
-            ->route('transactions.index')
+            ->route('transactions.show', $transaction)
             ->with('success', 'Pesanan berhasil!');
     }
 
@@ -161,6 +166,91 @@ class TransactionController extends Controller
         $transaction->load(['transactionDetails.product', 'address.kecamatan.kota.provinsi']);
 
         return view('customer.transactions.show', compact('transaction'));
+    }
+
+    public function pay(Transaction $transaction)
+    {
+        $this->authorizeCustomerTransaction($transaction);
+
+        if ($transaction->status !== 'pending') {
+            throw ValidationException::withMessages([
+                'status' => 'Hanya transaksi pending yang dapat dibayar.',
+            ]);
+        }
+
+        $transaction->loadMissing(['transactionDetails.product', 'user']);
+        $itemDetails = $transaction->transactionDetails
+            ->map(fn ($detail) => [
+                'id' => (string) $detail->product_id,
+                'price' => (int) round((float) $detail->harga_saat_transaksi),
+                'quantity' => (int) $detail->quantity,
+                'name' => Str::limit($detail->product?->nama_produk ?? 'Produk', 50, ''),
+            ])
+            ->values();
+        $grossAmount = (int) $itemDetails->sum(fn ($detail) => $detail['price'] * $detail['quantity']);
+
+        if ($grossAmount <= 0) {
+            throw ValidationException::withMessages([
+                'total' => 'Total pembayaran tidak valid.',
+            ]);
+        }
+
+        if ($transaction->snap_token) {
+            return response()->json([
+                'snap_token' => $transaction->snap_token,
+            ]);
+        }
+
+        $serverKey = config('services.midtrans.server_key');
+
+        if (! $serverKey) {
+            throw ValidationException::withMessages([
+                'payment' => 'Konfigurasi Midtrans belum lengkap.',
+            ]);
+        }
+
+        if (! $transaction->order_id) {
+            $transaction->forceFill([
+                'order_id' => $this->generateOrderId($transaction),
+            ])->save();
+        }
+
+        $response = Http::withBasicAuth($serverKey, '')
+            ->acceptJson()
+            ->asJson()
+            ->post(config('services.midtrans.snap_url'), [
+                'transaction_details' => [
+                    'order_id' => $transaction->order_id,
+                    'gross_amount' => $grossAmount,
+                ],
+                'item_details' => $itemDetails->all(),
+                'customer_details' => [
+                    'first_name' => $transaction->user?->name ?? 'Customer',
+                    'email' => $transaction->user?->email,
+                ],
+                'callbacks' => [
+                    'finish' => route('transactions.show', $transaction),
+                ],
+            ]);
+
+        if ($response->failed() || ! $response->json('token')) {
+            logger()->warning('Midtrans Snap token request failed.', [
+                'transaction_id' => $transaction->id,
+                'response' => $response->body(),
+            ]);
+
+            throw ValidationException::withMessages([
+                'payment' => 'Gagal membuat token pembayaran Midtrans.',
+            ]);
+        }
+
+        $transaction->update([
+            'snap_token' => $response->json('token'),
+        ]);
+
+        return response()->json([
+            'snap_token' => $transaction->snap_token,
+        ]);
     }
 
     public function cancel(Transaction $transaction)
@@ -226,5 +316,14 @@ class TransactionController extends Controller
     private function authorizeCustomerTransaction(Transaction $transaction): void
     {
         abort_unless($transaction->user_id === Auth::id(), 403);
+    }
+
+    private function generateOrderId(Transaction $transaction): string
+    {
+        do {
+            $orderId = 'SIRACAS-'.$transaction->id.'-'.Str::upper(Str::random(8));
+        } while (Transaction::query()->where('order_id', $orderId)->exists());
+
+        return $orderId;
     }
 }

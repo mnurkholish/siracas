@@ -25,12 +25,17 @@ class Transaction extends Model
         'tanggal',
         'catatan',
         'status',
+        'order_id',
+        'snap_token',
+        'payment_type',
+        'paid_at',
     ];
 
     protected function casts(): array
     {
         return [
             'tanggal' => 'date',
+            'paid_at' => 'datetime',
         ];
     }
 
