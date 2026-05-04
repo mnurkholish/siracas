@@ -68,15 +68,7 @@
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <dt class="text-muted">Nomor HP</dt>
-                            <dd class="text-right font-bold text-muted-dark">
-                                @if ($transaction->user?->nomor_hp)
-                                    <a href="https://wa.me/{{ preg_replace('/^0/', '62', $transaction->user->nomor_hp) }}"
-                                        target="_blank">
-                                        {{ $transaction->user->nomor_hp }}
-                                    </a>
-                                @else
-                                    {{ $transaction->user?->nomor_hp ?? '-' }}
-                                @endif
+                            <dd class="text-right font-bold text-muted-dark">{{ $transaction->user?->nomor_hp ?? '-' }}
                             </dd>
                         </div>
                         <div class="flex items-start justify-between gap-4">

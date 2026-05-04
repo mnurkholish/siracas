@@ -6,7 +6,8 @@
     };
 @endphp
 
-<x-layouts.admin title="Detail Transaksi #{{ $transaction->id }}" subtitle="Customer: {{ $transaction->user?->username ?? '-' }}">
+<x-layouts.admin title="Detail Transaksi #{{ $transaction->id }}"
+    subtitle="Customer: {{ $transaction->user?->username ?? '-' }}">
     @if ($errors->any())
         <div class="alert-danger mb-5">
             {{ $errors->first() }}
@@ -26,7 +27,8 @@
                                 alt="{{ $detail->product?->nama_produk ?? 'Produk' }}"
                                 class="h-16 w-16 rounded-md border border-gray-200 object-cover">
                             <div>
-                                <h3 class="font-bold text-muted-dark">{{ $detail->product?->nama_produk ?? 'Produk tidak tersedia' }}</h3>
+                                <h3 class="font-bold text-muted-dark">
+                                    {{ $detail->product?->nama_produk ?? 'Produk tidak tersedia' }}</h3>
                                 <p class="mt-1 text-sm text-gray-500">Quantity: {{ $detail->quantity }}</p>
                                 <p class="mt-1 text-sm font-semibold text-primary">
                                     Rp{{ number_format((float) $detail->harga_saat_transaksi, 0, ',', '.') }}
@@ -54,11 +56,21 @@
                     </div>
                     <div class="flex items-start justify-between gap-4">
                         <dt class="text-gray-500">Nomor HP</dt>
-                        <dd class="text-right font-bold text-black">{{ $transaction->user?->nomor_hp ?? '-' }}</dd>
+                        <dd class="text-right font-bold text-blue-500">
+                            @if ($transaction->user?->nomor_hp)
+                                <a href="https://wa.me/{{ preg_replace('/^0/', '62', $transaction->user->nomor_hp) }}"
+                                    target="_blank">
+                                    {{ $transaction->user->nomor_hp }}
+                                </a>
+                            @else
+                                {{ $transaction->user?->nomor_hp ?? '-' }}
+                            @endif
+                        </dd>
                     </div>
                     <div class="flex items-start justify-between gap-4">
                         <dt class="text-gray-500">Tanggal</dt>
-                        <dd class="text-right font-bold text-black">{{ $transaction->tanggal->format('d M Y H:i:s') }}</dd>
+                        <dd class="text-right font-bold text-black">{{ $transaction->tanggal->format('d M Y H:i:s') }}
+                        </dd>
                     </div>
                 </dl>
             </div>
@@ -73,11 +85,14 @@
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <dt class="text-gray-500">Metode</dt>
-                            <dd class="text-right font-bold text-black">{{ $transaction->payment_type ? str_replace('_', ' ', ucfirst($transaction->payment_type)) : '-' }}</dd>
+                            <dd class="text-right font-bold text-black">
+                                {{ $transaction->payment_type ? str_replace('_', ' ', ucfirst($transaction->payment_type)) : '-' }}
+                            </dd>
                         </div>
                         <div class="flex items-start justify-between gap-4">
                             <dt class="text-gray-500">Dibayar Pada</dt>
-                            <dd class="text-right font-bold text-black">{{ $transaction->paid_at?->format('d M Y H:i:s') ?? '-' }}</dd>
+                            <dd class="text-right font-bold text-black">
+                                {{ $transaction->paid_at?->format('d M Y H:i:s') ?? '-' }}</dd>
                         </div>
                     </dl>
                 </div>
@@ -95,16 +110,17 @@
 
             <div class="mt-5 flex items-center justify-between border-t border-gray-100 pt-5">
                 <span class="text-sm font-semibold text-gray-500">Total Harga</span>
-                <span class="text-xl font-bold text-primary">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
+                <span
+                    class="text-xl font-bold text-primary">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
             </div>
 
             @if ($adminStatusOptions !== [])
-                <form action="{{ route('admin.transactions.status', $transaction) }}" method="POST" class="update-status-form mt-6">
+                <form action="{{ route('admin.transactions.status', $transaction) }}" method="POST"
+                    class="update-status-form mt-6">
                     @csrf
                     @method('PATCH')
                     <label for="status" class="text-sm font-bold text-black">Ubah Status</label>
-                    <select id="status" name="status"
-                        class="form-control input-control mt-2">
+                    <select id="status" name="status" class="form-control input-control mt-2">
                         @foreach ($adminStatusOptions as $status)
                             <option value="{{ $status }}" @selected(old('status') === $status)>
                                 {{ ucfirst($status) }}
@@ -129,7 +145,7 @@
 
     <script>
         document.querySelectorAll('.update-status-form').forEach((form) => {
-            form.addEventListener('submit', function (event) {
+            form.addEventListener('submit', function(event) {
                 event.preventDefault();
                 Swal.fire({
                     icon: 'warning',
