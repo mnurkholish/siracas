@@ -1,9 +1,19 @@
 @php
     $adminStatusOptions = match ($transaction->status) {
-        'paid' => ['processing', 'completed'],
-        'processing' => ['completed'],
+        'dibayar' => ['diproses'],
+        'diproses' => ['dikirim'],
+        'dikirim' => ['selesai'],
         default => [],
     };
+    $statusLabels = [
+        'menunggu_pembayaran' => 'Menunggu Pembayaran',
+        'dibayar' => 'Dibayar',
+        'diproses' => 'Diproses',
+        'dikirim' => 'Dikirim',
+        'selesai' => 'Selesai',
+        'dibatalkan' => 'Dibatalkan',
+        'kedaluwarsa' => 'Kedaluwarsa',
+    ];
 @endphp
 
 <x-layouts.admin title="Detail Transaksi #{{ $transaction->id }}"
@@ -75,7 +85,7 @@
                 </dl>
             </div>
 
-            @if ($transaction->status === 'paid' || $transaction->paid_at || $transaction->payment_type)
+            @if ($transaction->status === 'dibayar' || $transaction->paid_at || $transaction->payment_type)
                 <div class="mt-5 border-t border-gray-100 pt-5">
                     <p class="text-xs font-bold uppercase tracking-[0.25em] text-gray-400">Pembayaran</p>
                     <dl class="mt-2 space-y-2 text-sm">
@@ -123,7 +133,7 @@
                     <select id="status" name="status" class="form-control input-control mt-2">
                         @foreach ($adminStatusOptions as $status)
                             <option value="{{ $status }}" @selected(old('status') === $status)>
-                                {{ ucfirst($status) }}
+                                {{ $statusLabels[$status] ?? $status }}
                             </option>
                         @endforeach
                     </select>
@@ -133,10 +143,10 @@
                 </form>
             @else
                 <div class="mt-6 rounded-lg bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-600">
-                    @if ($transaction->status === 'pending')
+                    @if ($transaction->status === 'menunggu_pembayaran')
                         Menunggu pembayaran customer
                     @else
-                        Status transaksi sudah final
+                        Status sudah final
                     @endif
                 </div>
             @endif

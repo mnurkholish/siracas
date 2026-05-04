@@ -10,19 +10,43 @@ use Illuminate\Validation\Rule;
 class AdminTransactionController extends Controller
 {
     private const ADMIN_STATUS_TRANSITIONS = [
-        'paid' => ['processing', 'completed'],
-        'processing' => ['completed'],
+        'dibayar' => ['diproses'],
+        'diproses' => ['dikirim'],
+        'dikirim' => ['selesai'],
     ];
 
     public function index()
     {
         $transactions = Transaction::query()
             ->with('user')
+            ->whereIn('status', Transaction::ACTIVE_STATUSES)
             ->latest('tanggal')
             ->latest('id')
             ->paginate(10);
 
-        return view('admin.transactions.index', compact('transactions'));
+        return view('admin.transactions.index', [
+            'transactions' => $transactions,
+            'title' => 'Transaksi',
+            'subtitle' => 'Kelola pesanan customer yang masih aktif.',
+            'emptyMessage' => 'Belum ada transaksi aktif.',
+        ]);
+    }
+
+    public function history()
+    {
+        $transactions = Transaction::query()
+            ->with('user')
+            ->whereIn('status', Transaction::HISTORY_STATUSES)
+            ->latest('tanggal')
+            ->latest('id')
+            ->paginate(10);
+
+        return view('admin.transactions.index', [
+            'transactions' => $transactions,
+            'title' => 'Riwayat Transaksi',
+            'subtitle' => 'Daftar transaksi yang sudah final.',
+            'emptyMessage' => 'Belum ada riwayat transaksi.',
+        ]);
     }
 
     public function show(Transaction $transaction)

@@ -53,7 +53,7 @@ class TransactionController extends Controller
                 'address_id' => $validated['address_id'],
                 'tanggal' => now(),
                 'catatan' => $validated['catatan'] ?? null,
-                'status' => 'pending',
+                'status' => 'menunggu_pembayaran',
             ]);
 
             foreach ($cart->cartItems as $cartItem) {
@@ -128,7 +128,7 @@ class TransactionController extends Controller
                 'address_id' => $validated['address_id'],
                 'tanggal' => now(),
                 'catatan' => $validated['catatan'] ?? null,
-                'status' => 'pending',
+                'status' => 'menunggu_pembayaran',
             ]);
 
             $transaction->transactionDetails()->create([
@@ -172,9 +172,9 @@ class TransactionController extends Controller
     {
         $this->authorizeCustomerTransaction($transaction);
 
-        if ($transaction->status !== 'pending') {
+        if ($transaction->status !== 'menunggu_pembayaran') {
             throw ValidationException::withMessages([
-                'status' => 'Hanya transaksi pending yang dapat dibayar.',
+                'status' => 'Hanya transaksi menunggu pembayaran yang dapat dibayar.',
             ]);
         }
 
@@ -258,9 +258,9 @@ class TransactionController extends Controller
     {
         $this->authorizeCustomerTransaction($transaction);
 
-        if ($transaction->status !== 'pending') {
+        if ($transaction->status !== 'menunggu_pembayaran') {
             throw ValidationException::withMessages([
-                'status' => 'Hanya transaksi pending yang dapat dibatalkan.',
+                'status' => 'Hanya transaksi menunggu pembayaran yang dapat dibatalkan.',
             ]);
         }
 
@@ -268,7 +268,7 @@ class TransactionController extends Controller
             $transaction->load('transactionDetails');
 
             $transaction->update([
-                'status' => 'cancelled',
+                'status' => 'dibatalkan',
             ]);
 
             foreach ($transaction->transactionDetails as $detail) {

@@ -1,4 +1,4 @@
-<x-layouts.admin title="Transaksi" subtitle="Kelola semua pesanan customer SIRACAS.">
+<x-layouts.admin :title="$title ?? 'Transaksi'" :subtitle="$subtitle ?? 'Kelola semua pesanan customer SIRACAS.'">
     <section class="table-wrap">
         <div class="overflow-x-auto">
             <table class="admin-table min-w-[760px]">
@@ -16,7 +16,7 @@
                             <td class="font-semibold text-muted-dark">
                                 {{ $transaction->user?->username ?? '-' }}
                             </td>
-                            <td class="text-gray-600">{{ $transaction->tanggal->format('d M Y') }}</td>
+                            <td class="text-gray-600">{{ $transaction->tanggal->format('d M Y H:i:s') }}</td>
                             <td>
                                 <x-badge :status="$transaction->status" />
                             </td>
@@ -29,7 +29,7 @@
                     @empty
                         <tr>
                             <td colspan="4" class="py-12 text-center text-gray-500">
-                                Belum ada transaksi.
+                                {{ $emptyMessage ?? 'Belum ada transaksi.' }}
                             </td>
                         </tr>
                     @endforelse

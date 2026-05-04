@@ -64,6 +64,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('/product', ProductController::class)->except(['create', 'edit']);
 
         Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions.index');
+        Route::get('/transactions/history', [AdminTransactionController::class, 'history'])->name('transactions.history');
         Route::get('/transactions/{transaction}', [AdminTransactionController::class, 'show'])->name('transactions.show');
         Route::patch('/transactions/{transaction}/status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.status');
 

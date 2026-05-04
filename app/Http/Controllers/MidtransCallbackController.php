@@ -42,10 +42,10 @@ class MidtransCallbackController extends Controller
         }
 
         $status = match ($validated['transaction_status']) {
-            'settlement', 'capture' => 'paid',
-            'pending' => 'pending',
-            'cancel', 'deny' => 'cancelled',
-            'expire' => 'expired',
+            'settlement', 'capture' => 'dibayar',
+            'pending' => 'menunggu_pembayaran',
+            'cancel', 'deny' => 'dibatalkan',
+            'expire' => 'kedaluwarsa',
             default => null,
         };
 
@@ -58,7 +58,7 @@ class MidtransCallbackController extends Controller
         $transaction->update([
             'status' => $status,
             'payment_type' => $validated['payment_type'] ?? $transaction->payment_type,
-            'paid_at' => $status === 'paid' ? ($transaction->paid_at ?? now()) : $transaction->paid_at,
+            'paid_at' => $status === 'dibayar' ? ($transaction->paid_at ?? now()) : $transaction->paid_at,
         ]);
 
         return response()->json([

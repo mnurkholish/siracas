@@ -12,8 +12,8 @@
                 ['name' => 'Akun', 'route' => 'admin.profile', 'icon' => 'profile'],
                 ['name' => 'Akun Customer', 'route' => 'admin.customer.index', 'icon' => 'customer'],
                 ['name' => 'Produk', 'route' => 'admin.product.index', 'icon' => 'product'],
-                ['name' => 'Transaksi', 'route' => 'admin.transactions.index', 'icon' => 'transaksi'],
-                ['name' => 'Riwayat Transaksi', 'route' => 'home', 'icon' => 'riwayat'],
+                ['name' => 'Transaksi', 'route' => 'admin.transactions.index', 'icon' => 'transaksi', 'active' => ['admin.transactions.index', 'admin.transactions.show', 'admin.transactions.status']],
+                ['name' => 'Riwayat Transaksi', 'route' => 'admin.transactions.history', 'icon' => 'riwayat', 'active' => ['admin.transactions.history']],
                 ['name' => 'Ulasan', 'route' => 'home', 'icon' => 'ulasan'],
                 ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],
                 ['name' => 'Notifikasi', 'route' => 'home', 'icon' => 'notifikasi'],
@@ -51,12 +51,8 @@
             <nav class="flex flex-1 flex-col gap-2 overflow-y-auto pr-1 text-base">
                 @foreach ($menus as $menu)
                     @php
-                        $routeParts = explode('.', $menu['route']);
-                        $activePattern =
-                            count($routeParts) > 2
-                                ? $routeParts[0] . '.' . $routeParts[1] . '.*'
-                                : $menu['route'] . '*';
-                        $active = request()->routeIs($activePattern);
+                        $active = collect($menu['active'] ?? [$menu['route'] . '*'])
+                            ->contains(fn ($pattern) => request()->routeIs($pattern));
                     @endphp
 
                     <a href="{{ route($menu['route']) }}" title="{{ $menu['name'] }}" @click="sidebarOpen = false"

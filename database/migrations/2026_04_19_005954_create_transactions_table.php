@@ -16,7 +16,7 @@ return new class () extends Migration {
             $table->foreignId('address_id')->constrained()->restrictOnDelete();
             $table->timestamp('tanggal');
             $table->text('catatan')->nullable();
-            $table->string('status')->default('pending');
+            $table->string('status')->default('menunggu_pembayaran');
             $table->timestamps();
         });
 

@@ -11,12 +11,26 @@ class Transaction extends Model
     protected $table = 'transactions';
 
     public const STATUSES = [
-        'pending',
-        'paid',
-        'processing',
-        'completed',
-        'cancelled',
-        'expired',
+        'menunggu_pembayaran',
+        'dibayar',
+        'diproses',
+        'dikirim',
+        'selesai',
+        'dibatalkan',
+        'kedaluwarsa',
+    ];
+
+    public const ACTIVE_STATUSES = [
+        'menunggu_pembayaran',
+        'dibayar',
+        'diproses',
+        'dikirim',
+    ];
+
+    public const HISTORY_STATUSES = [
+        'selesai',
+        'dibatalkan',
+        'kedaluwarsa',
     ];
 
     protected $fillable = [

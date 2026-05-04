@@ -5,7 +5,15 @@
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 
-    $statusLabel = $transaction->status === 'paid' ? 'Sudah Dibayar' : $transaction->status;
+    $statusLabel = [
+        'menunggu_pembayaran' => 'Menunggu Pembayaran',
+        'dibayar' => 'Dibayar',
+        'diproses' => 'Diproses',
+        'dikirim' => 'Dikirim',
+        'selesai' => 'Selesai',
+        'dibatalkan' => 'Dibatalkan',
+        'kedaluwarsa' => 'Kedaluwarsa',
+    ][$transaction->status] ?? $transaction->status;
 @endphp
 
 <x-layouts.public title="Detail Transaksi - SIRACAS">
@@ -78,7 +86,7 @@
                         </div>
                     </dl>
 
-                    @if ($transaction->status === 'paid' || $transaction->paid_at || $transaction->payment_type)
+                    @if ($transaction->status === 'dibayar' || $transaction->paid_at || $transaction->payment_type)
                         <div class="mt-5 border-t border-border-soft pt-5">
                             <p class="text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Pembayaran</p>
                             <dl class="mt-2 space-y-2 text-sm">
@@ -117,13 +125,13 @@
                             class="text-xl font-black text-accent">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
                     </div>
 
-                    @if ($transaction->status === 'paid')
+                    @if ($transaction->status === 'dibayar')
                         <div class="mt-5 rounded-lg bg-blue-50 px-4 py-3 text-center text-sm font-bold text-blue-700">
                             Sudah Dibayar
                         </div>
                     @endif
 
-                    @if ($transaction->status === 'pending')
+                    @if ($transaction->status === 'menunggu_pembayaran')
                         <x-button type="button" id="pay-now-button" size="lg" :block="true" class="mt-5">
                             Bayar Sekarang
                         </x-button>
@@ -142,7 +150,7 @@
         </section>
     </main>
 
-    @if ($transaction->status === 'pending')
+    @if ($transaction->status === 'menunggu_pembayaran')
         <script src="https://app.sandbox.midtrans.com/snap/snap.js"
             data-client-key="{{ config('services.midtrans.client_key') }}"></script>
     @endif
