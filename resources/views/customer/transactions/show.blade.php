@@ -59,14 +59,36 @@
 
                 <aside class="card p-5">
                     <p class="text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Alamat</p>
-                    <p class="mt-2 text-sm leading-6 text-muted-dark">{{ $transaction->address?->fullAddress() ?: '-' }}</p>
+                    <p class="mt-2 text-sm leading-6 text-muted-dark">
+                        {{ $transaction->city && $transaction->province
+                            ? collect([$transaction->city, $transaction->province])->filter()->implode(', ')
+                            : ($transaction->address?->fullAddress() ?: '-') }}
+                    </p>
 
                     <p class="mt-5 text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Catatan</p>
                     <p class="mt-2 text-sm leading-6 text-muted-dark">{{ $transaction->catatan ?: '-' }}</p>
 
-                    <div class="mt-5 flex items-center justify-between border-t border-border-soft pt-5">
-                        <span class="text-sm font-semibold text-muted">Total</span>
-                        <span class="text-xl font-black text-accent">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
+                    <div class="mt-5 space-y-3 border-t border-border-soft pt-5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-muted">Total barang</span>
+                            <span class="font-black text-text-body">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
+                        </div>
+                        <div class="flex items-center justify-between gap-4">
+                            <span class="text-sm font-semibold text-muted">Ongkir</span>
+                            <span class="text-right font-black text-text-body">
+                                @if ($transaction->ongkir === null)
+                                    Ongkir akan dikonfirmasi admin
+                                @else
+                                    Rp{{ number_format((float) $transaction->ongkir, 0, ',', '.') }}
+                                @endif
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-border-soft pt-3">
+                            <span class="text-sm font-semibold text-muted">Total bayar</span>
+                            <span class="text-xl font-black text-accent">
+                                {{ $transaction->totalBayar() === null ? '-' : 'Rp'.number_format($transaction->totalBayar(), 0, ',', '.') }}
+                            </span>
+                        </div>
                     </div>
 
                     @if ($transaction->status === 'paid')
@@ -76,9 +98,15 @@
                     @endif
 
                     @if ($transaction->status === 'pending')
-                        <x-button type="button" id="pay-now-button" size="lg" :block="true" class="mt-5">
-                            Bayar Sekarang
-                        </x-button>
+                        @if ($transaction->ongkir === null || $transaction->total_bayar === null)
+                            <div class="mt-5 rounded-lg bg-yellow-50 px-4 py-3 text-center text-sm font-bold text-yellow-700">
+                                Ongkir akan dikonfirmasi admin
+                            </div>
+                        @else
+                            <x-button type="button" id="pay-now-button" size="lg" :block="true" class="mt-5">
+                                Bayar Sekarang
+                            </x-button>
+                        @endif
 
                         <form action="{{ route('transactions.cancel', $transaction) }}" method="POST" class="cancel-transaction-form mt-5">
                             @csrf

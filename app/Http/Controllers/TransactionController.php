@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Address;
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Services\OngkirService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,10 @@ use Illuminate\Validation\ValidationException;
 
 class TransactionController extends Controller
 {
+    public function __construct(private readonly OngkirService $ongkirService)
+    {
+    }
+
     public function checkoutForm()
     {
         $cart = Auth::user()
@@ -29,6 +34,7 @@ class TransactionController extends Controller
             'cart' => $cart,
             'cartItems' => $cartItems,
             'addresses' => $addresses,
+            'addressOngkir' => $this->ongkirByAddress($addresses),
         ]);
     }
 
@@ -48,13 +54,12 @@ class TransactionController extends Controller
         }
 
         $transaction = DB::transaction(function () use ($cart, $validated) {
-            $transaction = Transaction::create([
-                'user_id' => Auth::id(),
-                'address_id' => $validated['address_id'],
-                'tanggal' => now()->toDateString(),
-                'catatan' => $validated['catatan'] ?? null,
-                'status' => 'pending',
-            ]);
+            $address = $this->findAddressForCheckout((int) $validated['address_id']);
+            $city = $address->kecamatan?->kota?->nama;
+            $province = $address->kecamatan?->kota?->provinsi?->nama;
+            $ongkir = $this->ongkirService->hitung($city, $province);
+            $lines = [];
+            $totalBarang = 0;
 
             foreach ($cart->cartItems as $cartItem) {
                 $product = Product::query()
@@ -68,13 +73,35 @@ class TransactionController extends Controller
                     ]);
                 }
 
-                $transaction->transactionDetails()->create([
-                    'product_id' => $product->id,
+                $lines[] = [
+                    'product' => $product,
                     'quantity' => $cartItem->quantity,
                     'harga_saat_transaksi' => $product->harga,
+                ];
+                $totalBarang += $cartItem->quantity * (float) $product->harga;
+            }
+
+            $transaction = Transaction::create([
+                'user_id' => Auth::id(),
+                'address_id' => $address->id,
+                'city' => $city,
+                'province' => $province,
+                'ongkir' => $ongkir['harga'],
+                'total_barang' => $totalBarang,
+                'total_bayar' => $ongkir['ditemukan'] ? $totalBarang + $ongkir['harga'] : null,
+                'tanggal' => now()->toDateString(),
+                'catatan' => $validated['catatan'] ?? null,
+                'status' => 'pending',
+            ]);
+
+            foreach ($lines as $line) {
+                $transaction->transactionDetails()->create([
+                    'product_id' => $line['product']->id,
+                    'quantity' => $line['quantity'],
+                    'harga_saat_transaksi' => $line['harga_saat_transaksi'],
                 ]);
 
-                $product->decrement('stok', $cartItem->quantity);
+                $line['product']->decrement('stok', $line['quantity']);
             }
 
             $cart->cartItems()->delete();
@@ -95,6 +122,7 @@ class TransactionController extends Controller
         return view('customer.checkout.buy-now', [
             'product' => $product,
             'addresses' => $addresses,
+            'addressOngkir' => $this->ongkirByAddress($addresses),
             'quantity' => $quantity,
         ]);
     }
@@ -123,9 +151,20 @@ class TransactionController extends Controller
                 ]);
             }
 
+            $address = $this->findAddressForCheckout((int) $validated['address_id']);
+            $city = $address->kecamatan?->kota?->nama;
+            $province = $address->kecamatan?->kota?->provinsi?->nama;
+            $ongkir = $this->ongkirService->hitung($city, $province);
+            $totalBarang = (int) $validated['quantity'] * (float) $lockedProduct->harga;
+
             $transaction = Transaction::create([
                 'user_id' => Auth::id(),
-                'address_id' => $validated['address_id'],
+                'address_id' => $address->id,
+                'city' => $city,
+                'province' => $province,
+                'ongkir' => $ongkir['harga'],
+                'total_barang' => $totalBarang,
+                'total_bayar' => $ongkir['ditemukan'] ? $totalBarang + $ongkir['harga'] : null,
                 'tanggal' => now()->toDateString(),
                 'catatan' => $validated['catatan'] ?? null,
                 'status' => 'pending',
@@ -178,6 +217,12 @@ class TransactionController extends Controller
             ]);
         }
 
+        if ($transaction->ongkir === null || $transaction->total_bayar === null) {
+            throw ValidationException::withMessages([
+                'ongkir' => OngkirService::PESAN_ONGKIR_TIDAK_DITEMUKAN.'.',
+            ]);
+        }
+
         $transaction->loadMissing(['transactionDetails.product', 'user']);
         $itemDetails = $transaction->transactionDetails
             ->map(fn ($detail) => [
@@ -187,7 +232,13 @@ class TransactionController extends Controller
                 'name' => Str::limit($detail->product?->nama_produk ?? 'Produk', 50, ''),
             ])
             ->values();
-        $grossAmount = (int) $itemDetails->sum(fn ($detail) => $detail['price'] * $detail['quantity']);
+        $itemDetails->push([
+            'id' => 'ONGKIR-'.$transaction->id,
+            'price' => (int) round((float) $transaction->ongkir),
+            'quantity' => 1,
+            'name' => 'Ongkir',
+        ]);
+        $grossAmount = (int) round((float) $transaction->total_bayar);
 
         if ($grossAmount <= 0) {
             throw ValidationException::withMessages([
@@ -311,6 +362,26 @@ class TransactionController extends Controller
             ->with('kecamatan.kota.provinsi')
             ->latest()
             ->get();
+    }
+
+    private function ongkirByAddress($addresses): array
+    {
+        return $addresses
+            ->mapWithKeys(function (Address $address) {
+                $city = $address->kecamatan?->kota?->nama;
+                $province = $address->kecamatan?->kota?->provinsi?->nama;
+
+                return [$address->id => $this->ongkirService->hitung($city, $province)];
+            })
+            ->all();
+    }
+
+    private function findAddressForCheckout(int $addressId): Address
+    {
+        return Address::query()
+            ->where('user_id', Auth::id())
+            ->with('kecamatan.kota.provinsi')
+            ->findOrFail($addressId);
     }
 
     private function authorizeCustomerTransaction(Transaction $transaction): void

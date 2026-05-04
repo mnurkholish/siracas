@@ -77,7 +77,11 @@
                             class="form-control input-control mt-2">
                             <option value="">Pilih alamat</option>
                             @foreach ($addresses as $address)
-                                <option value="{{ $address->id }}" @selected(old('address_id') == $address->id)>
+                                @php($quote = $addressOngkir[$address->id] ?? null)
+                                <option value="{{ $address->id }}"
+                                    data-ongkir="{{ $quote['harga'] ?? '' }}"
+                                    data-ongkir-message="{{ $quote['pesan'] ?? '' }}"
+                                    @selected(old('address_id') == $address->id)>
                                     {{ $address->fullAddress() }}
                                 </option>
                             @endforeach
@@ -93,9 +97,22 @@
                             class="form-control textarea-control mt-2"
                             placeholder="Opsional">{{ old('catatan') }}</textarea>
 
-                        <div class="mt-5 flex items-center justify-between border-t border-border-soft pt-5">
-                            <span class="text-sm font-semibold text-muted">Total</span>
-                            <span class="text-xl font-black text-accent">Rp{{ number_format($total, 0, ',', '.') }}</span>
+                        <div class="mt-5 space-y-3 border-t border-border-soft pt-5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm font-semibold text-muted">Total barang</span>
+                                <span class="text-base font-black text-text-body">Rp{{ number_format($total, 0, ',', '.') }}</span>
+                            </div>
+                            <div class="flex items-center justify-between gap-4">
+                                <span class="text-sm font-semibold text-muted">Ongkir</span>
+                                <span id="ongkir-text" class="text-right text-sm font-black text-text-body">Pilih alamat</span>
+                            </div>
+                            <div id="ongkir-message" class="hidden rounded-lg bg-yellow-50 px-3 py-2 text-xs font-bold text-yellow-700">
+                                Ongkir akan dikonfirmasi admin
+                            </div>
+                            <div class="flex items-center justify-between border-t border-border-soft pt-3">
+                                <span class="text-sm font-semibold text-muted">Total bayar</span>
+                                <span id="total-bayar-text" class="text-xl font-black text-accent">-</span>
+                            </div>
                         </div>
 
                         <x-button type="submit" size="xl" :block="true" class="mt-5">
@@ -108,6 +125,48 @@
     </main>
 
     <script>
+        const totalBarang = Number(@json($total));
+        const formatRupiah = (value) => new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            maximumFractionDigits: 0,
+        }).format(value);
+        const addressSelect = document.getElementById('address_id');
+        const ongkirText = document.getElementById('ongkir-text');
+        const ongkirMessage = document.getElementById('ongkir-message');
+        const totalBayarText = document.getElementById('total-bayar-text');
+
+        function updateOngkirPreview() {
+            const selected = addressSelect?.selectedOptions?.[0];
+            const ongkir = selected?.dataset?.ongkir;
+            const message = selected?.dataset?.ongkirMessage;
+
+            if (!selected || !selected.value) {
+                ongkirText.textContent = 'Pilih alamat';
+                totalBayarText.textContent = '-';
+                ongkirMessage.classList.add('hidden');
+                return;
+            }
+
+            if (!ongkir) {
+                ongkirText.textContent = '-';
+                totalBayarText.textContent = '-';
+                ongkirMessage.textContent = message || 'Ongkir akan dikonfirmasi admin';
+                ongkirMessage.classList.remove('hidden');
+                return;
+            }
+
+            const ongkirValue = Number(ongkir);
+            ongkirText.textContent = formatRupiah(ongkirValue);
+            totalBayarText.textContent = formatRupiah(totalBarang + ongkirValue);
+            ongkirMessage.classList.add('hidden');
+        }
+
+        if (addressSelect && ongkirText && ongkirMessage && totalBayarText) {
+            addressSelect.addEventListener('change', updateOngkirPreview);
+            updateOngkirPreview();
+        }
+
         document.querySelectorAll('.checkout-form').forEach((form) => {
             form.addEventListener('submit', function (event) {
                 event.preventDefault();

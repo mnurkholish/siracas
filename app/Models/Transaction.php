@@ -22,6 +22,11 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'address_id',
+        'city',
+        'province',
+        'ongkir',
+        'total_barang',
+        'total_bayar',
         'tanggal',
         'catatan',
         'status',
@@ -35,6 +40,9 @@ class Transaction extends Model
     {
         return [
             'tanggal' => 'date',
+            'ongkir' => 'decimal:2',
+            'total_barang' => 'decimal:2',
+            'total_bayar' => 'decimal:2',
             'paid_at' => 'datetime',
         ];
     }
@@ -56,9 +64,16 @@ class Transaction extends Model
 
     public function totalHarga(): float
     {
-        return (float) $this->transactionDetails->sum(function (TransactionDetail $detail) {
-            return $detail->quantity * (float) $detail->harga_saat_transaksi;
-        });
+        if ($this->total_barang !== null) {
+            return (float) $this->total_barang;
+        }
+
+        return (float) $this->transactionDetails->sum(fn (TransactionDetail $detail) => $detail->subtotal());
+    }
+
+    public function totalBayar(): ?float
+    {
+        return $this->total_bayar === null ? null : (float) $this->total_bayar;
     }
 
     public function totalQuantity(): int

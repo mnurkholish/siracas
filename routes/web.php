@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Admin\AdminTransactionController;
+use App\Http\Controllers\Admin\OngkirController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CustomerAccountController;
 use App\Http\Controllers\CustomerProductController;
@@ -66,6 +67,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('transactions.index');
         Route::get('/transactions/{transaction}', [AdminTransactionController::class, 'show'])->name('transactions.show');
         Route::patch('/transactions/{transaction}/status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.status');
+
+        Route::get('/api/ongkir', [OngkirController::class, 'index'])->name('api.ongkir.index');
+        Route::post('/api/ongkir', [OngkirController::class, 'store'])->name('api.ongkir.store');
+        Route::put('/api/ongkir/{ongkir}', [OngkirController::class, 'update'])->name('api.ongkir.update');
+        Route::patch('/api/ongkir/{ongkir}/toggle', [OngkirController::class, 'toggle'])->name('api.ongkir.toggle');
 
         Route::get('/profile', [ProfileController::class, 'adminIndex'])->name('profile');
         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');

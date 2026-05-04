@@ -47,7 +47,11 @@
 
             <div class="mt-5 border-t border-gray-100 pt-5">
                 <p class="text-xs font-bold uppercase tracking-[0.25em] text-gray-400">Alamat</p>
-                <p class="mt-2 text-sm leading-6 text-gray-700">{{ $transaction->address?->fullAddress() ?: '-' }}</p>
+                <p class="mt-2 text-sm leading-6 text-gray-700">
+                    {{ $transaction->city && $transaction->province
+                        ? collect([$transaction->city, $transaction->province])->filter()->implode(', ')
+                        : ($transaction->address?->fullAddress() ?: '-') }}
+                </p>
             </div>
 
             <div class="mt-5">
@@ -55,9 +59,27 @@
                 <p class="mt-2 text-sm leading-6 text-gray-700">{{ $transaction->catatan ?: '-' }}</p>
             </div>
 
-            <div class="mt-5 flex items-center justify-between border-t border-gray-100 pt-5">
-                <span class="text-sm font-semibold text-gray-500">Total Harga</span>
-                <span class="text-xl font-bold text-primary">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
+            <div class="mt-5 space-y-3 border-t border-gray-100 pt-5">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-500">Total barang</span>
+                    <span class="font-bold text-black">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
+                </div>
+                <div class="flex items-center justify-between gap-4">
+                    <span class="text-sm font-semibold text-gray-500">Ongkir</span>
+                    <span class="text-right font-bold text-black">
+                        @if ($transaction->ongkir === null)
+                            Ongkir akan dikonfirmasi admin
+                        @else
+                            Rp{{ number_format((float) $transaction->ongkir, 0, ',', '.') }}
+                        @endif
+                    </span>
+                </div>
+                <div class="flex items-center justify-between border-t border-gray-100 pt-3">
+                    <span class="text-sm font-semibold text-gray-500">Total bayar</span>
+                    <span class="text-xl font-bold text-primary">
+                        {{ $transaction->totalBayar() === null ? '-' : 'Rp'.number_format($transaction->totalBayar(), 0, ',', '.') }}
+                    </span>
+                </div>
             </div>
 
             @if ($adminStatusOptions !== [])
