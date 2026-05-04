@@ -2,7 +2,6 @@
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('customer.dashboard')],
         ['nav' => 'Produk', 'route' => route('customer.product.index')],
-        ['nav' => 'Keranjang', 'route' => route('cart.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 

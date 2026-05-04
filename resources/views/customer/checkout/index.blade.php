@@ -2,11 +2,10 @@
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('customer.dashboard')],
         ['nav' => 'Produk', 'route' => route('customer.product.index')],
-        ['nav' => 'Keranjang', 'route' => route('cart.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 
-    $total = $cartItems->sum(fn ($item) => $item->quantity * (float) ($item->product?->harga ?? 0));
+    $total = $cartItems->sum(fn($item) => $item->quantity * (float) ($item->product?->harga ?? 0));
 @endphp
 
 <x-layouts.public title="Checkout - SIRACAS">
@@ -33,7 +32,8 @@
                     </x-button>
                 </div>
             @else
-                <form action="{{ route('checkout.process') }}" method="POST" class="checkout-form mt-8 grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
+                <form action="{{ route('checkout.process') }}" method="POST"
+                    class="checkout-form mt-8 grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
                     @csrf
 
                     <div class="card overflow-hidden">
@@ -52,8 +52,10 @@
                                             alt="{{ $product?->nama_produk ?? 'Produk' }}"
                                             class="h-20 w-20 shrink-0 rounded-lg border border-border-soft object-cover">
                                         <div>
-                                            <h3 class="font-black text-muted-dark">{{ $product?->nama_produk ?? 'Produk tidak tersedia' }}</h3>
-                                            <p class="mt-1 text-sm font-semibold text-muted">Qty: {{ $item->quantity }}</p>
+                                            <h3 class="font-black text-muted-dark">
+                                                {{ $product?->nama_produk ?? 'Produk tidak tersedia' }}</h3>
+                                            <p class="mt-1 text-sm font-semibold text-muted">Qty: {{ $item->quantity }}
+                                            </p>
                                             <p class="mt-1 text-sm font-bold text-accent">
                                                 Rp{{ number_format((float) ($product?->harga ?? 0), 0, ',', '.') }}
                                             </p>
@@ -73,8 +75,7 @@
                             class="float-right text-sm font-bold text-primary-dark transition hover:text-text-body">
                             Buat alamat
                         </a>
-                        <select id="address_id" name="address_id"
-                            class="form-control input-control mt-2">
+                        <select id="address_id" name="address_id" class="form-control input-control mt-2">
                             <option value="">Pilih alamat</option>
                             @foreach ($addresses as $address)
                                 <option value="{{ $address->id }}" @selected(old('address_id') == $address->id)>
@@ -89,13 +90,13 @@
                         @endif
 
                         <label for="catatan" class="mt-5 block text-sm font-bold text-muted-dark">Catatan</label>
-                        <textarea id="catatan" name="catatan" rows="4"
-                            class="form-control textarea-control mt-2"
+                        <textarea id="catatan" name="catatan" rows="4" class="form-control textarea-control mt-2"
                             placeholder="Opsional">{{ old('catatan') }}</textarea>
 
                         <div class="mt-5 flex items-center justify-between border-t border-border-soft pt-5">
                             <span class="text-sm font-semibold text-muted">Total</span>
-                            <span class="text-xl font-black text-accent">Rp{{ number_format($total, 0, ',', '.') }}</span>
+                            <span
+                                class="text-xl font-black text-accent">Rp{{ number_format($total, 0, ',', '.') }}</span>
                         </div>
 
                         <x-button type="submit" size="xl" :block="true" class="mt-5">
@@ -109,7 +110,7 @@
 
     <script>
         document.querySelectorAll('.checkout-form').forEach((form) => {
-            form.addEventListener('submit', function (event) {
+            form.addEventListener('submit', function(event) {
                 event.preventDefault();
                 Swal.fire({
                     icon: 'warning',

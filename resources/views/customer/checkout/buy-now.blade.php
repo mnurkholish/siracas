@@ -2,7 +2,6 @@
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('customer.dashboard')],
         ['nav' => 'Produk', 'route' => route('customer.product.index')],
-        ['nav' => 'Keranjang', 'route' => route('cart.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 
@@ -23,7 +22,8 @@
                 </a>
 
                 @if ($errors->any())
-                    <div class="mt-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                    <div
+                        class="mt-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
                         {{ $errors->first() }}
                     </div>
                 @endif
@@ -89,7 +89,7 @@
 
     <script>
         document.querySelectorAll('.buy-now-form').forEach((form) => {
-            form.addEventListener('submit', function (event) {
+            form.addEventListener('submit', function(event) {
                 event.preventDefault();
                 Swal.fire({
                     icon: 'warning',

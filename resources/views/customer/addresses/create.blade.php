@@ -2,7 +2,6 @@
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('customer.dashboard')],
         ['nav' => 'Produk', 'route' => route('customer.product.index')],
-        ['nav' => 'Keranjang', 'route' => route('cart.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 
@@ -30,16 +29,14 @@
                     </div>
                 @endif
 
-                <form action="{{ route('addresses.store') }}" method="POST"
-                    x-data="addressForm({
-                        oldProvinsiId: @js($oldProvinsiId),
-                        oldKotaId: @js($oldKotaId),
-                        oldKecamatanId: @js($oldKecamatanId),
-                        kotasUrl: @js(route('addresses.wilayah.kotas')),
-                        kecamatansUrl: @js(route('addresses.wilayah.kecamatans')),
-                    })"
-                    x-init="init()"
-                    class="mt-6 space-y-5">
+                <form action="{{ route('addresses.store') }}" method="POST" x-data="addressForm({
+                    oldProvinsiId: @js($oldProvinsiId),
+                    oldKotaId: @js($oldKotaId),
+                    oldKecamatanId: @js($oldKecamatanId),
+                    kotasUrl: @js(route('addresses.wilayah.kotas')),
+                    kecamatansUrl: @js(route('addresses.wilayah.kecamatans')),
+                })"
+                    x-init="init()" class="mt-6 space-y-5">
                     @csrf
                     <input type="hidden" name="return_to" value="{{ old('return_to', $returnTo) }}">
 
@@ -58,8 +55,8 @@
 
                     <div>
                         <label for="kota" class="form-label">Kota</label>
-                        <select id="kota" name="kota_id" x-model="kotaId" @change="onKotaChange" :disabled="!provinsiId || loadingKotas"
-                            class="form-control input-control">
+                        <select id="kota" name="kota_id" x-model="kotaId" @change="onKotaChange"
+                            :disabled="!provinsiId || loadingKotas" class="form-control input-control">
                             <option value="" x-text="loadingKotas ? 'Memuat kota...' : 'Pilih kota'"></option>
                             <template x-for="kota in kotas" :key="kota.id">
                                 <option :value="kota.id" x-text="kota.nama"></option>
@@ -69,9 +66,10 @@
 
                     <div>
                         <label for="kecamatan_id" class="form-label">Kecamatan</label>
-                        <select id="kecamatan_id" name="kecamatan_id" x-model="kecamatanId" :disabled="!kotaId || loadingKecamatans"
-                            class="form-control input-control">
-                            <option value="" x-text="loadingKecamatans ? 'Memuat kecamatan...' : 'Pilih kecamatan'"></option>
+                        <select id="kecamatan_id" name="kecamatan_id" x-model="kecamatanId"
+                            :disabled="!kotaId || loadingKecamatans" class="form-control input-control">
+                            <option value=""
+                                x-text="loadingKecamatans ? 'Memuat kecamatan...' : 'Pilih kecamatan'"></option>
                             <template x-for="kecamatan in kecamatans" :key="kecamatan.id">
                                 <option :value="kecamatan.id" x-text="kecamatan.nama"></option>
                             </template>
@@ -80,8 +78,7 @@
 
                     <div>
                         <label for="detail_alamat" class="form-label">Detail Alamat</label>
-                        <textarea id="detail_alamat" name="detail_alamat" rows="5"
-                            class="form-control textarea-control"
+                        <textarea id="detail_alamat" name="detail_alamat" rows="5" class="form-control textarea-control"
                             placeholder="Nama jalan, nomor rumah, RT/RW, patokan">{{ old('detail_alamat') }}</textarea>
                     </div>
 

@@ -9,16 +9,12 @@
             'route' => route('customer.product.index'),
         ],
         [
-            'nav' => 'Keranjang',
-            'route' => route('cart.index'),
-        ],
-        [
             'nav' => 'Transaksi',
             'route' => route('transactions.index'),
         ],
     ];
 
-    $subtotal = $cartItems->sum(fn ($item) => $item->quantity * (float) $item->harga_saat_dimasukkan);
+    $subtotal = $cartItems->sum(fn($item) => $item->quantity * (float) $item->harga_saat_dimasukkan);
 @endphp
 
 <x-layouts.public title="Keranjang - SIRACAS">
@@ -40,13 +36,15 @@
             </div>
 
             @if ($errors->any())
-                <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                <div
+                    class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
                     {{ $errors->first() }}
                 </div>
             @endif
 
             @if ($cartItems->isEmpty())
-                <div class="mt-8 rounded-lg border border-dashed border-border-strong bg-white px-6 py-16 text-center shadow-sm">
+                <div
+                    class="mt-8 rounded-lg border border-dashed border-border-strong bg-white px-6 py-16 text-center shadow-sm">
                     <h2 class="text-xl font-black text-text-body">Keranjang masih kosong</h2>
                     <p class="mt-2 text-sm text-muted">Pilih produk organik SIRACAS yang ingin Anda pesan.</p>
                     <a href="{{ route('customer.product.index') }}"
@@ -57,7 +55,8 @@
             @else
                 <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_320px] lg:items-start">
                     <div class="overflow-hidden rounded-lg border border-border bg-white shadow-sm">
-                        <div class="hidden grid-cols-[1fr_210px_170px_80px] gap-4 border-b border-border-soft px-5 py-4 text-xs font-bold uppercase tracking-[0.22em] text-muted-light md:grid">
+                        <div
+                            class="hidden grid-cols-[1fr_210px_170px_80px] gap-4 border-b border-border-soft px-5 py-4 text-xs font-bold uppercase tracking-[0.22em] text-muted-light md:grid">
                             <span>Produk</span>
                             <span>Quantity</span>
                             <span>Total Harga</span>
@@ -71,17 +70,20 @@
                                     $itemTotal = $item->quantity * (float) $item->harga_saat_dimasukkan;
                                 @endphp
 
-                                <article class="grid gap-4 px-5 py-5 md:grid-cols-[1fr_210px_170px_80px] md:items-center">
+                                <article
+                                    class="grid gap-4 px-5 py-5 md:grid-cols-[1fr_210px_170px_80px] md:items-center">
                                     <div class="flex gap-4">
                                         <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('images/banners/banner-2.webp') }}"
                                             alt="{{ $product->nama_produk }}"
                                             class="h-20 w-20 shrink-0 rounded-lg border border-border-soft object-cover">
                                         <div class="min-w-0">
-                                            <h2 class="line-clamp-2 text-base font-black text-muted-dark">{{ $product->nama_produk }}</h2>
+                                            <h2 class="line-clamp-2 text-base font-black text-muted-dark">
+                                                {{ $product->nama_produk }}</h2>
                                             <p class="mt-1 text-sm font-bold text-accent">
                                                 Rp{{ number_format((float) $item->harga_saat_dimasukkan, 0, ',', '.') }}
                                             </p>
-                                            <p class="mt-1 text-xs font-semibold text-muted">Stok: {{ $product->stok }}</p>
+                                            <p class="mt-1 text-xs font-semibold text-muted">Stok: {{ $product->stok }}
+                                            </p>
                                         </div>
                                     </div>
 
@@ -106,7 +108,8 @@
                                     </form>
 
                                     <div>
-                                        <p class="text-xs font-semibold uppercase text-muted-light md:hidden">Total Harga</p>
+                                        <p class="text-xs font-semibold uppercase text-muted-light md:hidden">Total
+                                            Harga</p>
                                         <p class="text-lg font-black text-text-body">
                                             Rp{{ number_format($itemTotal, 0, ',', '.') }}
                                         </p>
@@ -141,7 +144,8 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="mt-5 rounded-lg border border-dashed border-border-strong bg-surface px-4 py-4 text-sm leading-6 text-muted">
+                        <div
+                            class="mt-5 rounded-lg border border-dashed border-border-strong bg-surface px-4 py-4 text-sm leading-6 text-muted">
                             Pastikan quantity dan stok sudah sesuai sebelum melanjutkan transaksi.
                         </div>
                         <a href="{{ route('checkout.form') }}"
@@ -156,7 +160,7 @@
 
     <script>
         document.querySelectorAll('.delete-cart-item-form').forEach((form) => {
-            form.addEventListener('submit', function (event) {
+            form.addEventListener('submit', function(event) {
                 event.preventDefault();
 
                 Swal.fire({

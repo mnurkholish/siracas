@@ -3,7 +3,7 @@
     $navLinks = [
         ['nav' => 'Beranda', 'route' => '/'],
         ['nav' => 'Produk', 'route' => route('customer.product.index')],
-        ['nav' => 'Transaksi', 'route' => '#'],
+        ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 
     $profilePhoto = $user->foto_profil ? asset('storage/' . $user->foto_profil) : null;

@@ -5,16 +5,8 @@
             'route' => route('customer.dashboard'),
         ],
         [
-            'nav' => 'Tentang Kami',
-            'route' => route('customer.dashboard') . '#tentang',
-        ],
-        [
             'nav' => 'Produk',
             'route' => route('customer.product.index'),
-        ],
-        [
-            'nav' => 'Keranjang',
-            'route' => route('cart.index'),
         ],
         [
             'nav' => 'Transaksi',
@@ -64,7 +56,8 @@
                     </div>
 
                     @if ($errors->any())
-                        <div class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                        <div
+                            class="mt-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
                             {{ $errors->first() }}
                         </div>
                     @endif
@@ -74,14 +67,16 @@
                         @csrf
                         <label for="quantity" class="text-sm font-bold text-muted-dark">Quantity</label>
                         <div class="mt-3 flex flex-col gap-3 sm:flex-row">
-                            <input type="number" id="quantity" name="quantity" min="1" max="{{ $product->stok }}"
-                                value="{{ old('quantity', 1) }}" @disabled($product->stok <= 0)
+                            <input type="number" id="quantity" name="quantity" min="1"
+                                max="{{ $product->stok }}" value="{{ old('quantity', 1) }}"
+                                @disabled($product->stok <= 0)
                                 class="h-12 rounded-lg border border-border-strong bg-white px-4 text-sm font-bold text-muted-dark outline-none transition focus:border-primary focus:ring-2 focus:ring-border-soft sm:w-32">
                             <button type="submit" @disabled($product->stok <= 0)
                                 class="inline-flex h-12 items-center justify-center rounded-lg bg-primary px-5 text-sm font-bold text-white transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-surface-disabled">
                                 {{ $product->stok > 0 ? 'Tambahkan ke Keranjang' : 'Stok Habis' }}
                             </button>
-                            <button type="submit" formmethod="GET" formaction="{{ route('products.buy-now.form', $product) }}"
+                            <button type="submit" formmethod="GET"
+                                formaction="{{ route('products.buy-now.form', $product) }}"
                                 @disabled($product->stok <= 0)
                                 class="inline-flex h-12 items-center justify-center rounded-lg border border-border-strong bg-white px-5 text-sm font-bold text-text-body transition hover:bg-primary-soft disabled:cursor-not-allowed disabled:bg-surface-disabled disabled:text-muted">
                                 Beli Sekarang

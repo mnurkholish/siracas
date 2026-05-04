@@ -9,10 +9,6 @@
             'route' => route('customer.product.index'),
         ],
         [
-            'nav' => 'Keranjang',
-            'route' => route('cart.index'),
-        ],
-        [
             'nav' => 'Transaksi',
             'route' => route('transactions.index'),
         ],
