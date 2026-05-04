@@ -22,9 +22,10 @@
 
             <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <div>
-                    <a href="{{ route('transactions.index') }}" class="text-sm font-semibold text-primary-dark">Kembali</a>
+                    <a href="{{ route('transactions.index') }}"
+                        class="text-sm font-semibold text-primary-dark">Kembali</a>
                     <h1 class="mt-2 text-3xl font-black text-text-body">Detail Transaksi #{{ $transaction->id }}</h1>
-                    <p class="mt-1 text-sm text-muted">{{ $transaction->tanggal->format('d M Y') }}</p>
+                    <p class="mt-1 text-sm text-muted">{{ $transaction->tanggal->format('d M Y H:i:s') }}</p>
                 </div>
                 <x-badge :status="$transaction->status">
                     {{ $statusLabel }}
@@ -42,7 +43,8 @@
                                         alt="{{ $detail->product?->nama_produk ?? 'Produk' }}"
                                         class="h-20 w-20 rounded-lg border border-border-soft object-cover">
                                     <div>
-                                        <h2 class="font-black text-muted-dark">{{ $detail->product?->nama_produk ?? 'Produk tidak tersedia' }}</h2>
+                                        <h2 class="font-black text-muted-dark">
+                                            {{ $detail->product?->nama_produk ?? 'Produk tidak tersedia' }}</h2>
                                         <p class="mt-1 text-sm text-muted">Qty: {{ $detail->quantity }}</p>
                                         <p class="mt-1 text-sm font-bold text-accent">
                                             Rp{{ number_format((float) $detail->harga_saat_transaksi, 0, ',', '.') }}
@@ -58,15 +60,70 @@
                 </div>
 
                 <aside class="card p-5">
-                    <p class="text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Alamat</p>
-                    <p class="mt-2 text-sm leading-6 text-muted-dark">{{ $transaction->address?->fullAddress() ?: '-' }}</p>
+                    <p class="text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Customer</p>
+                    <dl class="mt-2 space-y-2 text-sm">
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-muted">Username</dt>
+                            <dd class="text-right font-bold text-muted-dark">{{ $transaction->user?->username ?? '-' }}
+                            </dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-muted">Nomor HP</dt>
+                            <dd class="text-right font-bold text-muted-dark">
+                                @if ($transaction->user?->nomor_hp)
+                                    <a href="https://wa.me/{{ preg_replace('/^0/', '62', $transaction->user->nomor_hp) }}"
+                                        target="_blank">
+                                        {{ $transaction->user->nomor_hp }}
+                                    </a>
+                                @else
+                                    {{ $transaction->user?->nomor_hp ?? '-' }}
+                                @endif
+                            </dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-muted">Tanggal</dt>
+                            <dd class="text-right font-bold text-muted-dark">
+                                {{ $transaction->tanggal->format('d M Y H:i:s') }}</dd>
+                        </div>
+                    </dl>
+
+                    @if ($transaction->status === 'paid' || $transaction->paid_at || $transaction->payment_type)
+                        <div class="mt-5 border-t border-border-soft pt-5">
+                            <p class="text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Pembayaran</p>
+                            <dl class="mt-2 space-y-2 text-sm">
+                                <div class="flex items-start justify-between gap-4">
+                                    <dt class="text-muted">Order ID</dt>
+                                    <dd class="text-right font-bold text-muted-dark">
+                                        {{ $transaction->order_id ?? '-' }}</dd>
+                                </div>
+                                <div class="flex items-start justify-between gap-4">
+                                    <dt class="text-muted">Metode</dt>
+                                    <dd class="text-right font-bold text-muted-dark">
+                                        {{ $transaction->payment_type ? str_replace('_', ' ', ucfirst($transaction->payment_type)) : '-' }}
+                                    </dd>
+                                </div>
+                                <div class="flex items-start justify-between gap-4">
+                                    <dt class="text-muted">Dibayar Pada</dt>
+                                    <dd class="text-right font-bold text-muted-dark">
+                                        {{ $transaction->paid_at?->format('d M Y H:i:s') ?? '-' }}</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    @endif
+
+                    <div class="mt-5 border-t border-border-soft pt-5">
+                        <p class="text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Alamat</p>
+                        <p class="mt-2 text-sm leading-6 text-muted-dark">
+                            {{ $transaction->address?->fullAddress() ?: '-' }}</p>
+                    </div>
 
                     <p class="mt-5 text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Catatan</p>
                     <p class="mt-2 text-sm leading-6 text-muted-dark">{{ $transaction->catatan ?: '-' }}</p>
 
                     <div class="mt-5 flex items-center justify-between border-t border-border-soft pt-5">
                         <span class="text-sm font-semibold text-muted">Total</span>
-                        <span class="text-xl font-black text-accent">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
+                        <span
+                            class="text-xl font-black text-accent">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
                     </div>
 
                     @if ($transaction->status === 'paid')
@@ -80,7 +137,8 @@
                             Bayar Sekarang
                         </x-button>
 
-                        <form action="{{ route('transactions.cancel', $transaction) }}" method="POST" class="cancel-transaction-form mt-5">
+                        <form action="{{ route('transactions.cancel', $transaction) }}" method="POST"
+                            class="cancel-transaction-form mt-5">
                             @csrf
                             @method('PATCH')
                             <x-button type="submit" variant="danger-soft" size="lg" :block="true">
@@ -119,7 +177,8 @@
                     const data = await response.json();
 
                     if (!response.ok) {
-                        const message = data.message || Object.values(data.errors || {})?.[0]?.[0] || 'Gagal memulai pembayaran.';
+                        const message = data.message || Object.values(data.errors || {})?.[0]?.[0] ||
+                            'Gagal memulai pembayaran.';
                         throw new Error(message);
                     }
 
@@ -154,7 +213,7 @@
         }
 
         document.querySelectorAll('.cancel-transaction-form').forEach((form) => {
-            form.addEventListener('submit', function (event) {
+            form.addEventListener('submit', function(event) {
                 event.preventDefault();
                 Swal.fire({
                     icon: 'warning',

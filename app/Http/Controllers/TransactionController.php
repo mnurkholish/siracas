@@ -51,7 +51,7 @@ class TransactionController extends Controller
             $transaction = Transaction::create([
                 'user_id' => Auth::id(),
                 'address_id' => $validated['address_id'],
-                'tanggal' => now()->toDateString(),
+                'tanggal' => now(),
                 'catatan' => $validated['catatan'] ?? null,
                 'status' => 'pending',
             ]);
@@ -126,7 +126,7 @@ class TransactionController extends Controller
             $transaction = Transaction::create([
                 'user_id' => Auth::id(),
                 'address_id' => $validated['address_id'],
-                'tanggal' => now()->toDateString(),
+                'tanggal' => now(),
                 'catatan' => $validated['catatan'] ?? null,
                 'status' => 'pending',
             ]);
@@ -163,7 +163,7 @@ class TransactionController extends Controller
     {
         $this->authorizeCustomerTransaction($transaction);
 
-        $transaction->load(['transactionDetails.product', 'address.kecamatan.kota.provinsi']);
+        $transaction->load(['user', 'transactionDetails.product', 'address.kecamatan.kota.provinsi']);
 
         return view('customer.transactions.show', compact('transaction'));
     }
@@ -225,8 +225,9 @@ class TransactionController extends Controller
                 ],
                 'item_details' => $itemDetails->all(),
                 'customer_details' => [
-                    'first_name' => $transaction->user?->name ?? 'Customer',
+                    'first_name' => $transaction->user?->username ?? 'Customer',
                     'email' => $transaction->user?->email,
+                    'phone' => $transaction->user?->nomor_hp,
                 ],
                 'callbacks' => [
                     'finish' => route('transactions.show', $transaction),

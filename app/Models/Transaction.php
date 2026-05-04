@@ -34,7 +34,7 @@ class Transaction extends Model
     protected function casts(): array
     {
         return [
-            'tanggal' => 'date',
+            'tanggal' => 'datetime',
             'paid_at' => 'datetime',
         ];
     }

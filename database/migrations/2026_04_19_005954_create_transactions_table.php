@@ -14,7 +14,7 @@ return new class () extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('address_id')->constrained()->restrictOnDelete();
-            $table->date('tanggal');
+            $table->timestamp('tanggal');
             $table->text('catatan')->nullable();
             $table->string('status')->default('pending');
             $table->timestamps();

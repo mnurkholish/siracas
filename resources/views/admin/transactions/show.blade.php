@@ -46,6 +46,44 @@
             </div>
 
             <div class="mt-5 border-t border-gray-100 pt-5">
+                <p class="text-xs font-bold uppercase tracking-[0.25em] text-gray-400">Customer</p>
+                <dl class="mt-2 space-y-2 text-sm">
+                    <div class="flex items-start justify-between gap-4">
+                        <dt class="text-gray-500">Username</dt>
+                        <dd class="text-right font-bold text-black">{{ $transaction->user?->username ?? '-' }}</dd>
+                    </div>
+                    <div class="flex items-start justify-between gap-4">
+                        <dt class="text-gray-500">Nomor HP</dt>
+                        <dd class="text-right font-bold text-black">{{ $transaction->user?->nomor_hp ?? '-' }}</dd>
+                    </div>
+                    <div class="flex items-start justify-between gap-4">
+                        <dt class="text-gray-500">Tanggal</dt>
+                        <dd class="text-right font-bold text-black">{{ $transaction->tanggal->format('d M Y H:i:s') }}</dd>
+                    </div>
+                </dl>
+            </div>
+
+            @if ($transaction->status === 'paid' || $transaction->paid_at || $transaction->payment_type)
+                <div class="mt-5 border-t border-gray-100 pt-5">
+                    <p class="text-xs font-bold uppercase tracking-[0.25em] text-gray-400">Pembayaran</p>
+                    <dl class="mt-2 space-y-2 text-sm">
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-gray-500">Order ID</dt>
+                            <dd class="text-right font-bold text-black">{{ $transaction->order_id ?? '-' }}</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-gray-500">Metode</dt>
+                            <dd class="text-right font-bold text-black">{{ $transaction->payment_type ? str_replace('_', ' ', ucfirst($transaction->payment_type)) : '-' }}</dd>
+                        </div>
+                        <div class="flex items-start justify-between gap-4">
+                            <dt class="text-gray-500">Dibayar Pada</dt>
+                            <dd class="text-right font-bold text-black">{{ $transaction->paid_at?->format('d M Y H:i:s') ?? '-' }}</dd>
+                        </div>
+                    </dl>
+                </div>
+            @endif
+
+            <div class="mt-5 border-t border-gray-100 pt-5">
                 <p class="text-xs font-bold uppercase tracking-[0.25em] text-gray-400">Alamat</p>
                 <p class="mt-2 text-sm leading-6 text-gray-700">{{ $transaction->address?->fullAddress() ?: '-' }}</p>
             </div>
