@@ -2,11 +2,11 @@
     $navLinks = [
         [
             'nav' => 'Beranda',
-            'route' => route('customer.dashboard'),
+            'route' => route('dashboard'),
         ],
         [
             'nav' => 'Produk',
-            'route' => route('customer.product.index'),
+            'route' => route('product.index'),
         ],
         [
             'nav' => 'Transaksi',
@@ -20,7 +20,7 @@
 
     <main class="bg-secondary-soft px-6 py-12 lg:px-10">
         <div class="mx-auto max-w-5xl rounded-lg border border-border bg-white p-6 shadow-sm">
-            <a href="{{ route('customer.product.index') }}"
+            <a href="{{ route('product.index') }}"
                 class="mb-6 inline-flex text-sm font-semibold text-primary-dark transition hover:text-text-body">
                 Kembali ke produk
             </a>

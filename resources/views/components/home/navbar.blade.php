@@ -97,7 +97,7 @@
                             </div>
 
                             <div class="py-1" role="none">
-                                <a href="{{ route('customer.profile') }}"
+                                <a href="{{ route('profile') }}"
                                     class="flex px-4 py-2.5 text-sm text-muted-dark transition-colors hover:bg-primary-soft hover:text-primary"
                                     role="menuitem" tabindex="-1">
                                     Lihat Akun

@@ -2,11 +2,11 @@
     $navLinks = [
         [
             'nav' => 'Beranda',
-            'route' => route('customer.dashboard'),
+            'route' => route('dashboard'),
         ],
         [
             'nav' => 'Produk',
-            'route' => route('customer.product.index'),
+            'route' => route('product.index'),
         ],
         [
             'nav' => 'Transaksi',
@@ -29,7 +29,7 @@
                     <p class="mt-2 text-sm text-muted">Atur jumlah produk sebelum lanjut ke checkout.</p>
                 </div>
 
-                <a href="{{ route('customer.product.index') }}"
+                <a href="{{ route('product.index') }}"
                     class="inline-flex h-11 items-center justify-center rounded-lg border border-border-strong bg-white px-5 text-sm font-semibold text-text-body transition hover:bg-primary-soft">
                     Tambah Produk
                 </a>
@@ -47,7 +47,7 @@
                     class="mt-8 rounded-lg border border-dashed border-border-strong bg-white px-6 py-16 text-center shadow-sm">
                     <h2 class="text-xl font-black text-text-body">Keranjang masih kosong</h2>
                     <p class="mt-2 text-sm text-muted">Pilih produk organik SIRACAS yang ingin Anda pesan.</p>
-                    <a href="{{ route('customer.product.index') }}"
+                    <a href="{{ route('product.index') }}"
                         class="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-primary px-5 text-sm font-bold text-white transition hover:bg-primary-dark">
                         Lihat Produk
                     </a>

@@ -1,7 +1,7 @@
 @php
     $navLinks = [
-        ['nav' => 'Beranda', 'route' => route('customer.dashboard')],
-        ['nav' => 'Produk', 'route' => route('customer.product.index')],
+        ['nav' => 'Beranda', 'route' => route('dashboard')],
+        ['nav' => 'Produk', 'route' => route('product.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 

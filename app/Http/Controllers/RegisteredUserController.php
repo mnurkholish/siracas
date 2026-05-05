@@ -66,7 +66,7 @@ class RegisteredUserController extends Controller
             'role' => 'customer', // Otomatis menjadi customer
         ]);
 
-        // return redirect()->route('customer.dashboard');
+        // return redirect()->route('dashboard');
         return redirect()->route('login')->with('success', 'Akun berhasil dibuat!');
     }
 

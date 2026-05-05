@@ -88,11 +88,11 @@ class AddressController extends Controller
     private function safeReturnTo(?string $returnTo): string
     {
         if (!$returnTo || !str_starts_with($returnTo, '/')) {
-            return route('customer.profile', absolute: false);
+            return route('profile', absolute: false);
         }
 
         if (str_starts_with($returnTo, '//')) {
-            return route('customer.profile', absolute: false);
+            return route('profile', absolute: false);
         }
 
         return $returnTo;

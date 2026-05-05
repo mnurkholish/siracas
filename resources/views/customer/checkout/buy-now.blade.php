@@ -1,7 +1,7 @@
 @php
     $navLinks = [
-        ['nav' => 'Beranda', 'route' => route('customer.dashboard')],
-        ['nav' => 'Produk', 'route' => route('customer.product.index')],
+        ['nav' => 'Beranda', 'route' => route('dashboard')],
+        ['nav' => 'Produk', 'route' => route('product.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 
@@ -17,7 +17,7 @@
             @csrf
 
             <section class="rounded-lg border border-border bg-white p-5 shadow-sm">
-                <a href="{{ route('customer.product.show', $product) }}" class="text-sm font-semibold text-primary-dark">
+                <a href="{{ route('product.show', $product) }}" class="text-sm font-semibold text-primary-dark">
                     Kembali ke produk
                 </a>
 

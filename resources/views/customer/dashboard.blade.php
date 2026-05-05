@@ -17,14 +17,14 @@
                     </p>
                 </div>
 
-                <a href="{{ route('customer.profile') }}"
+                <a href="{{ route('profile') }}"
                     class="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-primary-dark">
                     Lihat Akun
                 </a>
             </div>
 
             <div class="mx-auto mt-5 grid max-w-7xl gap-4 md:grid-cols-3" x-data="{ active: 'produk' }">
-                <a href="{{ route('customer.product.index') }}" @mouseenter="active = 'produk'"
+                <a href="{{ route('product.index') }}" @mouseenter="active = 'produk'"
                     class="group rounded-lg border border-border bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-border-strong hover:shadow-[0_18px_34px_rgba(145,117,97,0.12)]"
                     data-reveal style="transition-delay: 80ms">
                     <div class="flex items-center justify-between gap-4">
@@ -60,7 +60,7 @@
                     <p class="mt-4 text-sm leading-6 text-muted">Simpan produk pilihan dan atur jumlah pesanan sebelum checkout.</p>
                 </a>
 
-                <a href="{{ route('customer.profile') }}" @mouseenter="active = 'akun'"
+                <a href="{{ route('profile') }}" @mouseenter="active = 'akun'"
                     class="group rounded-lg border border-border bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-border-strong hover:shadow-[0_18px_34px_rgba(145,117,97,0.12)]"
                     data-reveal style="transition-delay: 240ms">
                     <div class="flex items-center justify-between gap-4">
@@ -79,7 +79,7 @@
         </section>
 
         <x-home.about-section />
-        <x-home.products-section :products="$products" :all-link="route('customer.product.index')" />
+        <x-home.products-section :products="$products" :all-link="route('product.index')" />
         <x-home.reviews-section :reviews="$reviews" />
     </main>
 

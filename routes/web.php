@@ -76,6 +76,11 @@ Route::middleware('auth')->group(function () {
 
     // -- Customer Routes --
     Route::middleware('role:customer')->group(function () {
+        Route::get('/dashboard', [HomeController::class, 'customerDashboard'])->name('dashboard');
+
+        Route::get('/product', [CustomerProductController::class, 'index'])->name('product.index');
+        Route::get('/product/{product}', [CustomerProductController::class, 'show'])->name('product.show');
+
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
         Route::post('/cart/{product}', [CartController::class, 'store'])->name('cart.store');
         Route::patch('/cart/items/{cartItem}', [CartController::class, 'update'])->name('cart.items.update');
@@ -93,12 +98,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
         Route::post('/transactions/{transaction}/pay', [TransactionController::class, 'pay'])->name('transactions.pay');
         Route::patch('/transactions/{transaction}/cancel', [TransactionController::class, 'cancel'])->name('transactions.cancel');
-    });
-
-    Route::middleware('role:customer')->prefix('customer')->name('customer.')->group(function () {
-        Route::get('/dashboard', [HomeController::class, 'customerDashboard'])->name('dashboard');
-        Route::get('/product', [CustomerProductController::class, 'index'])->name('product.index');
-        Route::get('/product/{product}', [CustomerProductController::class, 'show'])->name('product.show');
 
         Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 

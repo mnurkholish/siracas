@@ -45,7 +45,7 @@
         ],
         [
             'nav' => 'Produk',
-            'route' => route('customer.product.index'),
+            'route' => route('product.index'),
         ],
         [
             'nav' => 'Transaksi',
@@ -60,7 +60,7 @@
     <main>
         <x-home.hero-section />
         <x-home.about-section />
-        <x-home.products-section :products="$products" :allLink="route('customer.product.index')" />
+        <x-home.products-section :products="$products" :allLink="route('product.index')" />
         <x-home.reviews-section :reviews="$reviews" />
     </main>
 

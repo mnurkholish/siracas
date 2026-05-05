@@ -1,7 +1,7 @@
 @php
     $navLinks = [
-        ['nav' => 'Beranda', 'route' => route('customer.dashboard')],
-        ['nav' => 'Produk', 'route' => route('customer.product.index')],
+        ['nav' => 'Beranda', 'route' => route('dashboard')],
+        ['nav' => 'Produk', 'route' => route('product.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 
@@ -38,7 +38,7 @@
             @if ($cartItems->isEmpty())
                 <div class="empty-state mt-8">
                     <h2 class="text-xl font-black text-text-body">Keranjang masih kosong</h2>
-                    <x-button :href="route('customer.product.index')" size="lg" class="mt-5">
+                    <x-button :href="route('product.index')" size="lg" class="mt-5">
                         Pilih Produk
                     </x-button>
                 </div>

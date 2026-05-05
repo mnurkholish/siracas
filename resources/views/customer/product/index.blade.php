@@ -2,11 +2,11 @@
     $navLinks = [
         [
             'nav' => 'Beranda',
-            'route' => route('customer.dashboard'),
+            'route' => route('dashboard'),
         ],
         [
             'nav' => 'Produk',
-            'route' => route('customer.product.index'),
+            'route' => route('product.index'),
         ],
         [
             'nav' => 'Transaksi',
@@ -40,7 +40,7 @@
 
         <section class="px-6 py-8 lg:px-10 lg:py-10">
             <div class="mx-auto max-w-7xl">
-                <form action="{{ route('customer.product.index') }}" method="GET"
+                <form action="{{ route('product.index') }}" method="GET"
                     class="grid gap-3 rounded-lg border border-border bg-white p-4 shadow-sm md:grid-cols-[1fr_220px_auto] md:items-center">
                     <div class="relative">
                         <input type="text" name="search" value="{{ request('search') }}"
@@ -72,7 +72,7 @@
                             Terapkan
                         </button>
                         @if (request()->filled('search') || request()->filled('satuan'))
-                            <a href="{{ route('customer.product.index') }}"
+                            <a href="{{ route('product.index') }}"
                                 class="inline-flex h-12 items-center justify-center rounded-lg border border-border-strong bg-white px-4 text-sm font-semibold text-text-body transition hover:bg-primary-soft">
                                 Reset
                             </a>
@@ -94,7 +94,7 @@
                     @forelse ($products as $product)
                         <article
                             class="group flex min-h-full flex-col overflow-hidden rounded-lg border border-border bg-white shadow-[0_16px_30px_rgba(145,117,97,0.08)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_38px_rgba(145,117,97,0.14)]">
-                            <a href="{{ route('customer.product.show', $product) }}"
+                            <a href="{{ route('product.show', $product) }}"
                                 class="block overflow-hidden bg-secondary">
                                 <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('images/banners/banner-2.webp') }}"
                                     alt="{{ $product->nama_produk }}"
@@ -140,7 +140,7 @@
                                         </div>
                                     </div>
 
-                                    <a href="{{ route('customer.product.show', $product) }}"
+                                    <a href="{{ route('product.show', $product) }}"
                                         class="inline-flex h-11 w-full items-center justify-center rounded-lg bg-primary px-4 text-sm font-bold text-white transition hover:bg-primary-dark">
                                         Lihat Detail
                                     </a>

@@ -35,11 +35,11 @@ class HomeController extends Controller
             'navLinks' => [
                 [
                     'nav' => 'Beranda',
-                    'route' => route('customer.dashboard'),
+                    'route' => route('dashboard'),
                 ],
                 [
                     'nav' => 'Produk',
-                    'route' => route('customer.product.index'),
+                    'route' => route('product.index'),
                 ],
                 [
                     'nav' => 'Transaksi',
@@ -64,7 +64,7 @@ class HomeController extends Controller
                     'description' => $product->deskripsi ?: 'Produk SIRACAS berkualitas untuk kebutuhan organik Anda.',
                     'price' => 'Rp' . number_format((float) $product->harga, 0, ',', '.'),
                     'image' => $product->foto ? asset('storage/' . $product->foto) : asset('images/banners/banner-2.webp'),
-                    'url' => route('customer.product.show', $product),
+                    'url' => route('product.show', $product),
                 ];
             })
             ->all();
@@ -84,28 +84,28 @@ class HomeController extends Controller
                 'description' => 'Cacing tanah segar berkualitas untuk kebutuhan budidaya, pakan, dan pengolahan organik.',
                 'price' => 'Rp4.000',
                 'image' => asset('images/banners/banner-2.webp'),
-                'url' => route('customer.product.index'),
+                'url' => route('product.index'),
             ],
             [
                 'name' => 'Cacing Tanah Kering',
                 'description' => 'Cacing tanah kering yang higienis, cocok untuk campuran pakan bernutrisi tinggi.',
                 'price' => 'Rp4.000',
                 'image' => asset('images/banners/banner-1.webp'),
-                'url' => route('customer.product.index'),
+                'url' => route('product.index'),
             ],
             [
                 'name' => 'Pupuk Kascing',
                 'description' => 'Pupuk organik padat hasil olahan cacing untuk membantu tanah lebih subur dan gembur.',
                 'price' => 'Rp10.000',
                 'image' => asset('images/banners/banner-2.webp'),
-                'url' => route('customer.product.index'),
+                'url' => route('product.index'),
             ],
             [
                 'name' => 'Tepung Cacing',
                 'description' => 'Tepung cacing bernutrisi tinggi untuk pakan ternak, ikan, dan unggas.',
                 'price' => 'Rp10.000',
                 'image' => asset('images/banners/banner-1.webp'),
-                'url' => route('customer.product.index'),
+                'url' => route('product.index'),
             ],
         ];
     }

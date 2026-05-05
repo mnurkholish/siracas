@@ -2,7 +2,7 @@
     $user = Auth::user();
     $navLinks = [
         ['nav' => 'Beranda', 'route' => '/'],
-        ['nav' => 'Produk', 'route' => route('customer.product.index')],
+        ['nav' => 'Produk', 'route' => route('product.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
     ];
 
@@ -116,7 +116,7 @@
                 x-transition:leave-end="opacity-0 translate-y-3 scale-95">
                 <h2 class="mb-6 text-lg font-bold text-black">Ubah Akun</h2>
 
-                <form action="{{ route('customer.profile.update') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -265,7 +265,7 @@
                 <h2 class="mb-2 text-lg font-bold text-black">Reset Password</h2>
                 <p class="mb-6 text-sm text-gray-500">Masukkan password saat ini sebelum membuat password baru.</p>
 
-                <form action="{{ route('customer.profile.password') }}" method="POST">
+                <form action="{{ route('profile.password') }}" method="POST">
                     @csrf
                     @method('PUT')
 
