@@ -98,9 +98,9 @@ class AdminTransactionController extends Controller
 
     public function updateOngkir(Request $request, Transaction $transaction)
     {
-        if ($transaction->status === 'selesai') {
+        if ($transaction->status !== 'menunggu_pembayaran') {
             return back()->withErrors([
-                'ongkir' => 'Ongkir tidak dapat diubah karena transaksi sudah selesai.',
+                'ongkir' => 'Ongkir hanya dapat diubah saat transaksi menunggu pembayaran.',
             ]);
         }
 
@@ -113,16 +113,11 @@ class AdminTransactionController extends Controller
             'ongkir.max' => 'Ongkir terlalu besar.',
         ]);
 
-        $payload = [
+        $transaction->update([
             'ongkir' => $validated['ongkir'],
-        ];
-
-        if ($transaction->status === 'menunggu_pembayaran') {
-            $payload['order_id'] = null;
-            $payload['snap_token'] = null;
-        }
-
-        $transaction->update($payload);
+            'order_id' => null,
+            'snap_token' => null,
+        ]);
 
         return redirect()
             ->route('admin.transactions.show', $transaction)

@@ -16,6 +16,7 @@
     ];
     $totalProduk = $transaction->totalHarga();
     $ongkir = (float) $transaction->ongkir;
+    $canUpdateOngkir = $transaction->status === 'menunggu_pembayaran';
 @endphp
 
 <x-layouts.admin title="Detail Transaksi #{{ $transaction->id }}"
@@ -137,21 +138,22 @@
                 </dl>
             </div>
 
-            <form action="{{ route('admin.transactions.ongkir', $transaction) }}" method="POST"
-                class="update-ongkir-form mt-6">
-                @csrf
-                @method('PATCH')
-                <label for="ongkir" class="text-sm font-bold text-black">Ongkir</label>
-                <input type="number" id="ongkir" name="ongkir" min="0" step="100"
-                    value="{{ old('ongkir', (int) $ongkir) }}" @disabled($transaction->status === 'selesai')
-                    class="form-control input-control mt-2">
-                <p class="mt-2 text-xs font-semibold text-gray-500">
-                    Ongkir dapat diubah selama transaksi belum selesai.
-                </p>
-                <x-button type="submit" size="lg" :block="true" class="mt-4" :disabled="$transaction->status === 'selesai'">
-                    Simpan Ongkir
-                </x-button>
-            </form>
+            @if ($canUpdateOngkir)
+                <form action="{{ route('admin.transactions.ongkir', $transaction) }}" method="POST"
+                    class="update-ongkir-form mt-6">
+                    @csrf
+                    @method('PATCH')
+                    <label for="ongkir" class="text-sm font-bold text-black">Ongkir</label>
+                    <input type="number" id="ongkir" name="ongkir" min="0" step="100"
+                        value="{{ old('ongkir', (int) $ongkir) }}" class="form-control input-control mt-2">
+                    <p class="mt-2 text-xs font-semibold text-gray-500">
+                        Ongkir hanya dapat diubah saat transaksi menunggu pembayaran.
+                    </p>
+                    <x-button type="submit" size="lg" :block="true" class="mt-4">
+                        Simpan Ongkir
+                    </x-button>
+                </form>
+            @endif
 
             @if ($adminStatusOptions !== [])
                 <form action="{{ route('admin.transactions.status', $transaction) }}" method="POST"

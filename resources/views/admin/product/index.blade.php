@@ -134,15 +134,20 @@
                                                     d="M19.5 7.125 16.875 4.5M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                             </svg>
                                         </button>
-                                        <button type="button" @click="openDelete({{ $product->id }})"
-                                            class="inline-flex h-9 w-9 items-center justify-center rounded-full text-danger transition hover:bg-red-50"
-                                            aria-label="Hapus {{ $product->nama_produk }}">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166M19.228 5.79 18.16 19.673A2.25 2.25 0 0 1 15.916 21H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .563c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
-                                            </svg>
-                                        </button>
+                                        <form action="{{ route('admin.product.destroy', $product) }}" method="POST"
+                                            class="delete-product-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                class="inline-flex h-9 w-9 items-center justify-center rounded-full text-danger transition hover:bg-red-50"
+                                                aria-label="Hapus {{ $product->nama_produk }}">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                        d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166M19.228 5.79 18.16 19.673A2.25 2.25 0 0 1 15.916 21H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .563c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                                </svg>
+                                            </button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -328,37 +333,6 @@
             </div>
         </div>
 
-        <div x-show="activeModal === 'delete'" x-cloak class="modal-backdrop" x-transition.opacity>
-            <div @click.outside="closeModal()" class="w-full max-w-md rounded-lg bg-white p-6 shadow-2xl">
-                <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-danger">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
-                    </svg>
-                </div>
-                <h2 class="text-lg font-bold text-black">Hapus Produk</h2>
-                <p class="mt-2 text-sm leading-6 text-gray-500">
-                    Apakah anda yakin untuk menghapus produk ini?
-                </p>
-
-                <template x-if="selected">
-                    <form :action="selected.delete_url" method="POST"
-                        class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="h-10 rounded-lg bg-danger px-6 text-sm font-semibold text-white transition hover:bg-red-600">
-                            Yakin
-                        </button>
-                        <button type="button" @click="closeModal()"
-                            class="h-10 rounded-lg border border-gray-200 bg-white px-6 text-sm font-semibold text-gray-700 transition hover:bg-gray-50">
-                            Batal
-                        </button>
-                    </form>
-                </template>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -399,12 +373,6 @@
                     };
                     this.activeModal = 'edit';
                 },
-                openDelete(id) {
-                    this.selected = {
-                        ...this.findProduct(id)
-                    };
-                    this.activeModal = 'delete';
-                },
                 closeModal() {
                     this.activeModal = '';
                 },
@@ -417,5 +385,25 @@
                 },
             };
         }
+
+        document.querySelectorAll('.delete-product-form').forEach((form) => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Apakah yakin?',
+                    text: 'Produk yang dihapus akan masuk ke arsip.',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: themeColor('primary'),
+                    cancelButtonColor: themeColor('danger'),
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
     </script>
 </x-layouts.admin>
