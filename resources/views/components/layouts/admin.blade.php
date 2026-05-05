@@ -5,19 +5,30 @@
 ])
 
 <x-layouts.public :title="$title ? $title . ' - SIRACAS' : 'Admin - SIRACAS'">
-    <div x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false" class="min-h-screen bg-background text-black">
+    <div x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false"
+        class="min-h-screen bg-background text-black">
         @php
             $menus = [
                 ['name' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => 'dashboard'],
                 ['name' => 'Akun', 'route' => 'admin.profile', 'icon' => 'profile'],
                 ['name' => 'Akun Customer', 'route' => 'admin.customer.index', 'icon' => 'customer'],
                 ['name' => 'Produk', 'route' => 'admin.product.index', 'icon' => 'product'],
-                ['name' => 'Transaksi', 'route' => 'admin.transactions.index', 'icon' => 'transaksi', 'active' => ['admin.transactions.index', 'admin.transactions.show', 'admin.transactions.status']],
-                ['name' => 'Riwayat Transaksi', 'route' => 'admin.transactions.history', 'icon' => 'riwayat', 'active' => ['admin.transactions.history']],
-                ['name' => 'Ulasan', 'route' => 'home', 'icon' => 'ulasan'],
-                ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],
-                ['name' => 'Notifikasi', 'route' => 'home', 'icon' => 'notifikasi'],
-                ['name' => 'Laporan Operasional', 'route' => 'home', 'icon' => 'laporan'],
+                [
+                    'name' => 'Transaksi',
+                    'route' => 'admin.transactions.index',
+                    'icon' => 'transaksi',
+                    'active' => ['admin.transactions.index', 'admin.transactions.show', 'admin.transactions.status'],
+                ],
+                // [
+                //     'name' => 'Riwayat Transaksi',
+                //     'route' => 'admin.transactions.history',
+                //     'icon' => 'riwayat',
+                //     'active' => ['admin.transactions.history'],
+                // ],
+                // ['name' => 'Ulasan', 'route' => 'home', 'icon' => 'ulasan'],
+                // ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],
+                // ['name' => 'Notifikasi', 'route' => 'home', 'icon' => 'notifikasi'],
+                // ['name' => 'Laporan Operasional', 'route' => 'home', 'icon' => 'laporan'],
             ];
         @endphp
 
@@ -51,8 +62,9 @@
             <nav class="flex flex-1 flex-col gap-2 overflow-y-auto pr-1 text-base">
                 @foreach ($menus as $menu)
                     @php
-                        $active = collect($menu['active'] ?? [$menu['route'] . '*'])
-                            ->contains(fn ($pattern) => request()->routeIs($pattern));
+                        $active = collect($menu['active'] ?? [$menu['route'] . '*'])->contains(
+                            fn($pattern) => request()->routeIs($pattern),
+                        );
                     @endphp
 
                     <a href="{{ route($menu['route']) }}" title="{{ $menu['name'] }}" @click="sidebarOpen = false"
@@ -96,7 +108,8 @@
         </aside>
 
         <div class="lg:pl-[260px]">
-            <header class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border-soft bg-white/95 px-4 backdrop-blur lg:hidden">
+            <header
+                class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border-soft bg-white/95 px-4 backdrop-blur lg:hidden">
                 <button type="button" @click="sidebarOpen = true"
                     class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-soft text-text-body transition hover:bg-primary-soft"
                     aria-label="Buka menu admin">
@@ -107,7 +120,8 @@
                 </button>
 
                 <div class="flex min-w-0 items-center gap-3">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo SIRACAS" class="h-8 w-8 rounded-full object-cover">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo SIRACAS"
+                        class="h-8 w-8 rounded-full object-cover">
                     <span class="truncate text-lg font-bold tracking-wide text-text-body">SIRACAS</span>
                 </div>
 
