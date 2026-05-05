@@ -96,6 +96,39 @@ class AdminTransactionController extends Controller
             ->with('success', 'Status telah diperbarui');
     }
 
+    public function updateOngkir(Request $request, Transaction $transaction)
+    {
+        if ($transaction->status === 'selesai') {
+            return back()->withErrors([
+                'ongkir' => 'Ongkir tidak dapat diubah karena transaksi sudah selesai.',
+            ]);
+        }
+
+        $validated = $request->validate([
+            'ongkir' => ['required', 'numeric', 'min:0', 'max:9999999999.99'],
+        ], [
+            'ongkir.required' => 'Ongkir wajib diisi.',
+            'ongkir.numeric' => 'Ongkir harus berupa angka.',
+            'ongkir.min' => 'Ongkir tidak boleh kurang dari 0.',
+            'ongkir.max' => 'Ongkir terlalu besar.',
+        ]);
+
+        $payload = [
+            'ongkir' => $validated['ongkir'],
+        ];
+
+        if ($transaction->status === 'menunggu_pembayaran') {
+            $payload['order_id'] = null;
+            $payload['snap_token'] = null;
+        }
+
+        $transaction->update($payload);
+
+        return redirect()
+            ->route('admin.transactions.show', $transaction)
+            ->with('success', 'Ongkir telah diperbarui');
+    }
+
     private function filteredTransactions(Request $request, array $allowedStatuses)
     {
         $search = trim((string) $request->query('search'));

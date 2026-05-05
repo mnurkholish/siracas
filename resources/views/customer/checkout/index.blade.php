@@ -24,6 +24,17 @@
                 </div>
             @endif
 
+            <div class="mt-6 rounded-lg border border-amber-200 bg-amber-50 px-5 py-4">
+                <p class="text-sm font-semibold leading-6 text-amber-800">
+                    Silakan chat admin melalui WhatsApp untuk menentukan ongkir sebelum membuat pesanan.
+                </p>
+                @if ($adminWhatsappUrl)
+                    <x-button :href="$adminWhatsappUrl" target="_blank" rel="noopener" variant="secondary" size="sm" class="mt-3">
+                        Chat Admin
+                    </x-button>
+                @endif
+            </div>
+
             @if ($cartItems->isEmpty())
                 <div class="empty-state mt-8">
                     <h2 class="text-xl font-black text-text-body">Keranjang masih kosong</h2>
@@ -94,7 +105,7 @@
                             placeholder="Opsional">{{ old('catatan') }}</textarea>
 
                         <div class="mt-5 flex items-center justify-between border-t border-border-soft pt-5">
-                            <span class="text-sm font-semibold text-muted">Total</span>
+                            <span class="text-sm font-semibold text-muted">Total Produk</span>
                             <span
                                 class="text-xl font-black text-accent">Rp{{ number_format($total, 0, ',', '.') }}</span>
                         </div>

@@ -67,6 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/transactions/history', [AdminTransactionController::class, 'history'])->name('transactions.history');
         Route::get('/transactions/{transaction}', [AdminTransactionController::class, 'show'])->name('transactions.show');
         Route::patch('/transactions/{transaction}/status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.status');
+        Route::patch('/transactions/{transaction}/ongkir', [AdminTransactionController::class, 'updateOngkir'])->name('transactions.ongkir');
 
         Route::get('/profile', [ProfileController::class, 'adminIndex'])->name('profile');
         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');

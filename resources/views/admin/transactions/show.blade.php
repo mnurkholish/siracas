@@ -14,6 +14,8 @@
         'dibatalkan' => 'Dibatalkan',
         'kedaluwarsa' => 'Kedaluwarsa',
     ];
+    $totalProduk = $transaction->totalHarga();
+    $ongkir = (float) $transaction->ongkir;
 @endphp
 
 <x-layouts.admin title="Detail Transaksi #{{ $transaction->id }}"
@@ -118,11 +120,38 @@
                 <p class="mt-2 text-sm leading-6 text-gray-700">{{ $transaction->catatan ?: '-' }}</p>
             </div>
 
-            <div class="mt-5 flex items-center justify-between border-t border-gray-100 pt-5">
-                <span class="text-sm font-semibold text-gray-500">Total Harga</span>
-                <span
-                    class="text-xl font-bold text-primary">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
+            <div class="mt-5 border-t border-gray-100 pt-5">
+                <dl class="space-y-2 text-sm">
+                    <div class="flex items-center justify-between gap-4">
+                        <dt class="font-semibold text-gray-500">Total Produk</dt>
+                        <dd class="font-bold text-black">Rp{{ number_format($totalProduk, 0, ',', '.') }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between gap-4">
+                        <dt class="font-semibold text-gray-500">Ongkir</dt>
+                        <dd class="font-bold text-black">Rp{{ number_format($ongkir, 0, ',', '.') }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between gap-4 border-t border-gray-100 pt-3">
+                        <dt class="font-bold text-black">Total Akhir</dt>
+                        <dd class="text-xl font-bold text-primary">Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}</dd>
+                    </div>
+                </dl>
             </div>
+
+            <form action="{{ route('admin.transactions.ongkir', $transaction) }}" method="POST"
+                class="update-ongkir-form mt-6">
+                @csrf
+                @method('PATCH')
+                <label for="ongkir" class="text-sm font-bold text-black">Ongkir</label>
+                <input type="number" id="ongkir" name="ongkir" min="0" step="100"
+                    value="{{ old('ongkir', (int) $ongkir) }}" @disabled($transaction->status === 'selesai')
+                    class="form-control input-control mt-2">
+                <p class="mt-2 text-xs font-semibold text-gray-500">
+                    Ongkir dapat diubah selama transaksi belum selesai.
+                </p>
+                <x-button type="submit" size="lg" :block="true" class="mt-4" :disabled="$transaction->status === 'selesai'">
+                    Simpan Ongkir
+                </x-button>
+            </form>
 
             @if ($adminStatusOptions !== [])
                 <form action="{{ route('admin.transactions.status', $transaction) }}" method="POST"
@@ -162,6 +191,25 @@
                     title: 'Apakah yakin?',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, perbarui',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: themeColor('primary'),
+                    cancelButtonColor: themeColor('danger'),
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('.update-ongkir-form').forEach((form) => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Simpan ongkir?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, simpan',
                     cancelButtonText: 'Batal',
                     confirmButtonColor: themeColor('primary'),
                     cancelButtonColor: themeColor('danger'),

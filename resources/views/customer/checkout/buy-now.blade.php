@@ -28,6 +28,17 @@
                     </div>
                 @endif
 
+                <div class="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+                    <p class="text-sm font-semibold leading-6 text-amber-800">
+                        Silakan chat admin melalui WhatsApp untuk menentukan ongkir sebelum membuat pesanan.
+                    </p>
+                    @if ($adminWhatsappUrl)
+                        <x-button :href="$adminWhatsappUrl" target="_blank" rel="noopener" variant="secondary" size="sm" class="mt-3">
+                            Chat Admin
+                        </x-button>
+                    @endif
+                </div>
+
                 <div class="mt-6 flex flex-col gap-5 sm:flex-row">
                     <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('images/banners/banner-2.webp') }}"
                         alt="{{ $product->nama_produk }}"
@@ -75,7 +86,7 @@
                     placeholder="Opsional">{{ old('catatan') }}</textarea>
 
                 <div class="mt-5 flex items-center justify-between border-t border-border-soft pt-5">
-                    <span class="text-sm font-semibold text-muted">Estimasi total</span>
+                    <span class="text-sm font-semibold text-muted">Total Produk</span>
                     <span class="text-xl font-black text-accent">Rp{{ number_format($total, 0, ',', '.') }}</span>
                 </div>
 

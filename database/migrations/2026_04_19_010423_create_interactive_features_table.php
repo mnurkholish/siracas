@@ -25,7 +25,6 @@ return new class () extends Migration {
             $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
             $table->text('pesan');
-            $table->string('foto')->nullable();
             $table->timestamps();
         });
 
@@ -34,7 +33,6 @@ return new class () extends Migration {
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('judul');
             $table->text('pesan');
-            $table->string('foto')->nullable();
             $table->boolean('dibaca')->default(false);
             $table->timestamps();
         });

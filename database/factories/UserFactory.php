@@ -32,7 +32,7 @@ class UserFactory extends Factory
             'foto_profil' => null,
             'tanggal_lahir' => $this->faker->date(),
             'nomor_hp' => "081234567890",
-            'jenis_kelamin' => $this->faker->randomElement(['Laki-laki', 'Perempuan']),
+            'jenis_kelamin' => $this->faker->randomElement(['laki-laki', 'perempuan']),
             'role' => 'customer',
             'remember_token' => Str::random(10),
         ];

@@ -39,6 +39,7 @@ class Transaction extends Model
         'tanggal',
         'catatan',
         'status',
+        'ongkir',
         'order_id',
         'snap_token',
         'payment_type',
@@ -50,6 +51,7 @@ class Transaction extends Model
         return [
             'tanggal' => 'datetime',
             'paid_at' => 'datetime',
+            'ongkir' => 'decimal:2',
         ];
     }
 
@@ -73,6 +75,11 @@ class Transaction extends Model
         return (float) $this->transactionDetails->sum(function (TransactionDetail $detail) {
             return $detail->quantity * (float) $detail->harga_saat_transaksi;
         });
+    }
+
+    public function totalAkhir(): float
+    {
+        return $this->totalHarga() + (float) $this->ongkir;
     }
 
     public function totalQuantity(): int

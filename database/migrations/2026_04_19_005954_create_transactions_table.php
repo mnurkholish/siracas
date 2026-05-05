@@ -17,6 +17,7 @@ return new class () extends Migration {
             $table->timestamp('tanggal');
             $table->text('catatan')->nullable();
             $table->string('status')->default('menunggu_pembayaran');
+            $table->decimal('ongkir', 12, 2)->default(0);
             $table->timestamps();
         });
 

@@ -17,7 +17,7 @@
                     'name' => 'Transaksi',
                     'route' => 'admin.transactions.index',
                     'icon' => 'transaksi',
-                    'active' => ['admin.transactions.index', 'admin.transactions.show', 'admin.transactions.status'],
+                    'active' => ['admin.transactions.index', 'admin.transactions.show', 'admin.transactions.status', 'admin.transactions.ongkir'],
                 ],
                 // [
                 //     'name' => 'Riwayat Transaksi',

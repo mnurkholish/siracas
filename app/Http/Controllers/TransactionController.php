@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Address;
 use App\Models\Product;
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,7 @@ class TransactionController extends Controller
             'cart' => $cart,
             'cartItems' => $cartItems,
             'addresses' => $addresses,
+            'adminWhatsappUrl' => $this->adminWhatsappUrl(),
         ]);
     }
 
@@ -96,6 +98,7 @@ class TransactionController extends Controller
             'product' => $product,
             'addresses' => $addresses,
             'quantity' => $quantity,
+            'adminWhatsappUrl' => $this->adminWhatsappUrl(),
         ]);
     }
 
@@ -165,7 +168,10 @@ class TransactionController extends Controller
 
         $transaction->load(['user', 'transactionDetails.product', 'address.kecamatan.kota.provinsi']);
 
-        return view('customer.transactions.show', compact('transaction'));
+        return view('customer.transactions.show', [
+            'transaction' => $transaction,
+            'adminWhatsappUrl' => $this->adminWhatsappUrl(),
+        ]);
     }
 
     public function pay(Transaction $transaction)
@@ -178,6 +184,12 @@ class TransactionController extends Controller
             ]);
         }
 
+        if ((float) $transaction->ongkir <= 0) {
+            throw ValidationException::withMessages([
+                'ongkir' => 'Ongkir belum ditentukan. Silakan chat admin terlebih dahulu.',
+            ]);
+        }
+
         $transaction->loadMissing(['transactionDetails.product', 'user']);
         $itemDetails = $transaction->transactionDetails
             ->map(fn ($detail) => [
@@ -187,7 +199,15 @@ class TransactionController extends Controller
                 'name' => Str::limit($detail->product?->nama_produk ?? 'Produk', 50, ''),
             ])
             ->values();
-        $grossAmount = (int) $itemDetails->sum(fn ($detail) => $detail['price'] * $detail['quantity']);
+        $ongkir = (int) round((float) $transaction->ongkir);
+        $itemDetails->push([
+            'id' => 'ONGKIR',
+            'price' => $ongkir,
+            'quantity' => 1,
+            'name' => 'Ongkir',
+        ]);
+
+        $grossAmount = (int) round($transaction->totalAkhir());
 
         if ($grossAmount <= 0) {
             throw ValidationException::withMessages([
@@ -326,5 +346,23 @@ class TransactionController extends Controller
         } while (Transaction::query()->where('order_id', $orderId)->exists());
 
         return $orderId;
+    }
+
+    private function adminWhatsappUrl(): ?string
+    {
+        $phone = User::query()
+            ->where('role', 'admin')
+            ->whereNotNull('nomor_hp')
+            ->value('nomor_hp');
+
+        if (! $phone) {
+            return null;
+        }
+
+        $normalizedPhone = preg_replace('/\D+/', '', $phone);
+        $normalizedPhone = preg_replace('/^0/', '62', $normalizedPhone);
+        $message = rawurlencode('Halo admin, saya ingin menanyakan ongkir untuk pesanan saya. Saya bertempat di <Masukkan alamat anda> dan ingin memesan <Tulis pesanan anda>');
+
+        return "https://wa.me/{$normalizedPhone}?text={$message}";
     }
 }

@@ -14,6 +14,10 @@
         'dibatalkan' => 'Dibatalkan',
         'kedaluwarsa' => 'Kedaluwarsa',
     ][$transaction->status] ?? $transaction->status;
+
+    $totalProduk = $transaction->totalHarga();
+    $ongkir = (float) $transaction->ongkir;
+    $canPay = $transaction->status === 'menunggu_pembayaran' && $ongkir > 0;
 @endphp
 
 <x-layouts.public title="Detail Transaksi - SIRACAS">
@@ -119,10 +123,21 @@
                     <p class="mt-5 text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Catatan</p>
                     <p class="mt-2 text-sm leading-6 text-muted-dark">{{ $transaction->catatan ?: '-' }}</p>
 
-                    <div class="mt-5 flex items-center justify-between border-t border-border-soft pt-5">
-                        <span class="text-sm font-semibold text-muted">Total</span>
-                        <span
-                            class="text-xl font-black text-accent">Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}</span>
+                    <div class="mt-5 border-t border-border-soft pt-5">
+                        <dl class="space-y-2 text-sm">
+                            <div class="flex items-center justify-between gap-4">
+                                <dt class="font-semibold text-muted">Total Produk</dt>
+                                <dd class="font-bold text-muted-dark">Rp{{ number_format($totalProduk, 0, ',', '.') }}</dd>
+                            </div>
+                            <div class="flex items-center justify-between gap-4">
+                                <dt class="font-semibold text-muted">Ongkir</dt>
+                                <dd class="font-bold text-muted-dark">Rp{{ number_format($ongkir, 0, ',', '.') }}</dd>
+                            </div>
+                            <div class="flex items-center justify-between gap-4 border-t border-border-soft pt-3">
+                                <dt class="font-black text-muted-dark">Total Akhir</dt>
+                                <dd class="text-xl font-black text-accent">Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}</dd>
+                            </div>
+                        </dl>
                     </div>
 
                     @if ($transaction->status === 'dibayar')
@@ -132,9 +147,23 @@
                     @endif
 
                     @if ($transaction->status === 'menunggu_pembayaran')
-                        <x-button type="button" id="pay-now-button" size="lg" :block="true" class="mt-5">
-                            Bayar Sekarang
-                        </x-button>
+                        @if ($canPay)
+                            <x-button type="button" id="pay-now-button" size="lg" :block="true" class="mt-5">
+                                Bayar Sekarang
+                            </x-button>
+                        @else
+                            <div class="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800">
+                                Ongkir belum ditentukan. Silakan chat admin terlebih dahulu.
+                            </div>
+                            <div class="mt-3 rounded-lg bg-gray-50 px-4 py-3 text-center text-sm font-bold text-gray-600">
+                                Menunggu admin menentukan ongkir
+                            </div>
+                            @if ($adminWhatsappUrl)
+                                <x-button :href="$adminWhatsappUrl" target="_blank" rel="noopener" variant="secondary" size="lg" :block="true" class="mt-3">
+                                    Chat Admin
+                                </x-button>
+                            @endif
+                        @endif
 
                         <form action="{{ route('transactions.cancel', $transaction) }}" method="POST"
                             class="cancel-transaction-form mt-5">
@@ -150,7 +179,7 @@
         </section>
     </main>
 
-    @if ($transaction->status === 'menunggu_pembayaran')
+    @if ($canPay)
         <script src="https://app.sandbox.midtrans.com/snap/snap.js"
             data-client-key="{{ config('services.midtrans.client_key') }}"></script>
     @endif
