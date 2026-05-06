@@ -27,6 +27,9 @@ class Product extends Model
         'pcs' => 'Pcs',
         'paket' => 'Paket',
         'karung' => 'Karung',
+        'ton' => 'Ton',
+        'kuwintal' => 'Kuwintal',
+        'botol' => 'Botol',
     ];
 
     protected function casts(): array

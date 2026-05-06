@@ -18,13 +18,13 @@ class UserSeeder extends Seeder
 
         // Admin manual
         DB::table('users')->insert([
-            'username' => 'admin',
+            'username' => 'Admin',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('Admin123'),
             'foto_profil' => null,
             'tanggal_lahir' => '1990-01-01',
             'nomor_hp' => '085648569562',
-            'jenis_kelamin' => 'laki-laki',
+            'jenis_kelamin' => 'perempuan',
             'role' => 'admin',
             'created_at' => now(),
             'updated_at' => now(),
@@ -46,6 +46,6 @@ class UserSeeder extends Seeder
 
 
         // Customer pakai factory (misal 10 data)
-        User::factory()->count(10)->create();
+        User::factory()->count(15)->create();
     }
 }
