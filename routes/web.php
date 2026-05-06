@@ -1,20 +1,20 @@
 <?php
 
-use App\Http\Controllers\AddressController;
 use App\Http\Controllers\Admin\AdminTransactionController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\CustomerAccountController;
-use App\Http\Controllers\CustomerProductController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\CustomerAccountController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\SessionsController;
+use App\Http\Controllers\Customer\AddressController;
+use App\Http\Controllers\Customer\CartController;
+use App\Http\Controllers\Customer\CustomerProductController;
+use App\Http\Controllers\Customer\TransactionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MidtransCallbackController;
-use App\Http\Controllers\NewPasswordController;
-use App\Http\Controllers\PasswordResetLinkController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RegisteredUserController;
-use App\Http\Controllers\SessionsController;
-use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 // ==========================================
