@@ -13,6 +13,8 @@
             'route' => route('transactions.index'),
         ],
     ];
+
+    $averageRating = round((float) ($product->reviews_avg_rating ?? 0), 1);
 @endphp
 
 <x-layouts.public title="{{ $product->nama_produk }} - SIRACAS">
@@ -36,6 +38,18 @@
                     <p class="mt-4 text-2xl font-black text-accent">
                         Rp{{ number_format((float) $product->harga, 0, ',', '.') }}
                     </p>
+
+                    <div class="mt-4 flex flex-wrap items-center gap-3">
+                        <div class="flex items-center gap-1 text-accent">
+                            @for ($star = 1; $star <= 5; $star++)
+                                <i class="bi {{ $star <= round($averageRating) ? 'bi-star-fill' : 'bi-star' }}"></i>
+                            @endfor
+                        </div>
+                        <p class="text-sm font-bold text-muted-dark">
+                            {{ number_format($averageRating, 1, ',', '.') }} / 5
+                            <span class="font-semibold text-muted">({{ $product->reviews->count() }} review)</span>
+                        </p>
+                    </div>
 
                     <div class="mt-5 grid gap-3 sm:grid-cols-2">
                         <div class="rounded-lg bg-secondary-soft px-4 py-3">
@@ -85,6 +99,53 @@
                     </form>
                 </section>
             </div>
+
+            <section class="mt-10 border-t border-border-soft pt-8">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-[0.35em] text-muted-light">Review Produk</p>
+                        <h2 class="mt-2 text-2xl font-black text-muted-dark">Ulasan Customer</h2>
+                    </div>
+                    <p class="text-sm font-bold text-muted-dark">
+                        Rata-rata {{ number_format($averageRating, 1, ',', '.') }} dari {{ $product->reviews->count() }} review
+                    </p>
+                </div>
+
+                @if ($product->reviews->isEmpty())
+                    <div class="mt-6 rounded-lg border border-dashed border-border-strong bg-surface px-5 py-8 text-center">
+                        <p class="font-bold text-muted-dark">Belum ada review untuk produk ini.</p>
+                    </div>
+                @else
+                    <div class="mt-6 grid gap-4">
+                        @foreach ($product->reviews as $review)
+                            <article class="rounded-lg border border-border-soft bg-surface p-5">
+                                <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                                    <div>
+                                        <div class="flex flex-wrap items-center gap-3">
+                                            <p class="font-black text-muted-dark">{{ $review->user?->username ?? 'Customer' }}</p>
+                                            <div class="flex items-center gap-1 text-accent">
+                                                @for ($star = 1; $star <= 5; $star++)
+                                                    <i class="bi {{ $star <= $review->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                                @endfor
+                                            </div>
+                                        </div>
+                                        <p class="mt-1 text-xs font-semibold text-muted">
+                                            {{ $review->created_at->format('d M Y') }}
+                                        </p>
+                                        <p class="mt-3 text-sm leading-7 text-muted-dark">{{ $review->isi }}</p>
+                                    </div>
+
+                                    @if ($review->foto)
+                                        <img src="{{ asset('storage/' . $review->foto) }}"
+                                            alt="Foto review {{ $product->nama_produk }}"
+                                            class="h-24 w-24 rounded-lg border border-border-soft object-cover">
+                                    @endif
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                @endif
+            </section>
         </div>
     </main>
 

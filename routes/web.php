@@ -11,6 +11,7 @@ use App\Http\Controllers\Auth\SessionsController;
 use App\Http\Controllers\Customer\AddressController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CustomerProductController;
+use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Customer\TransactionController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MidtransCallbackController;
@@ -98,6 +99,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
         Route::post('/transactions/{transaction}/pay', [TransactionController::class, 'pay'])->name('transactions.pay');
         Route::patch('/transactions/{transaction}/cancel', [TransactionController::class, 'cancel'])->name('transactions.cancel');
+        Route::post('/transactions/{transaction}/details/{transactionDetail}/reviews', [ReviewController::class, 'store'])->name('transactions.details.reviews.store');
 
         Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 

@@ -21,6 +21,35 @@
 @endphp
 
 <x-layouts.public title="Detail Transaksi - SIRACAS">
+    <style>
+        .star-rating {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 0.25rem;
+        }
+
+        .star-rating input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .star-rating label {
+            cursor: pointer;
+            color: #d8c9bc;
+            font-size: 1.35rem;
+            line-height: 1;
+            transition: color 150ms ease;
+        }
+
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #b37323;
+        }
+    </style>
+
     <x-home.navbar :nav-links="$navLinks" />
 
     <main class="page">
@@ -48,23 +77,96 @@
                     <div class="border-b border-border-soft px-5 py-4 font-black text-muted-dark">Produk</div>
                     <div class="divide-y divide-border-soft">
                         @foreach ($transaction->transactionDetails as $detail)
-                            <article class="grid gap-4 px-5 py-5 sm:grid-cols-[1fr_auto] sm:items-center">
-                                <div class="flex gap-4">
-                                    <img src="{{ $detail->product?->foto ? asset('storage/' . $detail->product->foto) : asset('images/banners/banner-2.webp') }}"
-                                        alt="{{ $detail->product?->nama_produk ?? 'Produk' }}"
-                                        class="h-20 w-20 rounded-lg border border-border-soft object-cover">
-                                    <div>
-                                        <h2 class="font-black text-muted-dark">
-                                            {{ $detail->product?->nama_produk ?? 'Produk tidak tersedia' }}</h2>
-                                        <p class="mt-1 text-sm text-muted">Qty: {{ $detail->quantity }}</p>
-                                        <p class="mt-1 text-sm font-bold text-accent">
-                                            Rp{{ number_format((float) $detail->harga_saat_transaksi, 0, ',', '.') }}
-                                        </p>
+                            @php
+                                $review = $detail->product?->reviews?->first();
+                            @endphp
+
+                            <article class="px-5 py-5">
+                                <div class="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-start">
+                                    <div class="flex gap-4">
+                                        <img src="{{ $detail->product?->foto ? asset('storage/' . $detail->product->foto) : asset('images/banners/banner-2.webp') }}"
+                                            alt="{{ $detail->product?->nama_produk ?? 'Produk' }}"
+                                            class="h-20 w-20 rounded-lg border border-border-soft object-cover">
+                                        <div>
+                                            <h2 class="font-black text-muted-dark">
+                                                {{ $detail->product?->nama_produk ?? 'Produk tidak tersedia' }}</h2>
+                                            <p class="mt-1 text-sm text-muted">Qty: {{ $detail->quantity }}</p>
+                                            <p class="mt-1 text-sm font-bold text-accent">
+                                                Rp{{ number_format((float) $detail->harga_saat_transaksi, 0, ',', '.') }}
+                                            </p>
+                                        </div>
                                     </div>
+
+                                    <p class="text-lg font-black text-text-body">
+                                        Rp{{ number_format($detail->subtotal(), 0, ',', '.') }}
+                                    </p>
                                 </div>
-                                <p class="text-lg font-black text-text-body">
-                                    Rp{{ number_format($detail->subtotal(), 0, ',', '.') }}
-                                </p>
+
+                                @if ($transaction->status === 'selesai' && $detail->product)
+                                    <div class="mt-5 rounded-lg border border-border-soft bg-surface p-4">
+                                        @if ($review)
+                                            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                                                <div>
+                                                    <p class="text-sm font-black text-success">Sudah direview</p>
+                                                    <div class="mt-2 flex items-center gap-1 text-accent">
+                                                        @for ($star = 1; $star <= 5; $star++)
+                                                            <i class="bi {{ $star <= $review->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                                        @endfor
+                                                    </div>
+                                                    <p class="mt-2 text-sm leading-6 text-muted-dark">{{ $review->isi }}</p>
+                                                </div>
+                                                @if ($review->foto)
+                                                    <img src="{{ asset('storage/' . $review->foto) }}"
+                                                        alt="Foto review {{ $detail->product->nama_produk }}"
+                                                        class="h-20 w-20 rounded-lg border border-border-soft object-cover">
+                                                @endif
+                                            </div>
+                                        @else
+                                            <p class="text-sm font-black text-muted-dark">Beri Review</p>
+                                            <form action="{{ route('transactions.details.reviews.store', [$transaction, $detail]) }}"
+                                                method="POST" enctype="multipart/form-data" class="mt-4 grid gap-4">
+                                                @csrf
+
+                                                <div>
+                                                    <label class="form-label">Rating</label>
+                                                    <div class="star-rating" aria-label="Rating produk">
+                                                        @for ($star = 5; $star >= 1; $star--)
+                                                            <input type="radio"
+                                                                id="rating-{{ $detail->id }}-{{ $star }}"
+                                                                name="rating" value="{{ $star }}"
+                                                                @checked((int) old('rating') === $star)>
+                                                            <label for="rating-{{ $detail->id }}-{{ $star }}"
+                                                                title="{{ $star }} bintang">
+                                                                <i class="bi bi-star-fill"></i>
+                                                            </label>
+                                                        @endfor
+                                                    </div>
+                                                </div>
+
+                                                <div>
+                                                    <label for="isi-{{ $detail->id }}" class="form-label">Isi Review</label>
+                                                    <textarea id="isi-{{ $detail->id }}" name="isi" class="form-control textarea-control"
+                                                        placeholder="Ceritakan pengalamanmu dengan produk ini.">{{ old('isi') }}</textarea>
+                                                </div>
+
+                                                <div>
+                                                    <label for="foto-{{ $detail->id }}" class="form-label">Foto Review</label>
+                                                    <input type="file" id="foto-{{ $detail->id }}" name="foto"
+                                                        accept="image/jpeg,image/png,image/webp"
+                                                        class="form-control py-3">
+                                                    <p class="mt-2 text-xs font-semibold text-muted">Opsional, JPG/PNG/WEBP maksimal 2 MB.</p>
+                                                </div>
+
+                                                <div>
+                                                    <button type="submit"
+                                                        class="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-5 text-sm font-bold text-white transition hover:bg-primary-dark">
+                                                        Simpan Review
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        @endif
+                                    </div>
+                                @endif
                             </article>
                         @endforeach
                     </div>

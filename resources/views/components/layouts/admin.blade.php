@@ -17,18 +17,23 @@
                     'name' => 'Transaksi',
                     'route' => 'admin.transactions.index',
                     'icon' => 'transaksi',
-                    'active' => ['admin.transactions.index', 'admin.transactions.show', 'admin.transactions.status', 'admin.transactions.ongkir'],
+                    'active' => [
+                        'admin.transactions.index',
+                        'admin.transactions.show',
+                        'admin.transactions.status',
+                        'admin.transactions.ongkir',
+                    ],
                 ],
-                // [
-                //     'name' => 'Riwayat Transaksi',
-                //     'route' => 'admin.transactions.history',
-                //     'icon' => 'riwayat',
-                //     'active' => ['admin.transactions.history'],
-                // ],
-                // ['name' => 'Ulasan', 'route' => 'home', 'icon' => 'ulasan'],
-                // ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],
-                // ['name' => 'Notifikasi', 'route' => 'home', 'icon' => 'notifikasi'],
-                // ['name' => 'Laporan Operasional', 'route' => 'home', 'icon' => 'laporan'],
+                [
+                    'name' => 'Riwayat Transaksi',
+                    'route' => 'admin.transactions.history',
+                    'icon' => 'riwayat',
+                    'active' => ['admin.transactions.history'],
+                ],
+                ['name' => 'Ulasan', 'route' => 'home', 'icon' => 'ulasan'],
+                ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],
+                ['name' => 'Notifikasi', 'route' => 'home', 'icon' => 'notifikasi'],
+                ['name' => 'Laporan Operasional', 'route' => 'home', 'icon' => 'laporan'],
             ];
         @endphp
 

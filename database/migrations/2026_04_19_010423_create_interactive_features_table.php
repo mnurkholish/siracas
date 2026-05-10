@@ -43,6 +43,8 @@ return new class () extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('interactive_features');
+        Schema::dropIfExists('notifications');
+        Schema::dropIfExists('chats');
+        Schema::dropIfExists('reviews');
     }
 };

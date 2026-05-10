@@ -167,7 +167,13 @@ class TransactionController extends Controller
     {
         $this->authorizeCustomerTransaction($transaction);
 
-        $transaction->load(['user', 'transactionDetails.product', 'address.kecamatan.kota.provinsi']);
+        $transaction->load([
+            'user',
+            'transactionDetails.product.reviews' => fn ($query) => $query
+                ->where('user_id', Auth::id())
+                ->latest(),
+            'address.kecamatan.kota.provinsi',
+        ]);
 
         return view('customer.transactions.show', [
             'transaction' => $transaction,

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Transaction extends Model
 {
@@ -68,6 +69,23 @@ class Transaction extends Model
     public function transactionDetails(): HasMany
     {
         return $this->hasMany(TransactionDetail::class);
+    }
+
+    public function orderItems(): HasMany
+    {
+        return $this->transactionDetails();
+    }
+
+    public function reviews(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Review::class,
+            TransactionDetail::class,
+            'transaction_id',
+            'product_id',
+            'id',
+            'product_id'
+        );
     }
 
     public function totalHarga(): float
