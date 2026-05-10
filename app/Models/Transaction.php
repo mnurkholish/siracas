@@ -45,6 +45,7 @@ class Transaction extends Model
         'snap_token',
         'payment_type',
         'paid_at',
+        'completed_at',
     ];
 
     protected function casts(): array
@@ -52,6 +53,7 @@ class Transaction extends Model
         return [
             'tanggal' => 'datetime',
             'paid_at' => 'datetime',
+            'completed_at' => 'datetime',
             'ongkir' => 'decimal:2',
         ];
     }
@@ -82,9 +84,9 @@ class Transaction extends Model
             Review::class,
             TransactionDetail::class,
             'transaction_id',
-            'product_id',
+            'transaction_detail_id',
             'id',
-            'product_id'
+            'id'
         );
     }
 

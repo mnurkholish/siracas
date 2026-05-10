@@ -12,6 +12,10 @@
             'nav' => 'Transaksi',
             'route' => route('transactions.index'),
         ],
+        [
+            'nav' => 'Review Saya',
+            'route' => route('reviews.index'),
+        ],
     ];
 
     $subtotal = $cartItems->sum(fn($item) => $item->quantity * (float) $item->harga_saat_dimasukkan);

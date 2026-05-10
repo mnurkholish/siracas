@@ -89,6 +89,7 @@ class AdminTransactionController extends Controller
 
         $transaction->update([
             'status' => $validated['status'],
+            'completed_at' => $validated['status'] === 'selesai' ? now() : $transaction->completed_at,
         ]);
 
         return redirect()

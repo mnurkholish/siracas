@@ -39,7 +39,7 @@ class TransactionDetail extends Model
 
     public function reviews(): HasMany
     {
-        return $this->hasMany(Review::class, 'product_id', 'product_id');
+        return $this->hasMany(Review::class);
     }
 
     public function subtotal(): float

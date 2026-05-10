@@ -12,6 +12,38 @@ use Illuminate\Validation\ValidationException;
 
 class ReviewController extends Controller
 {
+    public function create()
+    {
+        $details = $this->reviewableDetailsQuery()
+            ->latest('id')
+            ->get()
+            ->values();
+
+        return view('customer.reviews.create', compact('details'));
+    }
+
+    public function show(TransactionDetail $transactionDetail)
+    {
+        $transactionDetail = $this->reviewableDetailsQuery()
+            ->whereKey($transactionDetail->id)
+            ->firstOrFail();
+
+        return view('customer.reviews.show', [
+            'detail' => $transactionDetail,
+        ]);
+    }
+
+    public function index()
+    {
+        $reviews = Review::query()
+            ->with('product')
+            ->where('user_id', Auth::id())
+            ->latest()
+            ->paginate(10);
+
+        return view('customer.reviews.index', compact('reviews'));
+    }
+
     public function store(Request $request, Transaction $transaction, TransactionDetail $transactionDetail)
     {
         abort_unless($transaction->user_id === Auth::id(), 403);
@@ -20,6 +52,12 @@ class ReviewController extends Controller
         if ($transaction->status !== 'selesai') {
             throw ValidationException::withMessages([
                 'status' => 'Review hanya dapat dibuat setelah transaksi selesai.',
+            ]);
+        }
+
+        if (! $transaction->completed_at || $transaction->completed_at->lt(now()->subDays(20))) {
+            throw ValidationException::withMessages([
+                'status' => 'Masa penilaian produk sudah berakhir.',
             ]);
         }
 
@@ -41,7 +79,7 @@ class ReviewController extends Controller
 
         $alreadyReviewed = Review::query()
             ->where('user_id', Auth::id())
-            ->where('product_id', $transactionDetail->product_id)
+            ->where('transaction_detail_id', $transactionDetail->id)
             ->exists();
 
         if ($alreadyReviewed) {
@@ -55,11 +93,30 @@ class ReviewController extends Controller
         Review::create([
             'user_id' => Auth::id(),
             'product_id' => $transactionDetail->product_id,
+            'transaction_detail_id' => $transactionDetail->id,
             'isi' => $validated['isi'],
             'rating' => $validated['rating'],
             'foto' => $validated['foto'],
         ]);
 
-        return back()->with('success', 'Review berhasil ditambahkan.');
+        return redirect()
+            ->route('review')
+            ->with('success', 'Penilaian berhasil ditambahkan.');
+    }
+
+    private function reviewableDetailsQuery()
+    {
+        return TransactionDetail::query()
+            ->with(['transaction', 'product'])
+            ->whereHas('transaction', function ($query) {
+                $query
+                    ->where('user_id', Auth::id())
+                    ->where('status', 'selesai')
+                    ->whereNotNull('completed_at')
+                    ->where('completed_at', '>=', now()->subDays(20));
+            })
+            ->whereDoesntHave('reviews', function ($query) {
+                $query->where('user_id', Auth::id());
+            });
     }
 }

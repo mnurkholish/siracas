@@ -12,6 +12,10 @@
             'nav' => 'Transaksi',
             'route' => route('transactions.index'),
         ],
+        [
+            'nav' => 'Review Saya',
+            'route' => route('reviews.index'),
+        ],
     ];
 
     $averageRating = round((float) ($product->reviews_avg_rating ?? 0), 1);

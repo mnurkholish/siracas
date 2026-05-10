@@ -3,6 +3,7 @@
         ['nav' => 'Beranda', 'route' => route('dashboard')],
         ['nav' => 'Produk', 'route' => route('product.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
+        ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
 
     $total = $cartItems->sum(fn($item) => $item->quantity * (float) ($item->product?->harga ?? 0));

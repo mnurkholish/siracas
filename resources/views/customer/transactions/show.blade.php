@@ -3,6 +3,7 @@
         ['nav' => 'Beranda', 'route' => route('dashboard')],
         ['nav' => 'Produk', 'route' => route('product.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
+        ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
 
     $statusLabel = [
@@ -21,35 +22,6 @@
 @endphp
 
 <x-layouts.public title="Detail Transaksi - SIRACAS">
-    <style>
-        .star-rating {
-            display: inline-flex;
-            flex-direction: row-reverse;
-            justify-content: flex-end;
-            gap: 0.25rem;
-        }
-
-        .star-rating input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .star-rating label {
-            cursor: pointer;
-            color: #d8c9bc;
-            font-size: 1.35rem;
-            line-height: 1;
-            transition: color 150ms ease;
-        }
-
-        .star-rating input:checked ~ label,
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            color: #b37323;
-        }
-    </style>
-
     <x-home.navbar :nav-links="$navLinks" />
 
     <main class="page">
@@ -78,7 +50,7 @@
                     <div class="divide-y divide-border-soft">
                         @foreach ($transaction->transactionDetails as $detail)
                             @php
-                                $review = $detail->product?->reviews?->first();
+                                $review = $detail->reviews->first();
                             @endphp
 
                             <article class="px-5 py-5">
@@ -121,49 +93,18 @@
                                                         class="h-20 w-20 rounded-lg border border-border-soft object-cover">
                                                 @endif
                                             </div>
+                                        @elseif ($transaction->completed_at && $transaction->completed_at->gte(now()->subDays(20)))
+                                            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                                                <div>
+                                                    <p class="text-sm font-black text-muted-dark">Produk ini belum dinilai</p>
+                                                    <p class="mt-1 text-sm text-muted">Berikan penilaian sebelum masa 20 hari berakhir.</p>
+                                                </div>
+                                                <x-button :href="route('review.show', $detail)" size="sm">
+                                                    Beri Penilaian
+                                                </x-button>
+                                            </div>
                                         @else
-                                            <p class="text-sm font-black text-muted-dark">Beri Review</p>
-                                            <form action="{{ route('transactions.details.reviews.store', [$transaction, $detail]) }}"
-                                                method="POST" enctype="multipart/form-data" class="mt-4 grid gap-4">
-                                                @csrf
-
-                                                <div>
-                                                    <label class="form-label">Rating</label>
-                                                    <div class="star-rating" aria-label="Rating produk">
-                                                        @for ($star = 5; $star >= 1; $star--)
-                                                            <input type="radio"
-                                                                id="rating-{{ $detail->id }}-{{ $star }}"
-                                                                name="rating" value="{{ $star }}"
-                                                                @checked((int) old('rating') === $star)>
-                                                            <label for="rating-{{ $detail->id }}-{{ $star }}"
-                                                                title="{{ $star }} bintang">
-                                                                <i class="bi bi-star-fill"></i>
-                                                            </label>
-                                                        @endfor
-                                                    </div>
-                                                </div>
-
-                                                <div>
-                                                    <label for="isi-{{ $detail->id }}" class="form-label">Isi Review</label>
-                                                    <textarea id="isi-{{ $detail->id }}" name="isi" class="form-control textarea-control"
-                                                        placeholder="Ceritakan pengalamanmu dengan produk ini.">{{ old('isi') }}</textarea>
-                                                </div>
-
-                                                <div>
-                                                    <label for="foto-{{ $detail->id }}" class="form-label">Foto Review</label>
-                                                    <input type="file" id="foto-{{ $detail->id }}" name="foto"
-                                                        accept="image/jpeg,image/png,image/webp"
-                                                        class="form-control py-3">
-                                                    <p class="mt-2 text-xs font-semibold text-muted">Opsional, JPG/PNG/WEBP maksimal 2 MB.</p>
-                                                </div>
-
-                                                <div>
-                                                    <button type="submit"
-                                                        class="inline-flex h-11 items-center justify-center rounded-lg bg-primary px-5 text-sm font-bold text-white transition hover:bg-primary-dark">
-                                                        Simpan Review
-                                                    </button>
-                                                </div>
-                                            </form>
+                                            <p class="text-sm font-bold text-muted">Masa penilaian produk sudah berakhir.</p>
                                         @endif
                                     </div>
                                 @endif

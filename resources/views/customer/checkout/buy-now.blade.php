@@ -3,6 +3,7 @@
         ['nav' => 'Beranda', 'route' => route('dashboard')],
         ['nav' => 'Produk', 'route' => route('product.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
+        ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
 
     $total = $quantity * (float) $product->harga;

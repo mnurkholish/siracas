@@ -156,6 +156,10 @@ class TransactionController extends Controller
         $transactions = Auth::user()
             ->transactions()
             ->with(['transactionDetails.product'])
+            ->withCount([
+                'transactionDetails as reviewable_details_count' => fn ($query) => $query
+                    ->whereDoesntHave('reviews', fn ($query) => $query->where('user_id', Auth::id())),
+            ])
             ->latest('tanggal')
             ->latest('id')
             ->paginate(10);
@@ -169,7 +173,8 @@ class TransactionController extends Controller
 
         $transaction->load([
             'user',
-            'transactionDetails.product.reviews' => fn ($query) => $query
+            'transactionDetails.product',
+            'transactionDetails.reviews' => fn ($query) => $query
                 ->where('user_id', Auth::id())
                 ->latest(),
             'address.kecamatan.kota.provinsi',

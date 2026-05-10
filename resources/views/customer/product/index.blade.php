@@ -12,6 +12,10 @@
             'nav' => 'Transaksi',
             'route' => route('transactions.index'),
         ],
+        [
+            'nav' => 'Review Saya',
+            'route' => route('reviews.index'),
+        ],
     ];
 @endphp
 

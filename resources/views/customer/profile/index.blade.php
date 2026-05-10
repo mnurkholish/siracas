@@ -4,6 +4,7 @@
         ['nav' => 'Beranda', 'route' => '/'],
         ['nav' => 'Produk', 'route' => route('product.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
+        ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
 
     $profilePhoto = $user->foto_profil ? asset('storage/' . $user->foto_profil) : null;

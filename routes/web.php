@@ -99,6 +99,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
         Route::post('/transactions/{transaction}/pay', [TransactionController::class, 'pay'])->name('transactions.pay');
         Route::patch('/transactions/{transaction}/cancel', [TransactionController::class, 'cancel'])->name('transactions.cancel');
+        Route::get('/review', [ReviewController::class, 'create'])->name('review');
+        Route::get('/review/{transactionDetail}', [ReviewController::class, 'show'])->name('review.show');
+        Route::get('/review-saya', [ReviewController::class, 'index'])->name('reviews.index');
         Route::post('/transactions/{transaction}/details/{transactionDetail}/reviews', [ReviewController::class, 'store'])->name('transactions.details.reviews.store');
 
         Route::get('/profile', [ProfileController::class, 'index'])->name('profile');

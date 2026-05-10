@@ -10,6 +10,7 @@ class Review extends Model
     protected $fillable = [
         'user_id',
         'product_id',
+        'transaction_detail_id',
         'isi',
         'rating',
         'foto',
@@ -29,6 +30,11 @@ class Review extends Model
 
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->withTrashed();
+    }
+
+    public function transactionDetail(): BelongsTo
+    {
+        return $this->belongsTo(TransactionDetail::class);
     }
 }

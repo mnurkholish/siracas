@@ -37,7 +37,9 @@ class CustomerProductController extends Controller
     public function show(Product $product)
     {
         $product->load([
-            'reviews' => fn ($query) => $query->with('user')->latest(),
+            'reviews' => fn ($query) => $query
+                ->with('user')
+                ->latest(),
         ])->loadAvg('reviews', 'rating');
 
         return view('customer.product.show', compact('product'));
