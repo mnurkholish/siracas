@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 
@@ -12,7 +13,10 @@ class HomeController extends Controller
     {
         // 1. Jika belum login
         if (!Auth::check()) {
-            return view('welcome', ['products' => $this->products()]);
+            return view('welcome', [
+                'products' => $this->products(),
+                'reviews' => $this->reviews(),
+            ]);
         }
 
         $user = Auth::user();
@@ -116,6 +120,28 @@ class HomeController extends Controller
 
     private function reviews(): array
     {
+        if (Schema::hasTable('reviews')) {
+            $reviews = Review::query()
+                ->with('user')
+                ->latest()
+                ->take(6)
+                ->get()
+                ->map(function (Review $review) {
+                    $name = $review->user?->username ?? 'Customer';
+
+                    return [
+                        'name' => $name,
+                        'initials' => mb_substr($name, 0, 2),
+                        'review' => $review->isi,
+                    ];
+                })
+                ->all();
+
+            if ($reviews !== []) {
+                return $reviews;
+            }
+        }
+
         return [
             [
                 'name' => 'Kholis',

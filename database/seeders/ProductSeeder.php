@@ -21,8 +21,6 @@ class ProductSeeder extends Seeder
                 'satuan' => 'kg',
                 'deskripsi' => 'Cacing hidup kualitas unggul untuk kebutuhan umpan pancing atau pengolahan limbah organik rumah tangga.',
                 'foto' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'nama_produk' => 'Tepung Cacing Murni (Vermipowder)',
@@ -31,8 +29,6 @@ class ProductSeeder extends Seeder
                 'satuan' => 'ons',
                 'deskripsi' => 'Konsentrat protein tinggi hasil ekstraksi cacing kering, ideal sebagai campuran pakan ternak atau suplemen kesehatan hewan.',
                 'foto' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'nama_produk' => 'Cacing Beku (Frozen Worm)',
@@ -41,8 +37,6 @@ class ProductSeeder extends Seeder
                 'satuan' => 'pcs',
                 'deskripsi' => 'Cacing segar yang dibekukan secara cepat untuk menjaga nutrisi, sangat baik sebagai pakan ikan hias dan reptil.',
                 'foto' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'nama_produk' => 'Pupuk Organik Kascing',
@@ -51,8 +45,6 @@ class ProductSeeder extends Seeder
                 'satuan' => 'karung',
                 'deskripsi' => 'Produk sampingan berupa bekas cacing (kascing) yang kaya akan unsur hara mikro dan makro untuk kesuburan tanah.',
                 'foto' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
             [
                 'nama_produk' => 'Kapsul Ekstrak Cacing',
@@ -61,13 +53,14 @@ class ProductSeeder extends Seeder
                 'satuan' => 'botol',
                 'deskripsi' => 'Ekstrak cacing dalam bentuk kapsul untuk membantu meredakan demam dan mendukung kesehatan pencernaan manusia.',
                 'foto' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
             ],
         ];
 
         foreach ($products as $product) {
-            Product::create($product);
+            Product::query()->updateOrCreate(
+                ['nama_produk' => $product['nama_produk']],
+                $product
+            );
         };
 
         // Generate otomatis
