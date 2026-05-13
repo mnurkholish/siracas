@@ -9,6 +9,17 @@
         $cart = auth()->user()->cart;
         $cartItemsCount = $cart ? $cart->cartItems()->sum('quantity') : 0;
     }
+
+    $isNavActive = function (string $route): bool {
+        $linkPath = trim(parse_url($route, PHP_URL_PATH) ?: $route, '/');
+        $currentPath = trim(request()->path(), '/');
+
+        if ($linkPath === '') {
+            return $currentPath === '';
+        }
+
+        return $currentPath === $linkPath || str_starts_with($currentPath, $linkPath . '/');
+    };
 @endphp
 
 <header class="sticky top-0 z-40 w-full border-b border-border-soft bg-white/95 backdrop-blur-sm">
@@ -29,9 +40,7 @@
                 aria-label="Navigasi utama">
                 @foreach ($navLinks as $link)
                     @php
-                        // Memeriksa apakah URL saat ini cocok dengan route navigasi
-                        $linkPath = parse_url($link['route'], PHP_URL_PATH) ?: $link['route'];
-                        $isActive = $linkPath === '/' ? request()->is('/') : request()->is(trim($linkPath, '/'));
+                        $isActive = $isNavActive($link['route']);
                     @endphp
                     <a href="{{ $link['route'] }}"
                         class="relative py-2 transition-colors duration-200 hover:text-primary {{ $isActive ? 'text-primary' : '' }}">
@@ -133,8 +142,7 @@
             <div class="flex min-w-full gap-6 px-2 text-sm font-medium text-muted-dark">
                 @foreach ($navLinks as $link)
                     @php
-                        $linkPath = parse_url($link['route'], PHP_URL_PATH) ?: $link['route'];
-                        $isActive = $linkPath === '/' ? request()->is('/') : request()->is(trim($linkPath, '/'));
+                        $isActive = $isNavActive($link['route']);
                     @endphp
                     <a href="{{ $link['route'] }}"
                         class="whitespace-nowrap transition-colors hover:text-primary {{ $isActive ? 'text-primary font-semibold' : '' }}">
