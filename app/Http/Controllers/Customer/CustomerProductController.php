@@ -39,9 +39,23 @@ class CustomerProductController extends Controller
         $product->load([
             'reviews' => fn ($query) => $query
                 ->with('user')
-                ->latest(),
-        ])->loadAvg('reviews', 'rating');
+                ->orderByDesc('rating')
+                ->latest()
+                ->limit(3),
+        ])->loadCount('reviews')->loadAvg('reviews', 'rating');
 
         return view('customer.product.show', compact('product'));
+    }
+
+    public function reviews(Product $product)
+    {
+        $product->loadAvg('reviews', 'rating')->loadCount('reviews');
+
+        $reviews = $product->reviews()
+            ->with('user')
+            ->latest()
+            ->paginate(8);
+
+        return view('customer.product.reviews', compact('product', 'reviews'));
     }
 }

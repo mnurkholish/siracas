@@ -51,7 +51,7 @@
                         </div>
                         <p class="text-sm font-bold text-muted-dark">
                             {{ number_format($averageRating, 1, ',', '.') }} / 5
-                            <span class="font-semibold text-muted">({{ $product->reviews->count() }} review)</span>
+                            <span class="font-semibold text-muted">({{ $product->reviews_count }} review)</span>
                         </p>
                     </div>
 
@@ -111,7 +111,7 @@
                         <h2 class="mt-2 text-2xl font-black text-muted-dark">Ulasan Customer</h2>
                     </div>
                     <p class="text-sm font-bold text-muted-dark">
-                        Rata-rata {{ number_format($averageRating, 1, ',', '.') }} dari {{ $product->reviews->count() }} review
+                        Rata-rata {{ number_format($averageRating, 1, ',', '.') }} dari {{ $product->reviews_count }} review
                     </p>
                 </div>
 
@@ -148,6 +148,14 @@
                             </article>
                         @endforeach
                     </div>
+
+                    @if ($product->reviews_count > $product->reviews->count())
+                        <div class="mt-6 flex justify-center">
+                            <x-button :href="route('product.reviews', $product)" variant="secondary" size="lg">
+                                Lihat Semua Review
+                            </x-button>
+                        </div>
+                    @endif
                 @endif
             </section>
         </div>

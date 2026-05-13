@@ -80,6 +80,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [HomeController::class, 'customerDashboard'])->name('dashboard');
 
         Route::get('/product', [CustomerProductController::class, 'index'])->name('product.index');
+        Route::get('/product/{product}/reviews', [CustomerProductController::class, 'reviews'])->name('product.reviews');
         Route::get('/product/{product}', [CustomerProductController::class, 'show'])->name('product.show');
 
         Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
