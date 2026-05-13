@@ -1,4 +1,4 @@
-<footer class="bg-secondary px-6 py-14 text-sm text-muted lg:px-10">
+<footer class="mt-auto bg-secondary px-6 py-14 text-sm text-muted lg:px-10">
     <div class="mx-auto grid max-w-7xl gap-10 md:grid-cols-2 xl:grid-cols-5">
         <div>
             <h3 class="text-xs font-black uppercase tracking-[0.3em] text-text-body">Company Info</h3>

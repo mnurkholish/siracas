@@ -72,7 +72,8 @@
                         );
                     @endphp
 
-                    <a href="{{ route($menu['route']) }}" title="{{ $menu['name'] }}" @click="sidebarOpen = false"
+                    <a href="{{ route($menu['route']) ?? '/' }}" title="{{ $menu['name'] }}"
+                        @click="sidebarOpen = false"
                         class="group flex min-h-10 items-center justify-start gap-3 rounded-md px-4 py-2 transition-all duration-200 {{ $active ? 'bg-white/25 font-semibold text-white' : 'text-white/95 hover:bg-white/15 hover:text-white' }}">
                         <span class="flex h-6 w-6 shrink-0 items-center justify-center">
                             <x-dynamic-component :component="'icons.menus.' . $menu['icon']" />
