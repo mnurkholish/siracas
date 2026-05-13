@@ -62,11 +62,10 @@ class ReviewController extends Controller
         }
 
         $validated = $request->validate([
-            'isi' => ['required', 'string', 'max:2000'],
+            'isi' => ['string', 'max:2000'],
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
             'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ], [
-            'isi.required' => 'Isi review wajib diisi.',
             'isi.max' => 'Isi review maksimal 2000 karakter.',
             'rating.required' => 'Rating wajib dipilih.',
             'rating.integer' => 'Rating tidak valid.',

@@ -7,7 +7,7 @@
     ];
 @endphp
 
-<x-layouts.public title="Review Saya - SIRACAS">
+<x-layouts.public title="Riwayat Penilaian - SIRACAS">
     <x-home.navbar :nav-links="$navLinks" />
 
     <main class="page">
@@ -15,7 +15,7 @@
             <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                     <p class="eyebrow">Review Saya</p>
-                    <h1 class="page-title">Daftar Review</h1>
+                    <h1 class="page-title">Riwayat Penilaian</h1>
                 </div>
                 <x-button :href="route('review')" variant="secondary" size="lg">
                     Beri Penilaian
@@ -42,7 +42,8 @@
                                     </h2>
                                     <div class="mt-2 flex items-center gap-1 text-accent">
                                         @for ($star = 1; $star <= 5; $star++)
-                                            <i class="bi {{ $star <= $review->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
+                                            <i
+                                                class="bi {{ $star <= $review->rating ? 'bi-star-fill' : 'bi-star' }}"></i>
                                         @endfor
                                     </div>
                                     <p class="mt-3 text-sm leading-7 text-muted-dark">{{ $review->isi }}</p>
