@@ -95,12 +95,30 @@
                                 placeholder="Ceritakan pengalamanmu dengan produk ini.">{{ old('isi') }}</textarea>
                         </div>
 
-                        <div>
+                        <div x-data="{ fileName: '' }">
                             <label for="foto-{{ $detail->id }}" class="form-label">Foto Penilaian</label>
+                            <label for="foto-{{ $detail->id }}"
+                                class="flex cursor-pointer items-center justify-between gap-4 rounded-lg border border-dashed border-border-strong bg-surface px-4 py-4 transition hover:border-primary hover:bg-primary-soft">
+                                <span>
+                                    <span class="block text-sm font-bold text-muted-dark">Pilih foto review</span>
+                                    <span class="mt-1 block text-xs font-semibold text-muted">Opsional, JPG/PNG/WEBP maksimal 2 MB.</span>
+                                </span>
+                                <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-primary shadow-sm">
+                                    <i class="bi bi-image"></i>
+                                </span>
+                            </label>
                             <input type="file" id="foto-{{ $detail->id }}" name="foto"
-                                accept="image/jpeg,image/png,image/webp"
-                                class="form-control py-3">
-                            <p class="mt-2 text-xs font-semibold text-muted">Opsional, JPG/PNG/WEBP maksimal 2 MB.</p>
+                                accept="image/jpeg,image/png,image/webp" class="sr-only" x-ref="foto"
+                                @change="fileName = $event.target.files[0]?.name || ''">
+                            <div x-show="fileName" class="mt-3 flex flex-wrap items-center gap-3" style="display: none;">
+                                <span class="rounded-lg bg-white px-3 py-2 text-xs font-bold text-muted-dark shadow-sm"
+                                    x-text="fileName"></span>
+                                <button type="button"
+                                    class="text-xs font-bold text-red-600 transition hover:text-red-700"
+                                    @click="$refs.foto.value = ''; fileName = ''">
+                                    Kosongkan pilihan
+                                </button>
+                            </div>
                         </div>
 
                         <div>

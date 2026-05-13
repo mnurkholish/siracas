@@ -30,6 +30,9 @@
             @else
                 <div class="mt-8 grid gap-5">
                     @foreach ($reviews as $review)
+                        @php
+                            $canEdit = $review->created_at->gte(now()->subDays(7));
+                        @endphp
                         <article class="card p-5">
                             <div class="grid gap-5 lg:grid-cols-[120px_1fr_auto] lg:items-start">
                                 <img src="{{ $review->product?->foto ? asset('storage/' . $review->product->foto) : asset('images/banners/banner-2.webp') }}"
@@ -50,6 +53,13 @@
                                     <p class="mt-3 text-xs font-semibold text-muted">
                                         {{ $review->created_at->format('d M Y H:i') }}
                                     </p>
+                                    @if ($canEdit)
+                                        <div class="mt-4">
+                                            <x-button :href="route('reviews.edit', $review)" variant="secondary" size="sm">
+                                                Edit Review
+                                            </x-button>
+                                        </div>
+                                    @endif
                                 </div>
 
                                 @if ($review->foto)

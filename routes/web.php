@@ -103,6 +103,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('/transactions/{transaction}/cancel', [TransactionController::class, 'cancel'])->name('transactions.cancel');
         Route::get('/review', [ReviewController::class, 'create'])->name('review');
         Route::get('/review/history', [ReviewController::class, 'index'])->name('reviews.index');
+        Route::get('/review/history/{review}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
+        Route::put('/review/history/{review}', [ReviewController::class, 'update'])->name('reviews.update');
         Route::get('/review/{transactionDetail}', [ReviewController::class, 'show'])->whereNumber('transactionDetail')->name('review.show');
         Route::post('/transactions/{transaction}/details/{transactionDetail}/reviews', [ReviewController::class, 'store'])->name('transactions.details.reviews.store');
 
