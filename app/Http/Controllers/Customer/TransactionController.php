@@ -151,20 +151,40 @@ class TransactionController extends Controller
             ->with('success', 'Pesanan berhasil!');
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $transactions = Auth::user()
-            ->transactions()
-            ->with(['transactionDetails.product'])
-            ->withCount([
-                'transactionDetails as reviewable_details_count' => fn ($query) => $query
-                    ->whereDoesntHave('reviews', fn ($query) => $query->where('user_id', Auth::id())),
-            ])
-            ->latest('tanggal')
-            ->latest('id')
-            ->paginate(10);
+        $transactions = $this->filteredTransactions($request, Transaction::ACTIVE_STATUSES)
+            ->paginate(10)
+            ->withQueryString();
 
-        return view('customer.transactions.index', compact('transactions'));
+        return view('customer.transactions.index', [
+            'transactions' => $transactions,
+            'title' => 'Pesanan Saya',
+            'eyebrow' => 'Transaksi',
+            'emptyMessage' => 'Belum ada transaksi aktif.',
+            'searchPlaceholder' => 'Cari produk di transaksi aktif',
+            'historyButtonLabel' => 'Riwayat Transaksi',
+            'historyButtonRoute' => route('transactions.history'),
+            'resetRoute' => route('transactions.index'),
+        ]);
+    }
+
+    public function history(Request $request)
+    {
+        $transactions = $this->filteredTransactions($request, Transaction::HISTORY_STATUSES)
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('customer.transactions.index', [
+            'transactions' => $transactions,
+            'title' => 'Riwayat Transaksi',
+            'eyebrow' => 'Riwayat',
+            'emptyMessage' => 'Belum ada riwayat transaksi.',
+            'searchPlaceholder' => 'Cari produk di riwayat transaksi',
+            'historyButtonLabel' => 'Kembali',
+            'historyButtonRoute' => route('transactions.index'),
+            'resetRoute' => route('transactions.history'),
+        ]);
     }
 
     public function show(Transaction $transaction)
@@ -349,6 +369,27 @@ class TransactionController extends Controller
     private function authorizeCustomerTransaction(Transaction $transaction): void
     {
         abort_unless($transaction->user_id === Auth::id(), 403);
+    }
+
+    private function filteredTransactions(Request $request, array $allowedStatuses)
+    {
+        $search = trim((string) $request->query('search'));
+
+        return Auth::user()
+            ->transactions()
+            ->with(['transactionDetails.product'])
+            ->withCount([
+                'transactionDetails as reviewable_details_count' => fn ($query) => $query
+                    ->whereDoesntHave('reviews', fn ($query) => $query->where('user_id', Auth::id())),
+            ])
+            ->whereIn('status', $allowedStatuses)
+            ->when($search !== '', function ($query) use ($search) {
+                $query->whereHas('transactionDetails.product', function ($query) use ($search) {
+                    $query->where('nama_produk', 'like', "%{$search}%");
+                });
+            })
+            ->latest('tanggal')
+            ->latest('id');
     }
 
     private function generateOrderId(Transaction $transaction): string

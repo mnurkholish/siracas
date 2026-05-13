@@ -96,6 +96,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/products/{product}/buy-now', [TransactionController::class, 'buyNowForm'])->name('products.buy-now.form');
         Route::post('/products/{product}/buy-now', [TransactionController::class, 'buyNowProcess'])->name('products.buy-now.process');
         Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+        Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
         Route::post('/transactions/{transaction}/pay', [TransactionController::class, 'pay'])->name('transactions.pay');
         Route::patch('/transactions/{transaction}/cancel', [TransactionController::class, 'cancel'])->name('transactions.cancel');

@@ -8,19 +8,46 @@
 
 @endphp
 
-<x-layouts.public title="Transaksi - SIRACAS">
+<x-layouts.public :title="($title ?? 'Transaksi') . ' - SIRACAS'">
     <x-home.navbar :nav-links="$navLinks" />
 
     <main class="page">
         <section class="page-container">
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                 <div>
-                    <p class="eyebrow">Transaksi</p>
-                    <h1 class="page-title">Pesanan Saya</h1>
+                    <p class="eyebrow">{{ $eyebrow ?? 'Transaksi' }}</p>
+                    <h1 class="page-title">{{ $title ?? 'Pesanan Saya' }}</h1>
                 </div>
-                <x-button :href="route('product.index')" variant="secondary" size="lg">
-                    Belanja Lagi
-                </x-button>
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <form action="{{ url()->current() }}" method="GET" class="relative w-full sm:w-[360px]">
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            placeholder="{{ $searchPlaceholder ?? 'Cari produk' }}"
+                            class="h-12 w-full rounded-full border border-border-soft bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:border-border-strong focus:ring-2 focus:ring-border-strong">
+                        <button type="submit"
+                            class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-primary-dark"
+                            aria-label="Cari transaksi">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="m21 21-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15Z" />
+                            </svg>
+                        </button>
+                    </form>
+
+                    <div class="flex flex-wrap gap-2">
+                        @if (request('search'))
+                            <x-button :href="$resetRoute ?? url()->current()" variant="secondary" size="lg">
+                                Reset
+                            </x-button>
+                        @endif
+                        <x-button :href="$historyButtonRoute ?? route('transactions.history')" variant="secondary" size="lg">
+                            {{ $historyButtonLabel ?? 'Riwayat Transaksi' }}
+                        </x-button>
+                        <x-button :href="route('product.index')" variant="secondary" size="lg">
+                            Belanja Lagi
+                        </x-button>
+                    </div>
+                </div>
             </div>
 
             <div class="table-wrap mt-8">
@@ -68,7 +95,7 @@
                             @empty
                                 <tr>
                                     <td colspan="6" class="py-12 text-center text-muted">
-                                        Belum ada transaksi.
+                                        {{ $emptyMessage ?? 'Belum ada transaksi.' }}
                                     </td>
                                 </tr>
                             @endforelse
