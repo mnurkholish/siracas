@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'username' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users'],
-            'nomor_hp' => ['required', 'regex:/^08[0-9]{8,11}$/'],
+            'nomor_hp' => ['required', 'regex:/^08[0-9]{8,11}$/', 'unique:users'],
             'password' => ['required', Password::defaults()],
             'jenis_kelamin' => ['required', 'in:laki-laki,perempuan'],
             'tanggal_lahir' => ['date', 'before_or_equal:' . Carbon::now()->subYears(17)->format('Y-m-d'),],
@@ -55,6 +55,7 @@ class RegisteredUserController extends Controller
             'tanggal_lahir.before_or_equal' => 'Umur minimal 17 tahun.',
             'nomor_hp.regex' => 'Format nomor HP tidak valid (contoh: 08123456789)',
             'nomor_hp.required' => 'Nomor HP tidak boleh kosong',
+            'nomor_hp.unique' => 'Nomor HP telah terdaftar, gunakan nomor yang lain',
         ]);
 
         $user = User::create([

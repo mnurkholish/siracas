@@ -39,7 +39,7 @@ class ProfileController extends Controller
             'jenis_kelamin' => ['required', 'in:laki-laki,perempuan'],
             'foto_profil' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
             'hapus_foto' => ['nullable', 'boolean'],
-            'nomor_hp' => ['required', 'regex:/^08[0-9]{8,11}$/'],
+            'nomor_hp' => ['required', 'regex:/^08[0-9]{8,11}$/', Rule::unique('users', 'nomor_hp')->ignore($user->id),],
         ], [
             'username.required' => 'Username tidak boleh kosong.',
             'username.string' => 'Username harus berupa teks.',
@@ -58,6 +58,7 @@ class ProfileController extends Controller
             'tanggal_lahir.required' => 'Tanggal lahir harus diisi',
             'nomor_hp.required' => 'Nomor HP tidak boleh kosong.',
             'nomor_hp.regex' => 'Format nomor HP tidak valid. Contoh: 08123456789.',
+            'nomor_hp.unique' => 'Nomor HP telah terdaftar, gunakan nomor yang lain',
         ]);
 
         if ($request->boolean('hapus_foto')) {
