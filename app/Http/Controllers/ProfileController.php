@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\PasswordValidation;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -9,7 +10,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Password;
 
 class ProfileController extends Controller
 {
@@ -114,7 +114,7 @@ class ProfileController extends Controller
     {
         $validated = $request->validateWithBag('passwordUpdate', [
             'current_password' => ['required', 'current_password'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => PasswordValidation::rules(confirmed: true),
         ], [
             'current_password.required' => 'Password saat ini tidak boleh kosong.',
             'current_password.current_password' => 'Password saat ini tidak sesuai.',
@@ -122,6 +122,7 @@ class ProfileController extends Controller
             'password.required' => 'Password baru tidak boleh kosong.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
             'password.min' => 'Password minimal :min karakter.',
+            'password.regex' => PasswordValidation::message(),
         ]);
 
         Auth::user()->forceFill([

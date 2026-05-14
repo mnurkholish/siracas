@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Support\PasswordValidation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -20,10 +21,11 @@ class NewPasswordController extends Controller
         $request->validate([
             'token' => ['required'],
             'email' => ['required', 'email'],
-            'password' => ['required', 'confirmed', 'min:8'],
+            'password' => PasswordValidation::rules(confirmed: true),
         ], [
             'password.confirmed' => 'Password tidak sesuai!',
             'password.min' => 'Password minimal 8 karakter',
+            'password.regex' => PasswordValidation::message(),
             'password.required' => 'Password tidak boleh kosong!',
             'email.email' => 'Format email tidak valid',
         ]);
