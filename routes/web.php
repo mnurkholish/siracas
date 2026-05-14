@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\Admin\CustomerAccountController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
@@ -69,6 +70,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/transactions/{transaction}', [AdminTransactionController::class, 'show'])->name('transactions.show');
         Route::patch('/transactions/{transaction}/status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.status');
         Route::patch('/transactions/{transaction}/ongkir', [AdminTransactionController::class, 'updateOngkir'])->name('transactions.ongkir');
+
+        Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+        Route::get('/reviews/{review}/reply/create', [AdminReviewController::class, 'create'])->name('reviews.create');
+        Route::put('/reviews/{review}/reply', [AdminReviewController::class, 'reply'])->name('reviews.reply');
 
         Route::get('/profile', [ProfileController::class, 'adminIndex'])->name('profile');
         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');

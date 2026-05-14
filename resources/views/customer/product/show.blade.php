@@ -137,6 +137,7 @@
                                             {{ $review->created_at->format('d M Y') }}
                                         </p>
                                         <p class="mt-3 text-sm leading-7 text-muted-dark">{{ $review->isi }}</p>
+                                        <x-review.admin-reply :review="$review" />
                                     </div>
 
                                     @if ($review->foto)

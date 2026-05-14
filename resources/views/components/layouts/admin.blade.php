@@ -30,7 +30,12 @@
                     'icon' => 'riwayat',
                     'active' => ['admin.transactions.history'],
                 ],
-                ['name' => 'Ulasan', 'route' => 'home', 'icon' => 'ulasan'],
+                [
+                    'name' => 'Ulasan',
+                    'route' => 'admin.reviews.index',
+                    'icon' => 'ulasan',
+                    'active' => ['admin.reviews.*'],
+                ],
                 ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],
                 ['name' => 'Notifikasi', 'route' => 'home', 'icon' => 'notifikasi'],
                 ['name' => 'Laporan Operasional', 'route' => 'home', 'icon' => 'laporan'],

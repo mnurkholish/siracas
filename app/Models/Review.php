@@ -14,12 +14,16 @@ class Review extends Model
         'isi',
         'rating',
         'foto',
+        'admin_reply',
+        'admin_replied_at',
+        'admin_replied_by',
     ];
 
     protected function casts(): array
     {
         return [
             'rating' => 'integer',
+            'admin_replied_at' => 'datetime',
         ];
     }
 
@@ -36,5 +40,10 @@ class Review extends Model
     public function transactionDetail(): BelongsTo
     {
         return $this->belongsTo(TransactionDetail::class);
+    }
+
+    public function adminReplier(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'admin_replied_by');
     }
 }
