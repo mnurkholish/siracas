@@ -74,6 +74,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/transactions/{transaction}', [AdminTransactionController::class, 'show'])->name('transactions.show');
         Route::patch('/transactions/{transaction}/status', [AdminTransactionController::class, 'updateStatus'])->name('transactions.status');
         Route::patch('/transactions/{transaction}/ongkir', [AdminTransactionController::class, 'updateOngkir'])->name('transactions.ongkir');
+        Route::patch('/transactions/{transaction}/refund', [AdminTransactionController::class, 'updateRefund'])->name('transactions.update-refund');
 
         Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
         Route::get('/reviews/{review}/reply/create', [AdminReviewController::class, 'create'])->name('reviews.create');
@@ -117,6 +118,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/transactions/{transaction}', [TransactionController::class, 'show'])->name('transactions.show');
         Route::post('/transactions/{transaction}/pay', [TransactionController::class, 'pay'])->name('transactions.pay');
         Route::patch('/transactions/{transaction}/cancel', [TransactionController::class, 'cancel'])->name('transactions.cancel');
+        Route::patch('/transactions/{transaction}/complete', [TransactionController::class, 'complete'])->name('transactions.complete');
         Route::get('/review', [ReviewController::class, 'create'])->name('review');
         Route::get('/review/history', [ReviewController::class, 'index'])->name('reviews.index');
         Route::get('/review/history/{review}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');

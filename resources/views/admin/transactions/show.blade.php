@@ -16,6 +16,7 @@
     ];
     $totalProduk = $transaction->totalHarga();
     $ongkir = (float) $transaction->ongkir;
+    $refundAmount = $transaction->refundAmount();
     $canUpdateOngkir = $transaction->status === 'menunggu_pembayaran';
 @endphp
 
@@ -132,11 +133,44 @@
                         <dd class="font-bold text-black">Rp{{ number_format($ongkir, 0, ',', '.') }}</dd>
                     </div>
                     <div class="flex items-center justify-between gap-4 border-t border-gray-100 pt-3">
-                        <dt class="font-bold text-black">Total Akhir</dt>
+                        <dt class="font-bold text-black">Total Bayar</dt>
                         <dd class="text-xl font-bold text-primary">Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between gap-4">
+                        <dt class="font-semibold text-gray-500">Pengembalian</dt>
+                        <dd class="font-bold text-danger">Rp{{ number_format($refundAmount, 0, ',', '.') }}</dd>
+                    </div>
+                    <div class="flex items-center justify-between gap-4">
+                        <dt class="font-bold text-black">Pendapatan Bersih</dt>
+                        <dd class="font-bold text-success">Rp{{ number_format($transaction->pendapatanBersih(), 0, ',', '.') }}</dd>
                     </div>
                 </dl>
             </div>
+
+            <form action="{{ route('admin.transactions.update-refund', $transaction) }}" method="POST"
+                class="update-refund-form mt-6 border-t border-gray-100 pt-5">
+                @csrf
+                @method('PATCH')
+                <p class="text-xs font-bold uppercase tracking-[0.25em] text-gray-400">Pengembalian / Garansi</p>
+
+                <label for="refund_amount" class="mt-4 block text-sm font-bold text-black">Nominal Pengembalian</label>
+                <input type="number" id="refund_amount" name="refund_amount" min="0" step="100"
+                    max="{{ $transaction->totalAkhir() }}"
+                    value="{{ old('refund_amount', (int) $refundAmount) }}" class="form-control input-control mt-2">
+
+                <label for="refund_note" class="mt-4 block text-sm font-bold text-black">Catatan Pengembalian</label>
+                <textarea id="refund_note" name="refund_note" rows="3"
+                    class="form-control textarea-control mt-2"
+                    placeholder="Catatan hasil garansi lewat WhatsApp">{{ old('refund_note', $transaction->refund_note) }}</textarea>
+
+                <div class="mt-3 rounded-lg bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-600">
+                    Tanggal Pengembalian: {{ $transaction->refunded_at?->format('d M Y H:i:s') ?? '-' }}
+                </div>
+
+                <x-button type="submit" size="lg" :block="true" class="mt-4">
+                    Simpan Pengembalian
+                </x-button>
+            </form>
 
             @if ($canUpdateOngkir)
                 <form action="{{ route('admin.transactions.ongkir', $transaction) }}" method="POST"
@@ -210,6 +244,25 @@
                 Swal.fire({
                     icon: 'warning',
                     title: 'Simpan ongkir?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, simpan',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: themeColor('primary'),
+                    cancelButtonColor: themeColor('danger'),
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('.update-refund-form').forEach((form) => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Simpan data pengembalian?',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, simpan',
                     cancelButtonText: 'Batal',

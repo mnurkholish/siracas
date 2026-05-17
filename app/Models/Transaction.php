@@ -46,6 +46,9 @@ class Transaction extends Model
         'payment_type',
         'paid_at',
         'completed_at',
+        'refund_amount',
+        'refund_note',
+        'refunded_at',
     ];
 
     protected function casts(): array
@@ -54,7 +57,9 @@ class Transaction extends Model
             'tanggal' => 'datetime',
             'paid_at' => 'datetime',
             'completed_at' => 'datetime',
+            'refunded_at' => 'datetime',
             'ongkir' => 'decimal:2',
+            'refund_amount' => 'decimal:2',
         ];
     }
 
@@ -100,6 +105,16 @@ class Transaction extends Model
     public function totalAkhir(): float
     {
         return $this->totalHarga() + (float) $this->ongkir;
+    }
+
+    public function refundAmount(): float
+    {
+        return (float) ($this->refund_amount ?? 0);
+    }
+
+    public function pendapatanBersih(): float
+    {
+        return max(0, $this->totalAkhir() - $this->refundAmount());
     }
 
     public function totalQuantity(): int

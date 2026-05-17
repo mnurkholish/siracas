@@ -139,6 +139,35 @@ class AdminTransactionController extends Controller
             ->with('success', 'Ongkir telah diperbarui');
     }
 
+    public function updateRefund(Request $request, Transaction $transaction)
+    {
+        $maxRefund = $transaction->totalAkhir();
+
+        $validated = $request->validate([
+            'refund_amount' => ['required', 'numeric', 'min:0', 'max:'.$maxRefund],
+            'refund_note' => ['nullable', 'string', 'max:2000'],
+        ], [
+            'refund_amount.required' => 'Nominal pengembalian wajib diisi.',
+            'refund_amount.numeric' => 'Nominal pengembalian harus berupa angka.',
+            'refund_amount.min' => 'Nominal pengembalian tidak boleh kurang dari 0.',
+            'refund_amount.max' => 'Nominal pengembalian tidak boleh lebih besar dari total pembayaran transaksi.',
+            'refund_note.max' => 'Catatan pengembalian maksimal 2000 karakter.',
+        ]);
+
+        $refundAmount = (float) $validated['refund_amount'];
+        $refundNote = trim((string) ($validated['refund_note'] ?? ''));
+
+        $transaction->update([
+            'refund_amount' => $refundAmount,
+            'refund_note' => $refundNote !== '' ? $refundNote : null,
+            'refunded_at' => $refundAmount > 0 ? ($transaction->refunded_at ?? now()) : null,
+        ]);
+
+        return redirect()
+            ->route('admin.transactions.show', $transaction)
+            ->with('success', 'Data pengembalian telah diperbarui');
+    }
+
     private function filteredTransactions(Request $request, array $allowedStatuses)
     {
         $search = trim((string) $request->query('search'));

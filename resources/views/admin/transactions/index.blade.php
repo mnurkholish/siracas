@@ -79,12 +79,15 @@
         </div>
 
         <div class="overflow-x-auto">
-            <table class="admin-table min-w-[760px]">
+            <table class="admin-table min-w-[1040px]">
                 <thead>
                     <tr>
                         <th>Customer</th>
                         <th>Tanggal</th>
                         <th>Status</th>
+                        <th>Total Bayar</th>
+                        <th>Pengembalian</th>
+                        <th>Pendapatan Bersih</th>
                         <th class="text-right">Aksi</th>
                     </tr>
                 </thead>
@@ -98,6 +101,15 @@
                             <td>
                                 <x-badge :status="$transaction->status" />
                             </td>
+                            <td class="font-semibold text-muted-dark">
+                                Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}
+                            </td>
+                            <td class="font-semibold text-danger">
+                                Rp{{ number_format($transaction->refundAmount(), 0, ',', '.') }}
+                            </td>
+                            <td class="font-bold text-success">
+                                Rp{{ number_format($transaction->pendapatanBersih(), 0, ',', '.') }}
+                            </td>
                             <td class="text-right">
                                 <x-button :href="route('admin.transactions.show', $transaction)" size="sm">
                                     Detail
@@ -106,7 +118,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="py-12 text-center text-gray-500">
+                            <td colspan="7" class="py-12 text-center text-gray-500">
                                 {{ $emptyMessage ?? 'Belum ada transaksi.' }}
                             </td>
                         </tr>

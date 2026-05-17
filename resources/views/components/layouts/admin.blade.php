@@ -22,6 +22,7 @@
                         'admin.transactions.show',
                         'admin.transactions.status',
                         'admin.transactions.ongkir',
+                        'admin.transactions.update-refund',
                     ],
                 ],
                 [

@@ -19,6 +19,7 @@
     $totalProduk = $transaction->totalHarga();
     $ongkir = (float) $transaction->ongkir;
     $canPay = $transaction->status === 'menunggu_pembayaran' && $ongkir > 0;
+    $canConfirmDelivered = $transaction->status === 'dikirim';
 @endphp
 
 <x-layouts.public title="Detail Transaksi - SIRACAS">
@@ -189,6 +190,32 @@
                         </div>
                     @endif
 
+                    @if ($canConfirmDelivered)
+                        <div class="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold leading-6 text-amber-800">
+                            Pesanan Anda sedang dalam pengiriman. Setelah barang diterima, periksa kondisi produk terlebih dahulu. Jika produk sesuai, klik Konfirmasi Selesai. Jika ada kendala seperti cacing mati, rusak, jumlah tidak sesuai, atau produk tidak sesuai, silakan hubungi admin melalui tombol Chat Garansi via WhatsApp.
+                        </div>
+
+                        <form action="{{ route('transactions.complete', $transaction) }}" method="POST"
+                            class="complete-transaction-form mt-5">
+                            @csrf
+                            @method('PATCH')
+                            <x-button type="submit" size="lg" :block="true">
+                                Konfirmasi Selesai
+                            </x-button>
+                        </form>
+
+                        @if ($warrantyWhatsappUrl)
+                            <x-button :href="$warrantyWhatsappUrl" target="_blank" rel="noopener" variant="secondary" size="lg" :block="true" class="mt-3">
+                                Chat Garansi via WhatsApp
+                            </x-button>
+                        @else
+                            <button type="button" disabled
+                                class="mt-3 inline-flex h-11 w-full cursor-not-allowed items-center justify-center rounded-lg border border-border-strong bg-gray-50 px-5 text-sm font-semibold text-gray-400">
+                                Nomor WhatsApp admin belum tersedia
+                            </button>
+                        @endif
+                    @endif
+
                     @if ($transaction->status === 'menunggu_pembayaran')
                         @if ($canPay)
                             <x-button type="button" id="pay-now-button" size="lg" :block="true" class="mt-5">
@@ -291,6 +318,25 @@
                     title: 'Apakah yakin?',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, batalkan',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: themeColor('primary'),
+                    cancelButtonColor: themeColor('danger'),
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('.complete-transaction-form').forEach((form) => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Konfirmasi pesanan selesai?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, selesai',
                     cancelButtonText: 'Batal',
                     confirmButtonColor: themeColor('primary'),
                     cancelButtonColor: themeColor('danger'),

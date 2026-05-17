@@ -203,6 +203,7 @@ class TransactionController extends Controller
         return view('customer.transactions.show', [
             'transaction' => $transaction,
             'adminWhatsappUrl' => $this->adminWhatsappUrl(),
+            'warrantyWhatsappUrl' => $this->warrantyWhatsappUrl($transaction),
         ]);
     }
 
@@ -336,6 +337,26 @@ class TransactionController extends Controller
             ->with('success', 'Pesanan berhasil dibatalkan');
     }
 
+    public function complete(Transaction $transaction)
+    {
+        $this->authorizeCustomerTransaction($transaction);
+
+        if ($transaction->status !== 'dikirim') {
+            throw ValidationException::withMessages([
+                'status' => 'Hanya transaksi yang sedang dikirim yang dapat dikonfirmasi selesai.',
+            ]);
+        }
+
+        $transaction->update([
+            'status' => 'selesai',
+            'completed_at' => $transaction->completed_at ?? now(),
+        ]);
+
+        return redirect()
+            ->route('transactions.show', $transaction)
+            ->with('success', 'Pesanan berhasil dikonfirmasi selesai.');
+    }
+
     private function transactionRules(): array
     {
         return [
@@ -403,9 +424,54 @@ class TransactionController extends Controller
 
     private function adminWhatsappUrl(): ?string
     {
+        $normalizedPhone = $this->adminWhatsappNumber();
+
+        if (! $normalizedPhone) {
+            return null;
+        }
+
+        $message = rawurlencode('Halo admin, saya ingin menanyakan ongkir untuk pesanan saya. Saya bertempat di <Masukkan alamat anda> dan ingin memesan <Tulis pesanan anda>');
+
+        return "https://wa.me/{$normalizedPhone}?text={$message}";
+    }
+
+    private function warrantyWhatsappUrl(Transaction $transaction): ?string
+    {
+        if ($transaction->status !== 'dikirim') {
+            return null;
+        }
+
+        $normalizedPhone = $this->adminWhatsappNumber();
+
+        if (! $normalizedPhone) {
+            return null;
+        }
+
+        $message = rawurlencode(implode("\n", [
+            'Halo Admin SIRACAS, saya ingin mengajukan garansi/komplain pesanan.',
+            '',
+            'ID Transaksi: #'.$transaction->id,
+            'Nama: '.($transaction->user?->username ?? '-'),
+            'Tanggal Pesanan: '.$transaction->tanggal->format('d M Y H:i'),
+            'Status Pesanan: Dikirim',
+            '',
+            'Kendala:',
+            '- Cacing mati / rusak / jumlah tidak sesuai / produk tidak sesuai',
+            '- Detail kendala:',
+            '',
+            'Saya akan mengirimkan foto/video bukti melalui chat ini.',
+            'Mohon bantuannya.',
+        ]));
+
+        return "https://wa.me/{$normalizedPhone}?text={$message}";
+    }
+
+    private function adminWhatsappNumber(): ?string
+    {
         $phone = User::query()
             ->where('role', 'admin')
             ->whereNotNull('nomor_hp')
+            ->orderBy('id')
             ->value('nomor_hp');
 
         if (! $phone) {
@@ -413,9 +479,9 @@ class TransactionController extends Controller
         }
 
         $normalizedPhone = preg_replace('/\D+/', '', $phone);
+        $normalizedPhone = preg_replace('/^08/', '628', $normalizedPhone);
         $normalizedPhone = preg_replace('/^0/', '62', $normalizedPhone);
-        $message = rawurlencode('Halo admin, saya ingin menanyakan ongkir untuk pesanan saya. Saya bertempat di <Masukkan alamat anda> dan ingin memesan <Tulis pesanan anda>');
 
-        return "https://wa.me/{$normalizedPhone}?text={$message}";
+        return $normalizedPhone !== '' ? $normalizedPhone : null;
     }
 }
