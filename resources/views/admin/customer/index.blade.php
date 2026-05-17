@@ -1,6 +1,9 @@
 <x-layouts.admin title="Data Akun">
     <x-slot:actions>
         <form action="{{ route('admin.customer.index') }}" method="GET" class="relative w-full sm:w-[410px]">
+            @if (request('status'))
+                <input type="hidden" name="status" value="{{ request('status') }}">
+            @endif
             <input type="text" name="search" value="{{ request('search') }}"
                 placeholder="Cari berdasarkan nama atau id"
                 class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-border-strong sm:px-8 sm:text-base">
@@ -17,13 +20,49 @@
     </x-slot:actions>
 
         <section class="table-wrap">
+            <div class="flex flex-col gap-4 border-b border-gray-100 bg-white px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
+                @php
+                    $baseFilter = array_filter(['search' => request('search')]);
+                    $allUrl = $baseFilter === []
+                        ? route('admin.customer.index')
+                        : route('admin.customer.index') . '?' . http_build_query($baseFilter);
+                @endphp
+
+                <div class="flex flex-wrap gap-2">
+                    <a href="{{ $allUrl }}"
+                        class="inline-flex h-9 items-center rounded-full px-3 text-xs font-bold transition {{ blank(request('status')) ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-primary-soft hover:text-primary-dark' }}">
+                        Semua
+                    </a>
+                    @foreach (['aktif' => 'Aktif', 'nonaktif' => 'Nonaktif'] as $value => $label)
+                        @php
+                            $query = array_filter([
+                                'search' => request('search'),
+                                'status' => $value,
+                            ]);
+                        @endphp
+                        <a href="{{ route('admin.customer.index') . '?' . http_build_query($query) }}"
+                            class="inline-flex h-9 items-center rounded-full px-3 text-xs font-bold transition {{ request('status') === $value ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-primary-soft hover:text-primary-dark' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+
+                @if (request()->hasAny(['search', 'status']))
+                    <a href="{{ route('admin.customer.index') }}"
+                        class="inline-flex h-10 items-center justify-center rounded-lg border border-border-strong bg-white px-4 text-sm font-semibold text-muted-dark transition hover:bg-primary-soft">
+                        Reset
+                    </a>
+                @endif
+            </div>
+
             <div class="overflow-x-auto">
-                <table class="admin-table min-w-[760px] text-center">
+                <table class="admin-table min-w-[900px] text-center">
                     <thead>
                         <tr>
                             <th>Username</th>
                             <th>Foto Profil</th>
                             <th>Email</th>
+                            <th>Status</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -40,22 +79,46 @@
                                 </td>
                                 <td>{{ $customer->email }}</td>
                                 <td>
-                                    <button type="button" onclick="openModal({{ $customer->id }})"
-                                        class="inline-flex h-9 w-9 items-center justify-center rounded-full text-indigo-600 transition hover:bg-indigo-50 hover:text-indigo-700"
-                                        aria-label="Lihat detail {{ $customer->username }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12 18 18.75 12 18.75 2.25 12 2.25 12Z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                        </svg>
-                                    </button>
+                                    <span class="inline-flex rounded-full px-3 py-1 text-xs font-bold {{ $customer->is_active ? 'bg-success-soft text-success' : 'bg-danger-soft text-danger' }}">
+                                        {{ $customer->is_active ? 'Aktif' : 'Nonaktif' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="flex items-center justify-center gap-2">
+                                        <button type="button" onclick="openModal({{ $customer->id }})"
+                                            class="inline-flex h-9 w-9 items-center justify-center rounded-full text-indigo-600 transition hover:bg-indigo-50 hover:text-indigo-700"
+                                            aria-label="Lihat detail {{ $customer->username }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M2.25 12s3.75-6.75 9.75-6.75S21.75 12 21.75 12 18 18.75 12 18.75 2.25 12 2.25 12Z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                            </svg>
+                                        </button>
+                                        <form action="{{ route('admin.customer.status', array_merge([$customer], request()->query())) }}"
+                                            method="POST" class="customer-status-form"
+                                            data-action="{{ $customer->is_active ? 'nonaktifkan' : 'aktifkan' }}"
+                                            data-username="{{ $customer->username }}">
+                                            @csrf
+                                            @method('PATCH')
+                                            <input type="hidden" name="status" value="{{ $customer->is_active ? 'nonaktif' : 'aktif' }}">
+                                            <button type="submit"
+                                                class="inline-flex h-9 w-9 items-center justify-center rounded-full {{ $customer->is_active ? 'text-danger hover:bg-red-50' : 'text-success hover:bg-success-soft' }} transition"
+                                                aria-label="{{ $customer->is_active ? 'Nonaktifkan' : 'Aktifkan' }} {{ $customer->username }}">
+                                                @if ($customer->is_active)
+                                                    <i class="bi bi-person-x text-lg"></i>
+                                                @else
+                                                    <i class="bi bi-person-check text-lg"></i>
+                                                @endif
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="py-12 text-center text-gray-500">
+                                <td colspan="5" class="py-12 text-center text-gray-500">
                                     Tidak ada data akun customer ditemukan.
                                 </td>
                             </tr>
@@ -198,6 +261,11 @@
                         <input type="text" id="modalNomorHp" readonly
                             class="h-11 w-full rounded-md border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 outline-none">
                     </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-semibold text-gray-700">Status</label>
+                        <input type="text" id="modalStatus" readonly
+                            class="h-11 w-full rounded-md border border-gray-200 bg-gray-50 px-4 text-sm text-gray-700 outline-none">
+                    </div>
                 </div>
             </div>
 
@@ -227,6 +295,7 @@
                     document.getElementById('modalJenisKelamin').value = data.jenis_kelamin;
                     document.getElementById('modalEmail').value = data.email;
                     document.getElementById('modalNomorHp').value = data.nomor_hp ?? '-';
+                    document.getElementById('modalStatus').value = data.status;
                 })
                 .catch(() => {
                     closeModal();
@@ -239,5 +308,32 @@
             modal.classList.add('hidden');
             modal.classList.remove('flex');
         }
+
+        document.querySelectorAll('.customer-status-form').forEach((form) => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                const action = form.dataset.action;
+                const username = form.dataset.username;
+                const isDeactivate = action === 'nonaktifkan';
+
+                Swal.fire({
+                    icon: 'warning',
+                    title: `${isDeactivate ? 'Nonaktifkan' : 'Aktifkan'} customer?`,
+                    text: isDeactivate
+                        ? `Customer ${username} tidak akan bisa login sampai diaktifkan kembali.`
+                        : `Customer ${username} akan bisa login kembali.`,
+                    showCancelButton: true,
+                    confirmButtonText: `Ya, ${action}`,
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: themeColor(isDeactivate ? 'danger' : 'primary'),
+                    cancelButtonColor: themeColor('muted'),
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
     </script>
 </x-layouts.admin>

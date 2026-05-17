@@ -36,6 +36,16 @@ class SessionsController extends Controller
 
         $request->session()->regenerate();
 
+        if (Auth::user()->role === 'customer' && ! Auth::user()->is_active) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return back()
+                ->withErrors(['email' => 'Akun customer ini sedang dinonaktifkan.'])
+                ->withInput($request->only('email'));
+        }
+
         if (Auth::user()->role === 'customer') {
             Auth::user()->cart()->firstOrCreate([]);
         }

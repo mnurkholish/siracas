@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CustomerAccountController extends Controller
 {
@@ -21,6 +22,10 @@ class CustomerAccountController extends Controller
                   ->orWhere('username', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%");
             });
+        }
+
+        if ($request->filled('status')) {
+            $query->where('is_active', $request->status === 'aktif');
         }
 
         $customers = $query->latest()->paginate(8)->withQueryString();
@@ -45,6 +50,26 @@ class CustomerAccountController extends Controller
             'jenis_kelamin' => $customer->jenis_kelamin ? ucfirst($customer->jenis_kelamin) : '-',
             'foto_url' => $fotoUrl,
             'nomor_hp' => $customer->nomor_hp,
+            'status' => $customer->is_active ? 'Aktif' : 'Nonaktif',
         ]);
+    }
+
+    public function updateStatus(Request $request, User $user)
+    {
+        abort_unless($user->role === 'customer', 404);
+
+        $validated = $request->validate([
+            'status' => ['required', Rule::in(['aktif', 'nonaktif'])],
+        ]);
+
+        $user->update([
+            'is_active' => $validated['status'] === 'aktif',
+        ]);
+
+        return redirect()
+            ->route('admin.customer.index', $request->query())
+            ->with('success', $validated['status'] === 'aktif'
+                ? 'Akun customer berhasil diaktifkan.'
+                : 'Akun customer berhasil dinonaktifkan.');
     }
 }

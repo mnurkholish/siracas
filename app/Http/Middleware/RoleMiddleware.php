@@ -28,6 +28,16 @@ class RoleMiddleware
             abort(403, 'Anda tidak memiliki akses ke halaman ini.');
         }
 
+        if ($role === 'customer' && ! Auth::user()->is_active) {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()
+                ->route('login')
+                ->withErrors(['email' => 'Akun customer ini sedang dinonaktifkan.']);
+        }
+
         // 3. Jika aman, lanjutkan request
         return $next($request);
 
