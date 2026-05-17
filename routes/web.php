@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminTransactionController;
 use App\Http\Controllers\Admin\CustomerAccountController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\NotificationCampaignController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Auth\SessionsController;
 use App\Http\Controllers\Customer\AddressController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\CustomerProductController;
+use App\Http\Controllers\Customer\NotificationController;
 use App\Http\Controllers\Customer\ReviewController;
 use App\Http\Controllers\Customer\TransactionController;
 use App\Http\Controllers\HomeController;
@@ -24,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 // ==========================================
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/midtrans/callback', MidtransCallbackController::class)->name('midtrans.callback');
+
 
 // ==========================================
 // 2. GUEST ROUTES
@@ -76,6 +79,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/reviews/{review}/reply/create', [AdminReviewController::class, 'create'])->name('reviews.create');
         Route::put('/reviews/{review}/reply', [AdminReviewController::class, 'reply'])->name('reviews.reply');
 
+        Route::get('/notification-campaigns', [NotificationCampaignController::class, 'index'])->name('notification-campaigns.index');
+        Route::post('/notification-campaigns', [NotificationCampaignController::class, 'store'])->name('notification-campaigns.store');
+        Route::put('/notification-campaigns/{notificationCampaign}', [NotificationCampaignController::class, 'update'])->name('notification-campaigns.update');
+        Route::delete('/notification-campaigns/{notificationCampaign}', [NotificationCampaignController::class, 'destroy'])->name('notification-campaigns.destroy');
+        Route::patch('/notification-campaigns/{notificationCampaign}/publish', [NotificationCampaignController::class, 'publish'])->name('notification-campaigns.publish');
+        Route::patch('/notification-campaigns/{notificationCampaign}/unpublish', [NotificationCampaignController::class, 'unpublish'])->name('notification-campaigns.unpublish');
+
         Route::get('/profile', [ProfileController::class, 'adminIndex'])->name('profile');
         Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
@@ -113,6 +123,12 @@ Route::middleware('auth')->group(function () {
         Route::put('/review/history/{review}', [ReviewController::class, 'update'])->name('reviews.update');
         Route::get('/review/{transactionDetail}', [ReviewController::class, 'show'])->whereNumber('transactionDetail')->name('review.show');
         Route::post('/transactions/{transaction}/details/{transactionDetail}/reviews', [ReviewController::class, 'store'])->name('transactions.details.reviews.store');
+
+        Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::patch('/notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
+        Route::patch('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.readAll');
+        Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+        Route::delete('/notifications', [NotificationController::class, 'destroyAll'])->name('notifications.destroyAll');
 
         Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
 

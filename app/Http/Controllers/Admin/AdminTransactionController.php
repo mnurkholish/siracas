@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Notifications\OrderCompletedNotification;
+use App\Notifications\OrderShippedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -87,10 +89,22 @@ class AdminTransactionController extends Controller
             'status.in' => 'Status transaksi belum bisa diubah',
         ]);
 
+        $previousStatus = $transaction->status;
+
         $transaction->update([
             'status' => $validated['status'],
             'completed_at' => $validated['status'] === 'selesai' ? now() : $transaction->completed_at,
         ]);
+
+        if ($previousStatus !== $validated['status']) {
+            $transaction->loadMissing('user');
+
+            match ($validated['status']) {
+                'dikirim' => $transaction->user?->notify(new OrderShippedNotification($transaction)),
+                'selesai' => $transaction->user?->notify(new OrderCompletedNotification($transaction)),
+                default => null,
+            };
+        }
 
         return redirect()
             ->route('admin.transactions.show', $transaction)

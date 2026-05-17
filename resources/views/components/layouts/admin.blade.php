@@ -36,8 +36,13 @@
                     'icon' => 'ulasan',
                     'active' => ['admin.reviews.*'],
                 ],
+                [
+                    'name' => 'Campaign Notifikasi',
+                    'route' => 'admin.notification-campaigns.index',
+                    'icon' => 'notifikasi',
+                    'active' => ['admin.notification-campaigns.*'],
+                ],
                 ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],
-                ['name' => 'Notifikasi', 'route' => 'home', 'icon' => 'notifikasi'],
                 ['name' => 'Laporan Operasional', 'route' => 'home', 'icon' => 'laporan'],
             ];
         @endphp

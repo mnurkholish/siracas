@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Notifications\OrderPaidNotification;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -55,11 +56,18 @@ class MidtransCallbackController extends Controller
             ]);
         }
 
+        $previousStatus = $transaction->status;
+
         $transaction->update([
             'status' => $status,
             'payment_type' => $validated['payment_type'] ?? $transaction->payment_type,
             'paid_at' => $status === 'dibayar' ? ($transaction->paid_at ?? now()) : $transaction->paid_at,
         ]);
+
+        if ($status === 'dibayar' && $previousStatus !== 'dibayar') {
+            $transaction->loadMissing('user');
+            $transaction->user?->notify(new OrderPaidNotification($transaction));
+        }
 
         return response()->json([
             'message' => 'Callback processed.',

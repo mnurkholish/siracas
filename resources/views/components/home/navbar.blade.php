@@ -10,6 +10,10 @@
         $cartItemsCount = $cart ? $cart->cartItems()->sum('quantity') : 0;
     }
 
+    $unreadNotificationsCount = auth()->check() && auth()->user()->role === 'customer'
+        ? auth()->user()->unreadNotifications()->count()
+        : 0;
+
     $isNavActive = function (string $route): bool {
         $linkPath = trim(parse_url($route, PHP_URL_PATH) ?: $route, '/');
         $currentPath = trim(request()->path(), '/');
@@ -64,10 +68,15 @@
                     @endif
                 </a>
 
-                <a href="#"
+                <a href="{{ route('notifications.index') }}"
                     class="relative inline-flex items-center justify-center rounded-full p-2 transition-colors hover:bg-primary-soft focus:outline-none focus:ring-2 focus:ring-border-strong"
                     aria-label="Notifikasi">
                     <x-icons.bell class="h-5 w-5 text-muted-dark" />
+                    @if ($unreadNotificationsCount > 0)
+                        <span class="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1.5 text-[11px] font-bold leading-none text-white">
+                            {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
+                        </span>
+                    @endif
                 </a>
 
                 <div class="ml-2 h-6 w-px bg-border-soft"></div>
@@ -153,3 +162,5 @@
         </nav>
     </div>
 </header>
+
+<x-notifications.floating-popup />
