@@ -22,6 +22,7 @@ class AdminCampaignNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'campaign_id' => $this->campaign->id,
             'title' => $this->campaign->title,
             'message' => $this->campaign->message,
             'url' => filled($this->campaign->url) ? $this->campaign->url : null,

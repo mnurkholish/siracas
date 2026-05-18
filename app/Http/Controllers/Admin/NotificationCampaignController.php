@@ -7,6 +7,7 @@ use App\Models\NotificationCampaign;
 use App\Models\User;
 use App\Notifications\AdminCampaignNotification;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -68,6 +69,7 @@ class NotificationCampaignController extends Controller
 
     public function destroy(NotificationCampaign $notificationCampaign)
     {
+        $this->deletePublishedNotifications($notificationCampaign);
         $this->deleteImage($notificationCampaign->image);
         $notificationCampaign->delete();
 
@@ -99,7 +101,9 @@ class NotificationCampaignController extends Controller
             'is_active' => false,
         ]);
 
-        return back()->with('success', 'Campaign notifikasi dinonaktifkan');
+        $deletedNotifications = $this->deletePublishedNotifications($notificationCampaign);
+
+        return back()->with('success', "Campaign notifikasi dinonaktifkan dan {$deletedNotifications} notifikasi customer ditarik");
     }
 
     private function validatedCampaign(Request $request): array
@@ -141,5 +145,39 @@ class NotificationCampaignController extends Controller
         if ($path && Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
         }
+    }
+
+    private function deletePublishedNotifications(NotificationCampaign $campaign): int
+    {
+        $deletedNotifications = 0;
+        $campaignUrl = filled($campaign->url) ? $campaign->url : null;
+
+        DatabaseNotification::query()
+            ->where('type', AdminCampaignNotification::class)
+            ->chunkById(100, function ($notifications) use ($campaign, $campaignUrl, &$deletedNotifications) {
+                $notificationIds = $notifications
+                    ->filter(function (DatabaseNotification $notification) use ($campaign, $campaignUrl) {
+                        $data = is_array($notification->data) ? $notification->data : [];
+
+                        if ((int) ($data['campaign_id'] ?? 0) === $campaign->id) {
+                            return true;
+                        }
+
+                        return ! array_key_exists('campaign_id', $data)
+                            && ($data['title'] ?? null) === $campaign->title
+                            && ($data['message'] ?? null) === $campaign->message
+                            && ($data['type'] ?? null) === $campaign->type
+                            && ($data['url'] ?? null) === $campaignUrl;
+                    })
+                    ->modelKeys();
+
+                if ($notificationIds !== []) {
+                    $deletedNotifications += DatabaseNotification::query()
+                        ->whereKey($notificationIds)
+                        ->delete();
+                }
+            });
+
+        return $deletedNotifications;
     }
 }
