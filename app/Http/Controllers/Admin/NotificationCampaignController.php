@@ -104,7 +104,7 @@ class NotificationCampaignController extends Controller
 
     private function validatedCampaign(Request $request): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'type' => ['required', Rule::in(array_keys(NotificationCampaign::TYPES))],
             'title' => ['required', 'string', 'max:160'],
             'message' => ['required', 'string', 'max:1000'],
@@ -119,6 +119,10 @@ class NotificationCampaignController extends Controller
             'image.image' => 'Gambar harus berupa file gambar.',
             'image.max' => 'Ukuran gambar maksimal 2 MB.',
         ]);
+
+        $data['url'] = filled($data['url'] ?? null) ? trim($data['url']) : null;
+
+        return $data;
     }
 
     private function storeImage(Request $request): ?string

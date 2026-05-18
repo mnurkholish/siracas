@@ -11,6 +11,8 @@ class NotificationController extends Controller
 {
     public function index()
     {
+        Auth::user()->unreadNotifications()->update(['read_at' => now()]);
+
         $notifications = Auth::user()
             ->notifications()
             ->latest()

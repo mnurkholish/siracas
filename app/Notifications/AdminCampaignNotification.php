@@ -24,7 +24,7 @@ class AdminCampaignNotification extends Notification
         return [
             'title' => $this->campaign->title,
             'message' => $this->campaign->message,
-            'url' => $this->campaign->url,
+            'url' => filled($this->campaign->url) ? $this->campaign->url : null,
             'type' => $this->campaign->type,
         ];
     }

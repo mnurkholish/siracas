@@ -42,6 +42,7 @@
                     @php
                         $payload = $notification->data;
                         $isUnread = is_null($notification->read_at);
+                        $detailUrl = trim((string) ($payload['url'] ?? ''));
                     @endphp
 
                     <article class="rounded-lg border {{ $isUnread ? 'border-primary bg-white shadow-sm' : 'border-border bg-white/75' }} p-5">
@@ -64,8 +65,8 @@
                             </div>
 
                             <div class="flex shrink-0 flex-wrap gap-2">
-                                @if (! empty($payload['url']))
-                                    <x-button :href="$payload['url']" variant="secondary" size="sm">
+                                @if ($detailUrl !== '')
+                                    <x-button :href="$detailUrl" variant="secondary" size="sm">
                                         Detail
                                     </x-button>
                                 @endif
