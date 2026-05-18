@@ -6,12 +6,11 @@
         ->map(fn ($campaign) => [
             'id' => $campaign->id,
             'type' => $campaign->type,
-            'title' => $campaign->title,
-            'message' => $campaign->message,
-            'url' => $campaign->url,
-            'is_active' => $campaign->is_active,
-            'update_url' => route('admin.notification-campaigns.update', $campaign),
-        ])
+                            'title' => $campaign->title,
+                            'message' => $campaign->message,
+                            'url' => $campaign->url,
+                            'update_url' => route('admin.notification-campaigns.update', $campaign),
+                        ])
         ->values();
 @endphp
 
@@ -89,17 +88,19 @@
                                             Ubah
                                         </x-button>
 
-                                        <form action="{{ route('admin.notification-campaigns.publish', $campaign) }}" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <x-button type="submit" size="sm">Publish</x-button>
-                                        </form>
-
-                                        <form action="{{ route('admin.notification-campaigns.unpublish', $campaign) }}" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <x-button type="submit" variant="secondary" size="sm">Unpublish</x-button>
-                                        </form>
+                                        @if ($campaign->is_active)
+                                            <form action="{{ route('admin.notification-campaigns.unpublish', $campaign) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <x-button type="submit" variant="secondary" size="sm">Unpublish</x-button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('admin.notification-campaigns.publish', $campaign) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <x-button type="submit" size="sm">Publish</x-button>
+                                            </form>
+                                        @endif
 
                                         <form action="{{ route('admin.notification-campaigns.destroy', $campaign) }}" method="POST" class="delete-campaign-form">
                                             @csrf
@@ -177,7 +178,6 @@
                             title: this.oldValues.title ?? this.selected.title,
                             message: this.oldValues.message ?? this.selected.message,
                             url: this.oldValues.url ?? this.selected.url,
-                            is_active: Boolean(Number(this.oldValues.is_active ?? this.selected.is_active)),
                         });
                     }
                 },

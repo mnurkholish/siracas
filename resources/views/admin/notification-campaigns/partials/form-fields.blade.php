@@ -35,15 +35,6 @@
         class="block w-full rounded-lg border border-border-strong bg-surface px-4 py-3 text-sm text-muted-dark file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white">
 </div>
 
-<input type="hidden" name="is_active" value="0">
-<label
-    class="flex items-center gap-3 rounded-lg border border-border-soft bg-surface px-4 py-3 text-sm font-semibold text-muted-dark">
-    <input type="checkbox" name="is_active" value="1" class="h-4 w-4 rounded border-border-strong text-primary"
-        @if ($mode === 'create') checked @endif
-        @if ($mode === 'edit') x-model="selected.is_active" @endif>
-    Aktif
-</label>
-
 <div class="flex justify-end gap-3 pt-2">
     <x-button type="button" variant="secondary" @click="closeModal()">Batal</x-button>
     <x-button type="submit">Simpan</x-button>

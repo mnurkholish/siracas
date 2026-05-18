@@ -41,6 +41,8 @@ class NotificationCampaignController extends Controller
     {
         $data = $this->validatedCampaign($request);
         $data['image'] = $this->storeImage($request);
+        $data['is_active'] = false;
+        $data['published_at'] = null;
 
         NotificationCampaign::create($data);
 
@@ -78,6 +80,8 @@ class NotificationCampaignController extends Controller
 
     public function publish(NotificationCampaign $notificationCampaign)
     {
+        $this->deletePublishedNotifications($notificationCampaign);
+
         User::query()
             ->where('role', 'customer')
             ->where('is_active', true)
@@ -114,7 +118,6 @@ class NotificationCampaignController extends Controller
             'message' => ['required', 'string', 'max:1000'],
             'url' => ['nullable', 'string', 'max:255'],
             'image' => ['sometimes', 'nullable', 'image', 'max:2048'],
-            'is_active' => ['nullable', 'boolean'],
         ], [
             'type.required' => 'Tipe notifikasi wajib dipilih.',
             'type.in' => 'Tipe notifikasi tidak valid.',
