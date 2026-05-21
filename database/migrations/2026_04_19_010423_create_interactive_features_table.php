@@ -20,14 +20,6 @@ return new class () extends Migration {
             $table->timestamps();
         });
 
-        Schema::create('chats', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('receiver_id')->constrained('users')->cascadeOnDelete();
-            $table->text('pesan');
-            $table->timestamps();
-        });
-
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
@@ -44,7 +36,6 @@ return new class () extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('notifications');
-        Schema::dropIfExists('chats');
         Schema::dropIfExists('reviews');
     }
 };

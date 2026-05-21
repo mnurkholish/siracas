@@ -44,7 +44,6 @@
                     'icon' => 'notifikasi',
                     'active' => ['admin.campaigns.*'],
                 ],
-                ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],
                 ['name' => 'Laporan Operasional', 'route' => 'home', 'icon' => 'laporan'],
             ];
 
