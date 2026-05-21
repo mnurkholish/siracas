@@ -47,8 +47,8 @@ class NotificationCampaignController extends Controller
         NotificationCampaign::create($data);
 
         return redirect()
-            ->route('admin.notification-campaigns.index')
-            ->with('success', 'Campaign notifikasi berhasil ditambah');
+            ->route('admin.campaigns.index')
+            ->with('success', 'Kampanye notifikasi berhasil ditambah');
     }
 
     public function update(Request $request, NotificationCampaign $notificationCampaign)
@@ -65,8 +65,8 @@ class NotificationCampaignController extends Controller
         $notificationCampaign->update($data);
 
         return redirect()
-            ->route('admin.notification-campaigns.index')
-            ->with('success', 'Campaign notifikasi berhasil diperbarui');
+            ->route('admin.campaigns.index')
+            ->with('success', 'Kampanye notifikasi berhasil diperbarui');
     }
 
     public function destroy(NotificationCampaign $notificationCampaign)
@@ -75,7 +75,7 @@ class NotificationCampaignController extends Controller
         $this->deleteImage($notificationCampaign->image);
         $notificationCampaign->delete();
 
-        return back()->with('success', 'Campaign notifikasi berhasil dihapus');
+        return back()->with('success', 'Kampanye notifikasi berhasil dihapus');
     }
 
     public function publish(NotificationCampaign $notificationCampaign)
@@ -96,7 +96,7 @@ class NotificationCampaignController extends Controller
             'published_at' => now(),
         ]);
 
-        return back()->with('success', 'Campaign notifikasi berhasil dipublish');
+        return back()->with('success', 'Kampanye notifikasi berhasil dipublish');
     }
 
     public function unpublish(NotificationCampaign $notificationCampaign)
@@ -107,7 +107,7 @@ class NotificationCampaignController extends Controller
 
         $deletedNotifications = $this->deletePublishedNotifications($notificationCampaign);
 
-        return back()->with('success', "Campaign notifikasi dinonaktifkan dan {$deletedNotifications} notifikasi customer ditarik");
+        return back()->with('success', "Kampanye notifikasi dinonaktifkan dan {$deletedNotifications} notifikasi customer ditarik");
     }
 
     private function validatedCampaign(Request $request): array

@@ -6,7 +6,7 @@
         ],
         [
             'nav' => 'Produk',
-            'route' => route('product.index'),
+            'route' => route('products.index'),
         ],
         [
             'nav' => 'Transaksi',
@@ -21,7 +21,7 @@
     <main>
         <x-home.hero-section />
         <x-home.about-section />
-        <x-home.products-section :products="$products" :allLink="route('product.index')" />
+        <x-home.products-section :products="$products" :allLink="route('products.index')" />
         <x-home.reviews-section :reviews="$reviews" />
     </main>
 

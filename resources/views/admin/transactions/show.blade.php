@@ -147,7 +147,7 @@
                 </dl>
             </div>
 
-            <form action="{{ route('admin.transactions.update-refund', $transaction) }}" method="POST"
+            <form action="{{ route('admin.transactions.refund', $transaction) }}" method="POST"
                 class="update-refund-form mt-6 border-t border-gray-100 pt-5">
                 @csrf
                 @method('PATCH')
@@ -173,7 +173,7 @@
             </form>
 
             @if ($canUpdateOngkir)
-                <form action="{{ route('admin.transactions.ongkir', $transaction) }}" method="POST"
+                <form action="{{ route('admin.transactions.shipping', $transaction) }}" method="POST"
                     class="update-ongkir-form mt-6">
                     @csrf
                     @method('PATCH')

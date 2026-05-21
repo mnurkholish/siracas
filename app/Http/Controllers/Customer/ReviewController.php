@@ -102,7 +102,7 @@ class ReviewController extends Controller
         ]);
 
         return redirect()
-            ->route('review')
+            ->route('reviews.create')
             ->with('success', 'Penilaian berhasil ditambahkan.');
     }
 

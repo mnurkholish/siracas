@@ -1,7 +1,7 @@
 @php
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('dashboard')],
-        ['nav' => 'Produk', 'route' => route('product.index')],
+        ['nav' => 'Produk', 'route' => route('products.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
         ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="flex flex-col gap-2 sm:flex-row">
-                    <form action="{{ route('notifications.readAll') }}" method="POST">
+                    <form action="{{ route('notifications.read-all') }}" method="POST">
                         @csrf
                         @method('PATCH')
                         <x-button type="submit" variant="secondary" size="lg">
@@ -27,7 +27,7 @@
                         </x-button>
                     </form>
 
-                    <form action="{{ route('notifications.destroyAll') }}" method="POST" class="delete-all-notifications-form">
+                    <form action="{{ route('notifications.clear') }}" method="POST" class="delete-all-notifications-form">
                         @csrf
                         @method('DELETE')
                         <x-button type="submit" variant="danger-soft" size="lg">

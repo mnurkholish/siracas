@@ -67,7 +67,7 @@ class CustomerAccountController extends Controller
         ]);
 
         return redirect()
-            ->route('admin.customer.index', $request->query())
+            ->route('admin.customers.index', $request->query())
             ->with('success', $validated['status'] === 'aktif'
                 ? 'Akun customer berhasil diaktifkan.'
                 : 'Akun customer berhasil dinonaktifkan.');

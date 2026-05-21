@@ -1,4 +1,4 @@
-<x-layouts.auth title="Register">
+<x-layouts.auth title="Daftar">
 
     <x-auth.card class="animate-fadeDown [animation-delay:200ms]">
         <h2 class="text-2xl font-bold mb-6">Daftar</h2>
@@ -48,7 +48,7 @@
         </form>
 
         <p class="text-sm mt-2 text-center">
-            Sudah punya akun? <a href="/login" class="text-primary underline">Login</a>
+            Sudah punya akun? <a href="/login" class="text-primary underline">Masuk</a>
         </p>
     </x-auth.card>
 

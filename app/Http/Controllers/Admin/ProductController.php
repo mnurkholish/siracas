@@ -70,7 +70,7 @@ class ProductController extends Controller
         Product::create($data);
 
         return redirect()
-            ->route('admin.product.index')
+            ->route('admin.products.index')
             ->with('success', 'Produk baru berhasil ditambah');
     }
 
@@ -118,7 +118,7 @@ class ProductController extends Controller
         $product->update($data);
 
         return redirect()
-            ->route('admin.product.index')
+            ->route('admin.products.index')
             ->with('success', 'Produk berhasil diperbarui');
     }
 
@@ -140,7 +140,7 @@ class ProductController extends Controller
         $product->delete();
 
         return redirect()
-            ->route('admin.product.index')
+            ->route('admin.products.index')
             ->with('success', 'Produk berhasil dihapus');
     }
 
@@ -150,7 +150,7 @@ class ProductController extends Controller
         $product->restore();
 
         return redirect()
-            ->route('admin.product.archives')
+            ->route('admin.products.archives')
             ->with('success', 'Produk berhasil dikembalikan');
     }
 

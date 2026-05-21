@@ -109,7 +109,7 @@
                             aria-labelledby="user-menu-button" tabindex="-1">
 
                             <div class="border-b border-gray-100 px-4 py-3">
-                                <p class="text-sm text-gray-500">Login sebagai</p>
+                                <p class="text-sm text-gray-500">Masuk sebagai</p>
                                 <p class="truncate text-sm font-medium text-gray-900">{{ auth()->user()->username ?? 'User' }}
                                 </p>
                             </div>
@@ -125,7 +125,7 @@
                                     <button type="submit"
                                         class="flex w-full text-left px-4 py-2.5 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
                                         role="menuitem" tabindex="-1">
-                                        Logout
+                                        Keluar
                                     </button>
                                 </form>
                             </div>
@@ -135,11 +135,11 @@
                     <div class="flex items-center gap-2">
                         <a href="/register"
                             class="hidden rounded-full px-4 py-2 text-sm font-semibold text-text-body transition hover:bg-primary-soft hover:text-primary sm:inline-flex">
-                            Register
+                            Daftar
                         </a>
                         <a href="/login"
                             class="inline-flex items-center justify-center rounded-full border border-border-strong px-4 py-2 text-sm font-semibold text-muted-dark shadow-sm transition hover:border-primary hover:bg-primary-soft focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1">
-                            Login
+                            Masuk
                         </a>
                     </div>
                 @endauth

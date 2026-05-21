@@ -6,7 +6,7 @@
         ],
         [
             'nav' => 'Produk',
-            'route' => route('product.index'),
+            'route' => route('products.index'),
         ],
         [
             'nav' => 'Transaksi',
@@ -26,7 +26,7 @@
 
     <main class="page">
         <section class="page-container">
-            <a href="{{ route('product.show', $product) }}"
+            <a href="{{ route('products.show', $product) }}"
                 class="inline-flex text-sm font-semibold text-primary-dark transition hover:text-text-body">
                 Kembali ke detail produk
             </a>

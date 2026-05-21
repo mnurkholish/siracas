@@ -6,7 +6,7 @@
         ],
         [
             'nav' => 'Produk',
-            'route' => route('product.index'),
+            'route' => route('products.index'),
         ],
         [
             'nav' => 'Transaksi',
@@ -26,7 +26,7 @@
 
     <main class="bg-secondary-soft px-6 py-12 lg:px-10">
         <div class="mx-auto max-w-5xl rounded-lg border border-border bg-white p-6 shadow-sm">
-            <a href="{{ route('product.index') }}"
+            <a href="{{ route('products.index') }}"
                 class="mb-6 inline-flex text-sm font-semibold text-primary-dark transition hover:text-text-body">
                 Kembali ke produk
             </a>
@@ -94,7 +94,7 @@
                                 {{ $product->stok > 0 ? 'Tambahkan ke Keranjang' : 'Stok Habis' }}
                             </button>
                             <button type="submit" formmethod="GET"
-                                formaction="{{ route('products.buy-now.form', $product) }}"
+                                formaction="{{ route('products.buy-now.index', $product) }}"
                                 @disabled($product->stok <= 0)
                                 class="inline-flex h-12 items-center justify-center rounded-lg border border-border-strong bg-white px-5 text-sm font-bold text-text-body transition hover:bg-primary-soft disabled:cursor-not-allowed disabled:bg-surface-disabled disabled:text-muted">
                                 Beli Sekarang
@@ -152,7 +152,7 @@
 
                     @if ($product->reviews_count > $product->reviews->count())
                         <div class="mt-6 flex justify-center">
-                            <x-button :href="route('product.reviews', $product)" variant="secondary" size="lg">
+                            <x-button :href="route('products.reviews', $product)" variant="secondary" size="lg">
                                 Lihat Semua Review
                             </x-button>
                         </div>

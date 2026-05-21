@@ -1,7 +1,7 @@
 @php
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('dashboard')],
-        ['nav' => 'Produk', 'route' => route('product.index')],
+        ['nav' => 'Produk', 'route' => route('products.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
         ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
@@ -13,12 +13,12 @@
     <x-home.navbar :nav-links="$navLinks" />
 
     <main class="bg-secondary-soft px-6 py-10 lg:px-10">
-        <form action="{{ route('products.buy-now.process', $product) }}" method="POST"
+        <form action="{{ route('products.buy-now.store', $product) }}" method="POST"
             class="buy-now-form mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
             @csrf
 
             <section class="rounded-lg border border-border bg-white p-5 shadow-sm">
-                <a href="{{ route('product.show', $product) }}" class="text-sm font-semibold text-primary-dark">
+                <a href="{{ route('products.show', $product) }}" class="text-sm font-semibold text-primary-dark">
                     Kembali ke produk
                 </a>
 

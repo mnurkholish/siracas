@@ -1,7 +1,7 @@
 @php
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('dashboard')],
-        ['nav' => 'Produk', 'route' => route('product.index')],
+        ['nav' => 'Produk', 'route' => route('products.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
         ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
@@ -43,7 +43,7 @@
                         <x-button :href="$historyButtonRoute ?? route('transactions.history')" variant="secondary" size="lg">
                             {{ $historyButtonLabel ?? 'Riwayat Transaksi' }}
                         </x-button>
-                        <x-button :href="route('product.index')" variant="secondary" size="lg">
+                        <x-button :href="route('products.index')" variant="secondary" size="lg">
                             Belanja Lagi
                         </x-button>
                     </div>
@@ -85,7 +85,7 @@
                                                     $transaction->completed_at &&
                                                     $transaction->completed_at->gte(now()->subDays(20)) &&
                                                     $transaction->reviewable_details_count > 0)
-                                                <x-button :href="route('review')" variant="secondary" size="sm">
+                                                <x-button :href="route('reviews.create')" variant="secondary" size="sm">
                                                     Beri Penilaian
                                                 </x-button>
                                             @endif

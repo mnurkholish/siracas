@@ -1,7 +1,7 @@
 @php
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('dashboard')],
-        ['nav' => 'Produk', 'route' => route('product.index')],
+        ['nav' => 'Produk', 'route' => route('products.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
         ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
@@ -64,7 +64,7 @@
                                             {{ $detail->transaction?->completed_at?->format('d M Y') }}
                                         </td>
                                         <td class="text-right">
-                                            <x-button :href="route('review.show', $detail)" size="sm">
+                                            <x-button :href="route('reviews.show', $detail)" size="sm">
                                                 Nilai
                                             </x-button>
                                         </td>

@@ -1,6 +1,6 @@
 <x-layouts.admin title="Data Akun">
     <x-slot:actions>
-        <form action="{{ route('admin.customer.index') }}" method="GET" class="relative w-full sm:w-[410px]">
+        <form action="{{ route('admin.customers.index') }}" method="GET" class="relative w-full sm:w-[410px]">
             @if (request('status'))
                 <input type="hidden" name="status" value="{{ request('status') }}">
             @endif
@@ -24,8 +24,8 @@
                 @php
                     $baseFilter = array_filter(['search' => request('search')]);
                     $allUrl = $baseFilter === []
-                        ? route('admin.customer.index')
-                        : route('admin.customer.index') . '?' . http_build_query($baseFilter);
+                        ? route('admin.customers.index')
+                        : route('admin.customers.index') . '?' . http_build_query($baseFilter);
                 @endphp
 
                 <div class="flex flex-wrap gap-2">
@@ -40,7 +40,7 @@
                                 'status' => $value,
                             ]);
                         @endphp
-                        <a href="{{ route('admin.customer.index') . '?' . http_build_query($query) }}"
+                        <a href="{{ route('admin.customers.index') . '?' . http_build_query($query) }}"
                             class="inline-flex h-9 items-center rounded-full px-3 text-xs font-bold transition {{ request('status') === $value ? 'bg-primary text-white' : 'bg-gray-100 text-gray-700 hover:bg-primary-soft hover:text-primary-dark' }}">
                             {{ $label }}
                         </a>
@@ -48,7 +48,7 @@
                 </div>
 
                 @if (request()->hasAny(['search', 'status']))
-                    <a href="{{ route('admin.customer.index') }}"
+                    <a href="{{ route('admin.customers.index') }}"
                         class="inline-flex h-10 items-center justify-center rounded-lg border border-border-strong bg-white px-4 text-sm font-semibold text-muted-dark transition hover:bg-primary-soft">
                         Reset
                     </a>
@@ -96,7 +96,7 @@
                                                     d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                             </svg>
                                         </button>
-                                        <form action="{{ route('admin.customer.status', array_merge([$customer], request()->query())) }}"
+                                        <form action="{{ route('admin.customers.status', array_merge([$customer], request()->query())) }}"
                                             method="POST" class="customer-status-form"
                                             data-action="{{ $customer->is_active ? 'nonaktifkan' : 'aktifkan' }}"
                                             data-username="{{ $customer->username }}">

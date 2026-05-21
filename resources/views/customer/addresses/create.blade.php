@@ -1,7 +1,7 @@
 @php
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('dashboard')],
-        ['nav' => 'Produk', 'route' => route('product.index')],
+        ['nav' => 'Produk', 'route' => route('products.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
         ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
@@ -34,8 +34,8 @@
                     oldProvinsiId: @js($oldProvinsiId),
                     oldKotaId: @js($oldKotaId),
                     oldKecamatanId: @js($oldKecamatanId),
-                    kotasUrl: @js(route('addresses.wilayah.kotas')),
-                    kecamatansUrl: @js(route('addresses.wilayah.kecamatans')),
+                    kotasUrl: @js(route('addresses.cities')),
+                    kecamatansUrl: @js(route('addresses.districts')),
                 })"
                     x-init="init()" class="mt-6 space-y-5">
                     @csrf

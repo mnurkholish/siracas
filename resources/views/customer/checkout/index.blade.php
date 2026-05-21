@@ -1,7 +1,7 @@
 @php
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('dashboard')],
-        ['nav' => 'Produk', 'route' => route('product.index')],
+        ['nav' => 'Produk', 'route' => route('products.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
         ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
@@ -39,12 +39,12 @@
             @if ($cartItems->isEmpty())
                 <div class="empty-state mt-8">
                     <h2 class="text-xl font-black text-text-body">Keranjang masih kosong</h2>
-                    <x-button :href="route('product.index')" size="lg" class="mt-5">
+                    <x-button :href="route('products.index')" size="lg" class="mt-5">
                         Pilih Produk
                     </x-button>
                 </div>
             @else
-                <form action="{{ route('checkout.process') }}" method="POST"
+                <form action="{{ route('checkout.store') }}" method="POST"
                     class="checkout-form mt-8 grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">
                     @csrf
 

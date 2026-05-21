@@ -1,7 +1,7 @@
 @php
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('dashboard')],
-        ['nav' => 'Produk', 'route' => route('product.index')],
+        ['nav' => 'Produk', 'route' => route('products.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
         ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
@@ -17,7 +17,7 @@
                     <p class="eyebrow">Review Saya</p>
                     <h1 class="page-title">Riwayat Penilaian</h1>
                 </div>
-                <x-button :href="route('review')" variant="secondary" size="lg">
+                <x-button :href="route('reviews.create')" variant="secondary" size="lg">
                     Beri Penilaian
                 </x-button>
             </div>

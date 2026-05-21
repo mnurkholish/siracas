@@ -24,7 +24,7 @@
             </div>
 
             <div class="mx-auto mt-5 grid max-w-7xl gap-4 md:grid-cols-3" x-data="{ active: 'produk' }">
-                <a href="{{ route('product.index') }}" @mouseenter="active = 'produk'"
+                <a href="{{ route('products.index') }}" @mouseenter="active = 'produk'"
                     class="group rounded-lg border border-border bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-border-strong hover:shadow-[0_18px_34px_rgba(145,117,97,0.12)]"
                     data-reveal style="transition-delay: 80ms">
                     <div class="flex items-center justify-between gap-4">
@@ -79,7 +79,7 @@
         </section>
 
         <x-home.about-section />
-        <x-home.products-section :products="$products" :all-link="route('product.index')" />
+        <x-home.products-section :products="$products" :all-link="route('products.index')" />
         <x-home.reviews-section :reviews="$reviews" />
     </main>
 

@@ -9,15 +9,15 @@
                             'title' => $campaign->title,
                             'message' => $campaign->message,
                             'url' => $campaign->url,
-                            'update_url' => route('admin.notification-campaigns.update', $campaign),
+                            'update_url' => route('admin.campaigns.update', $campaign),
                         ])
         ->values();
 @endphp
 
-<x-layouts.admin title="Campaign Notifikasi" subtitle="Kelola promo, produk baru, dan pengumuman in-app untuk customer.">
+<x-layouts.admin title="Kampanye Notifikasi" subtitle="Kelola promo, produk baru, dan pengumuman in-app untuk customer.">
     <x-slot:actions>
-        <form action="{{ route('admin.notification-campaigns.index') }}" method="GET" class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari campaign"
+        <form action="{{ route('admin.campaigns.index') }}" method="GET" class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kampanye"
                 class="h-11 w-full rounded-lg border border-border-strong bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-border-soft sm:w-72">
             <select name="type"
                 class="h-11 rounded-lg border border-border-strong bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-border-soft">
@@ -44,11 +44,11 @@
 
         <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="text-xl font-bold text-black">Daftar Campaign</h2>
-                <p class="mt-1 text-sm text-gray-500">Campaign admin bisa dipublish ke seluruh customer aktif.</p>
+                <h2 class="text-xl font-bold text-black">Daftar Kampanye</h2>
+                <p class="mt-1 text-sm text-gray-500">Kampanye admin bisa dipublish ke seluruh customer aktif.</p>
             </div>
             <x-button type="button" @click="openCreate()" size="lg">
-                Tambah Campaign
+                Tambah Kampanye
             </x-button>
         </div>
 
@@ -60,7 +60,7 @@
                             <th>Judul</th>
                             <th>Tipe</th>
                             <th>Status</th>
-                            <th>Published</th>
+                            <th>Waktu Publish</th>
                             <th class="text-center">Aksi</th>
                         </tr>
                     </thead>
@@ -72,7 +72,7 @@
                                     <p class="mt-1 line-clamp-1 text-xs text-gray-500">{{ $campaign->message }}</p>
                                     @if ($campaign->url)
                                         <a href="{{ $campaign->url }}" target="_blank" rel="noopener"
-                                            class="mt-1 inline-flex text-xs font-semibold text-primary-dark">Link campaign</a>
+                                            class="mt-1 inline-flex text-xs font-semibold text-primary-dark">Tautan kampanye</a>
                                     @endif
                                 </td>
                                 <td>{{ $campaign->typeLabel() }}</td>
@@ -89,20 +89,20 @@
                                         </x-button>
 
                                         @if ($campaign->is_active)
-                                            <form action="{{ route('admin.notification-campaigns.unpublish', $campaign) }}" method="POST">
+                                            <form action="{{ route('admin.campaigns.unpublish', $campaign) }}" method="POST">
                                                 @csrf
                                                 @method('PATCH')
                                                 <x-button type="submit" variant="secondary" size="sm">Unpublish</x-button>
                                             </form>
                                         @else
-                                            <form action="{{ route('admin.notification-campaigns.publish', $campaign) }}" method="POST">
+                                            <form action="{{ route('admin.campaigns.publish', $campaign) }}" method="POST">
                                                 @csrf
                                                 @method('PATCH')
                                                 <x-button type="submit" size="sm">Publish</x-button>
                                             </form>
                                         @endif
 
-                                        <form action="{{ route('admin.notification-campaigns.destroy', $campaign) }}" method="POST" class="delete-campaign-form">
+                                        <form action="{{ route('admin.campaigns.destroy', $campaign) }}" method="POST" class="delete-campaign-form">
                                             @csrf
                                             @method('DELETE')
                                             <x-button type="submit" variant="danger-soft" size="sm">Hapus</x-button>
@@ -113,7 +113,7 @@
                         @empty
                             <tr>
                                 <td colspan="5" class="py-12 text-center text-gray-500">
-                                    Belum ada campaign notifikasi.
+                                    Belum ada kampanye notifikasi.
                                 </td>
                             </tr>
                         @endforelse
@@ -131,11 +131,11 @@
         <div x-show="activeModal === 'create'" x-cloak class="modal-backdrop" x-transition.opacity>
             <div @click.outside="closeModal()" class="modal-panel max-w-2xl">
                 <div class="mb-6 flex items-start justify-between gap-4">
-                    <h2 class="text-lg font-bold text-black">Tambah Campaign</h2>
+                    <h2 class="text-lg font-bold text-black">Tambah Kampanye</h2>
                     <button type="button" @click="closeModal()" class="text-2xl leading-none text-gray-400 hover:text-gray-700">&times;</button>
                 </div>
 
-                <form action="{{ route('admin.notification-campaigns.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <form action="{{ route('admin.campaigns.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                     @csrf
                     <input type="hidden" name="form_context" value="create">
                     @include('admin.notification-campaigns.partials.form-fields', ['types' => $types, 'mode' => 'create'])
@@ -146,7 +146,7 @@
         <div x-show="activeModal === 'edit'" x-cloak class="modal-backdrop" x-transition.opacity>
             <div @click.outside="closeModal()" class="modal-panel max-w-2xl">
                 <div class="mb-6 flex items-start justify-between gap-4">
-                    <h2 class="text-lg font-bold text-black">Ubah Campaign</h2>
+                    <h2 class="text-lg font-bold text-black">Ubah Kampanye</h2>
                     <button type="button" @click="closeModal()" class="text-2xl leading-none text-gray-400 hover:text-gray-700">&times;</button>
                 </div>
 
@@ -202,7 +202,7 @@
                 event.preventDefault();
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Hapus campaign?',
+                    title: 'Hapus kampanye?',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, hapus',
                     cancelButtonText: 'Batal',

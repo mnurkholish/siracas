@@ -1,6 +1,6 @@
 <x-layouts.admin title="Arsip Produk">
     <x-slot:actions>
-        <form action="{{ route('admin.product.archives') }}" method="GET" class="relative w-full sm:w-[430px]">
+        <form action="{{ route('admin.products.archives') }}" method="GET" class="relative w-full sm:w-[430px]">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk yang dihapus"
                 class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-border-strong sm:px-8 sm:text-base">
             <button type="submit"
@@ -27,7 +27,7 @@
             <p class="mt-1 text-sm text-gray-500">Lihat produk yang sudah dihapus dan kembalikan jika dibutuhkan.</p>
         </div>
 
-        <a href="{{ route('admin.product.index') }}"
+        <a href="{{ route('admin.products.index') }}"
             class="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-border-strong bg-white px-5 text-sm font-semibold text-primary-dark shadow-sm transition hover:bg-primary-soft focus:outline-none focus:ring-2 focus:ring-border-strong">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                 stroke="currentColor" stroke-width="2">
@@ -75,7 +75,7 @@
                                 {{ $product->deleted_at?->format('d/m/Y H:i') ?? '-' }}
                             </td>
                             <td class="px-6 py-4">
-                                <form action="{{ route('admin.product.restore', $product->id) }}" method="POST"
+                                <form action="{{ route('admin.products.restore', $product->id) }}" method="POST"
                                     class="flex justify-center">
                                     @csrf
                                     @method('PATCH')

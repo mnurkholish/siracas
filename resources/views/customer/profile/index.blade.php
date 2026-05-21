@@ -2,7 +2,7 @@
     $user = Auth::user();
     $navLinks = [
         ['nav' => 'Beranda', 'route' => '/'],
-        ['nav' => 'Produk', 'route' => route('product.index')],
+        ['nav' => 'Produk', 'route' => route('products.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
         ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
@@ -95,7 +95,7 @@
                     </button>
                     <button form="logout-form" type="submit"
                         class="h-10 rounded-lg bg-danger px-6 text-sm font-semibold text-white transition hover:bg-danger-dark focus:outline-none focus:ring-2 focus:ring-red-200">
-                        Logout
+                        Keluar
                     </button>
                 </div>
             </div>

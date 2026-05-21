@@ -12,9 +12,9 @@
                 'satuan' => $product->satuan,
                 'deskripsi' => $product->deskripsi,
                 'foto_url' => $product->foto ? asset('storage/' . $product->foto) : asset('images/logo.png'),
-                'show_url' => route('admin.product.show', $product),
-                'update_url' => route('admin.product.update', $product),
-                'delete_url' => route('admin.product.destroy', $product),
+                'show_url' => route('admin.products.show', $product),
+                'update_url' => route('admin.products.update', $product),
+                'delete_url' => route('admin.products.destroy', $product),
             ];
         })
         ->values();
@@ -22,7 +22,7 @@
 
 <x-layouts.admin title="Produk">
     <x-slot:actions>
-        <form action="{{ route('admin.product.index') }}" method="GET" class="relative w-full sm:w-[430px]">
+        <form action="{{ route('admin.products.index') }}" method="GET" class="relative w-full sm:w-[430px]">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk berdasarkan nama"
                 class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-border-strong sm:px-8 sm:text-base">
             <button type="submit"
@@ -56,7 +56,7 @@
             </div>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-                <x-button :href="route('admin.product.archives')" variant="secondary" size="lg" class="gap-2">
+                <x-button :href="route('admin.products.archives')" variant="secondary" size="lg" class="gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -134,7 +134,7 @@
                                                     d="M19.5 7.125 16.875 4.5M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                             </svg>
                                         </button>
-                                        <form action="{{ route('admin.product.destroy', $product) }}" method="POST"
+                                        <form action="{{ route('admin.products.destroy', $product) }}" method="POST"
                                             class="delete-product-form">
                                             @csrf
                                             @method('DELETE')
@@ -259,7 +259,7 @@
             <div @click.outside="closeModal()"
                 class="modal-panel max-w-2xl">
                 <h2 class="mb-6 text-lg font-bold text-black">Tambah Produk</h2>
-                <form action="{{ route('admin.product.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <input type="hidden" name="form_context" value="create">
                     @include('admin.product.partials.form-fields', ['mode' => 'create'])

@@ -1,7 +1,7 @@
-<x-layouts.auth title="Login">
+<x-layouts.auth title="Masuk">
 
     <x-auth.card class="animate-fadeUp [animation-delay:200ms]">
-        <h2 class="text-2xl font-bold mb-6">Login</h2>
+        <h2 class="text-2xl font-bold mb-6">Masuk</h2>
 
         <form method="POST" action="/login">
             @csrf

@@ -1,7 +1,7 @@
 @php
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('dashboard')],
-        ['nav' => 'Produk', 'route' => route('product.index')],
+        ['nav' => 'Produk', 'route' => route('products.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
         ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
@@ -41,7 +41,7 @@
 
     <main class="page">
         <section class="mx-auto max-w-5xl">
-            <a href="{{ route('review') }}"
+            <a href="{{ route('reviews.create') }}"
                 class="text-sm font-semibold text-primary-dark transition hover:text-text-body">
                 Kembali
             </a>

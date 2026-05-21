@@ -1,7 +1,7 @@
 @php
     $navLinks = [
         ['nav' => 'Beranda', 'route' => route('dashboard')],
-        ['nav' => 'Produk', 'route' => route('product.index')],
+        ['nav' => 'Produk', 'route' => route('products.index')],
         ['nav' => 'Transaksi', 'route' => route('transactions.index')],
         ['nav' => 'Review Saya', 'route' => route('reviews.index')],
     ];
@@ -100,7 +100,7 @@
                                                     <p class="text-sm font-black text-muted-dark">Produk ini belum dinilai</p>
                                                     <p class="mt-1 text-sm text-muted">Berikan penilaian sebelum masa 20 hari berakhir.</p>
                                                 </div>
-                                                <x-button :href="route('review.show', $detail)" size="sm">
+                                                <x-button :href="route('reviews.show', $detail)" size="sm">
                                                     Beri Penilaian
                                                 </x-button>
                                             </div>

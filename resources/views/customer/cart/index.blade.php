@@ -6,7 +6,7 @@
         ],
         [
             'nav' => 'Produk',
-            'route' => route('product.index'),
+            'route' => route('products.index'),
         ],
         [
             'nav' => 'Transaksi',
@@ -33,7 +33,7 @@
                     <p class="mt-2 text-sm text-muted">Atur jumlah produk sebelum lanjut ke checkout.</p>
                 </div>
 
-                <a href="{{ route('product.index') }}"
+                <a href="{{ route('products.index') }}"
                     class="inline-flex h-11 items-center justify-center rounded-lg border border-border-strong bg-white px-5 text-sm font-semibold text-text-body transition hover:bg-primary-soft">
                     Tambah Produk
                 </a>
@@ -51,7 +51,7 @@
                     class="mt-8 rounded-lg border border-dashed border-border-strong bg-white px-6 py-16 text-center shadow-sm">
                     <h2 class="text-xl font-black text-text-body">Keranjang masih kosong</h2>
                     <p class="mt-2 text-sm text-muted">Pilih produk organik SIRACAS yang ingin Anda pesan.</p>
-                    <a href="{{ route('product.index') }}"
+                    <a href="{{ route('products.index') }}"
                         class="mt-6 inline-flex h-11 items-center justify-center rounded-lg bg-primary px-5 text-sm font-bold text-white transition hover:bg-primary-dark">
                         Lihat Produk
                     </a>
@@ -152,7 +152,7 @@
                             class="mt-5 rounded-lg border border-dashed border-border-strong bg-surface px-4 py-4 text-sm leading-6 text-muted">
                             Pastikan quantity dan stok sudah sesuai sebelum melanjutkan transaksi.
                         </div>
-                        <a href="{{ route('checkout.form') }}"
+                        <a href="{{ route('checkout.index') }}"
                             class="mt-4 inline-flex h-12 w-full items-center justify-center rounded-lg bg-primary px-5 text-sm font-bold text-white transition hover:bg-primary-dark">
                             Checkout
                         </a>

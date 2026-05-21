@@ -11,8 +11,8 @@
             $menus = [
                 ['name' => 'Dashboard', 'route' => 'admin.dashboard', 'icon' => 'dashboard'],
                 ['name' => 'Akun', 'route' => 'admin.profile', 'icon' => 'profile'],
-                ['name' => 'Akun Customer', 'route' => 'admin.customer.index', 'icon' => 'customer'],
-                ['name' => 'Produk', 'route' => 'admin.product.index', 'icon' => 'product'],
+                ['name' => 'Akun Customer', 'route' => 'admin.customers.index', 'icon' => 'customer'],
+                ['name' => 'Produk', 'route' => 'admin.products.index', 'icon' => 'product'],
                 [
                     'name' => 'Transaksi',
                     'route' => 'admin.transactions.index',
@@ -21,8 +21,8 @@
                         'admin.transactions.index',
                         'admin.transactions.show',
                         'admin.transactions.status',
-                        'admin.transactions.ongkir',
-                        'admin.transactions.update-refund',
+                        'admin.transactions.shipping',
+                        'admin.transactions.refund',
                     ],
                 ],
                 [
@@ -38,10 +38,10 @@
                     'active' => ['admin.reviews.*'],
                 ],
                 [
-                    'name' => 'Campaign Notifikasi',
-                    'route' => 'admin.notification-campaigns.index',
+                    'name' => 'Kampanye Notifikasi',
+                    'route' => 'admin.campaigns.index',
                     'icon' => 'notifikasi',
-                    'active' => ['admin.notification-campaigns.*'],
+                    'active' => ['admin.campaigns.*'],
                 ],
                 ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],
                 ['name' => 'Laporan Operasional', 'route' => 'home', 'icon' => 'laporan'],
@@ -72,7 +72,7 @@
             </div>
 
             <div class="mb-4 px-3 text-sm text-white/95">
-                Main menu
+                Menu utama
             </div>
 
             <nav class="flex flex-1 flex-col gap-2 overflow-y-auto pr-1 text-base">
@@ -114,7 +114,7 @@
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-                            <button type="submit" title="Logout"
+                            <button type="submit" title="Keluar"
                                 class="rounded-lg p-2 text-white/80 transition hover:bg-red-500/20 hover:text-red-100">
                                 <x-icons.logout />
                             </button>
