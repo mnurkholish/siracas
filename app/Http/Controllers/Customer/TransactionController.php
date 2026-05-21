@@ -341,9 +341,9 @@ class TransactionController extends Controller
     {
         $this->authorizeCustomerTransaction($transaction);
 
-        if ($transaction->status !== 'dikirim') {
+        if ($transaction->status !== 'diterima' || $transaction->warranty_status === 'diajukan') {
             throw ValidationException::withMessages([
-                'status' => 'Hanya transaksi yang sedang dikirim yang dapat dikonfirmasi selesai.',
+                'status' => 'Transaksi hanya dapat diselesaikan setelah diterima dan tidak sedang dalam pengajuan garansi.',
             ]);
         }
 
@@ -355,6 +355,27 @@ class TransactionController extends Controller
         return redirect()
             ->route('transactions.show', $transaction)
             ->with('success', 'Pesanan berhasil dikonfirmasi selesai.');
+    }
+
+    public function claimWarranty(Transaction $transaction)
+    {
+        $this->authorizeCustomerTransaction($transaction);
+        $transaction->loadMissing('user');
+
+        if (! $transaction->canClaimWarranty()) {
+            throw ValidationException::withMessages([
+                'warranty' => 'Garansi hanya dapat diajukan maksimal 1 hari setelah pesanan diterima.',
+            ]);
+        }
+
+        $transaction->update([
+            'warranty_status' => 'diajukan',
+            'warranty_claimed_at' => now(),
+        ]);
+
+        return redirect()
+            ->route('transactions.show', $transaction)
+            ->with('success', 'Pengajuan garansi berhasil dibuat. Silakan lanjutkan chat admin melalui WhatsApp.');
     }
 
     private function transactionRules(): array
@@ -437,7 +458,7 @@ class TransactionController extends Controller
 
     private function warrantyWhatsappUrl(Transaction $transaction): ?string
     {
-        if ($transaction->status !== 'dikirim') {
+        if ($transaction->status !== 'diterima') {
             return null;
         }
 
@@ -453,7 +474,7 @@ class TransactionController extends Controller
             'ID Transaksi: #'.$transaction->id,
             'Nama: '.($transaction->user?->username ?? '-'),
             'Tanggal Pesanan: '.$transaction->tanggal->format('d M Y H:i'),
-            'Status Pesanan: Dikirim',
+            'Status Pesanan: Diterima',
             '',
             'Kendala:',
             '- Cacing mati / rusak / jumlah tidak sesuai / produk tidak sesuai',

@@ -14,7 +14,7 @@ class AdminTransactionController extends Controller
     private const ADMIN_STATUS_TRANSITIONS = [
         'dibayar' => ['diproses'],
         'diproses' => ['dikirim'],
-        'dikirim' => ['selesai'],
+        'dikirim' => ['diterima'],
     ];
 
     private const STATUS_LABELS = [
@@ -22,6 +22,7 @@ class AdminTransactionController extends Controller
         'dibayar' => 'Dibayar',
         'diproses' => 'Diproses',
         'dikirim' => 'Dikirim',
+        'diterima' => 'Diterima',
         'selesai' => 'Selesai',
         'dibatalkan' => 'Dibatalkan',
         'kedaluwarsa' => 'Kedaluwarsa',
@@ -93,7 +94,7 @@ class AdminTransactionController extends Controller
 
         $transaction->update([
             'status' => $validated['status'],
-            'completed_at' => $validated['status'] === 'selesai' ? now() : $transaction->completed_at,
+            'received_at' => $validated['status'] === 'diterima' ? ($transaction->received_at ?? now()) : $transaction->received_at,
         ]);
 
         if ($previousStatus !== $validated['status']) {
@@ -101,7 +102,6 @@ class AdminTransactionController extends Controller
 
             match ($validated['status']) {
                 'dikirim' => $transaction->user?->notify(new OrderShippedNotification($transaction)),
-                'selesai' => $transaction->user?->notify(new OrderCompletedNotification($transaction)),
                 default => null,
             };
         }
@@ -141,12 +141,28 @@ class AdminTransactionController extends Controller
 
     public function updateRefund(Request $request, Transaction $transaction)
     {
+        return back()->withErrors([
+            'warranty' => 'Pengembalian hanya dapat disimpan melalui proses terima/tolak garansi.',
+        ]);
+    }
+
+    public function processWarranty(Request $request, Transaction $transaction)
+    {
+        if ($transaction->status !== 'diterima' || $transaction->warranty_status !== 'diajukan') {
+            return back()->withErrors([
+                'warranty' => 'Garansi hanya dapat diproses saat transaksi diterima dan garansi sedang diajukan.',
+            ]);
+        }
+
         $maxRefund = $transaction->totalAkhir();
 
         $validated = $request->validate([
+            'decision' => ['required', Rule::in(['diterima', 'ditolak'])],
             'refund_amount' => ['required', 'numeric', 'min:0', 'max:'.$maxRefund],
             'refund_note' => ['nullable', 'string', 'max:2000'],
         ], [
+            'decision.required' => 'Keputusan garansi wajib dipilih.',
+            'decision.in' => 'Keputusan garansi tidak valid.',
             'refund_amount.required' => 'Nominal pengembalian wajib diisi.',
             'refund_amount.numeric' => 'Nominal pengembalian harus berupa angka.',
             'refund_amount.min' => 'Nominal pengembalian tidak boleh kurang dari 0.',
@@ -157,15 +173,38 @@ class AdminTransactionController extends Controller
         $refundAmount = (float) $validated['refund_amount'];
         $refundNote = trim((string) ($validated['refund_note'] ?? ''));
 
+        if ($validated['decision'] === 'ditolak') {
+            if ($refundNote === '') {
+                return back()->withErrors([
+                    'refund_note' => 'Alasan penolakan wajib diisi.',
+                ])->withInput();
+            }
+
+            $refundAmount = 0;
+        }
+
+        if ($validated['decision'] === 'diterima' && $refundAmount > 0 && $refundNote === '') {
+            return back()->withErrors([
+                'refund_note' => 'Catatan pengembalian wajib diisi jika ada nominal refund.',
+            ])->withInput();
+        }
+
         $transaction->update([
+            'status' => 'selesai',
+            'completed_at' => $transaction->completed_at ?? now(),
+            'warranty_status' => $validated['decision'],
+            'warranty_resolved_at' => now(),
             'refund_amount' => $refundAmount,
             'refund_note' => $refundNote !== '' ? $refundNote : null,
             'refunded_at' => $refundAmount > 0 ? ($transaction->refunded_at ?? now()) : null,
         ]);
 
+        $transaction->loadMissing('user');
+        $transaction->user?->notify(new OrderCompletedNotification($transaction));
+
         return redirect()
             ->route('admin.transactions.show', $transaction)
-            ->with('success', 'Data pengembalian telah diperbarui');
+            ->with('success', 'Garansi telah diproses dan transaksi diselesaikan.');
     }
 
     private function filteredTransactions(Request $request, array $allowedStatuses)

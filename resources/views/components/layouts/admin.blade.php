@@ -23,6 +23,7 @@
                         'admin.transactions.status',
                         'admin.transactions.shipping',
                         'admin.transactions.refund',
+                        'admin.transactions.warranty',
                     ],
                 ],
                 [

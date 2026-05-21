@@ -16,6 +16,7 @@ class Transaction extends Model
         'dibayar',
         'diproses',
         'dikirim',
+        'diterima',
         'selesai',
         'dibatalkan',
         'kedaluwarsa',
@@ -26,6 +27,7 @@ class Transaction extends Model
         'dibayar',
         'diproses',
         'dikirim',
+        'diterima',
     ];
 
     public const HISTORY_STATUSES = [
@@ -46,6 +48,10 @@ class Transaction extends Model
         'payment_type',
         'paid_at',
         'completed_at',
+        'received_at',
+        'warranty_status',
+        'warranty_claimed_at',
+        'warranty_resolved_at',
         'refund_amount',
         'refund_note',
         'refunded_at',
@@ -57,10 +63,21 @@ class Transaction extends Model
             'tanggal' => 'datetime',
             'paid_at' => 'datetime',
             'completed_at' => 'datetime',
+            'received_at' => 'datetime',
+            'warranty_claimed_at' => 'datetime',
+            'warranty_resolved_at' => 'datetime',
             'refunded_at' => 'datetime',
             'ongkir' => 'decimal:2',
             'refund_amount' => 'decimal:2',
         ];
+    }
+
+    public function canClaimWarranty(): bool
+    {
+        return $this->status === 'diterima'
+            && $this->warranty_status === 'tidak_ada'
+            && $this->received_at
+            && $this->received_at->gte(now()->subDay());
     }
 
     public function user(): BelongsTo

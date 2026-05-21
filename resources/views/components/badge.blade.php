@@ -9,18 +9,26 @@
         'dibayar' => 'bg-info-soft text-info',
         'diproses' => 'bg-indigo-100 text-indigo-800',
         'dikirim' => 'bg-primary-soft text-primary-dark',
+        'diterima' => 'bg-info-soft text-info',
         'selesai' => 'bg-success-soft text-success',
         'dibatalkan' => 'bg-danger-soft text-red-700',
         'kedaluwarsa' => 'bg-gray-100 text-gray-700',
+        'tidak_ada' => 'bg-gray-100 text-gray-700',
+        'diajukan' => 'bg-warning-soft text-warning',
+        'ditolak' => 'bg-danger-soft text-red-700',
     ];
     $statusLabels = [
         'menunggu_pembayaran' => 'Menunggu Pembayaran',
         'dibayar' => 'Dibayar',
         'diproses' => 'Diproses',
         'dikirim' => 'Dikirim',
+        'diterima' => 'Diterima',
         'selesai' => 'Selesai',
         'dibatalkan' => 'Dibatalkan',
         'kedaluwarsa' => 'Kedaluwarsa',
+        'tidak_ada' => 'Tidak Ada',
+        'diajukan' => 'Diajukan',
+        'ditolak' => 'Ditolak',
     ];
     $variantClasses = [
         'success' => 'bg-success-soft text-success',

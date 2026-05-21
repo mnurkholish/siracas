@@ -11,6 +11,7 @@
         'dibayar' => 'Dibayar',
         'diproses' => 'Diproses',
         'dikirim' => 'Dikirim',
+        'diterima' => 'Diterima',
         'selesai' => 'Selesai',
         'dibatalkan' => 'Dibatalkan',
         'kedaluwarsa' => 'Kedaluwarsa',
@@ -19,7 +20,8 @@
     $totalProduk = $transaction->totalHarga();
     $ongkir = (float) $transaction->ongkir;
     $canPay = $transaction->status === 'menunggu_pembayaran' && $ongkir > 0;
-    $canConfirmDelivered = $transaction->status === 'dikirim';
+    $canComplete = $transaction->status === 'diterima' && $transaction->warranty_status !== 'diajukan';
+    $canClaimWarranty = $transaction->canClaimWarranty();
 @endphp
 
 <x-layouts.public title="Detail Transaksi - SIRACAS">
@@ -184,35 +186,120 @@
                         </dl>
                     </div>
 
+                    @if ($transaction->warranty_status !== 'tidak_ada')
+                        <div class="mt-5 border-t border-border-soft pt-5">
+                            <p class="text-xs font-bold uppercase tracking-[0.3em] text-muted-light">Garansi</p>
+                            <dl class="mt-2 space-y-2 text-sm">
+                                <div class="flex items-start justify-between gap-4">
+                                    <dt class="text-muted">Status</dt>
+                                    <dd><x-badge :status="$transaction->warranty_status" /></dd>
+                                </div>
+                                <div class="flex items-start justify-between gap-4">
+                                    <dt class="text-muted">Diajukan Pada</dt>
+                                    <dd class="text-right font-bold text-muted-dark">
+                                        {{ $transaction->warranty_claimed_at?->format('d M Y H:i:s') ?? '-' }}
+                                    </dd>
+                                </div>
+                                @if ($transaction->warranty_resolved_at)
+                                    <div class="flex items-start justify-between gap-4">
+                                        <dt class="text-muted">Diproses Pada</dt>
+                                        <dd class="text-right font-bold text-muted-dark">
+                                            {{ $transaction->warranty_resolved_at->format('d M Y H:i:s') }}
+                                        </dd>
+                                    </div>
+                                @endif
+                                @if ($transaction->refundAmount() > 0)
+                                    <div class="flex items-start justify-between gap-4">
+                                        <dt class="text-muted">Pengembalian</dt>
+                                        <dd class="text-right font-bold text-danger">
+                                            Rp{{ number_format($transaction->refundAmount(), 0, ',', '.') }}
+                                        </dd>
+                                    </div>
+                                @endif
+                                @if ($transaction->refund_note)
+                                    <div>
+                                        <dt class="text-muted">Catatan</dt>
+                                        <dd class="mt-1 text-sm font-semibold leading-6 text-muted-dark">
+                                            {{ $transaction->refund_note }}
+                                        </dd>
+                                    </div>
+                                @endif
+                            </dl>
+                        </div>
+                    @endif
+
                     @if ($transaction->status === 'dibayar')
                         <div class="mt-5 rounded-lg bg-blue-50 px-4 py-3 text-center text-sm font-bold text-blue-700">
                             Sudah Dibayar
                         </div>
                     @endif
 
-                    @if ($canConfirmDelivered)
+                    @if ($transaction->status === 'dikirim')
                         <div class="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold leading-6 text-amber-800">
-                            Pesanan Anda sedang dalam pengiriman. Setelah barang diterima, periksa kondisi produk terlebih dahulu. Jika produk sesuai, klik Konfirmasi Selesai. Jika ada kendala seperti cacing mati, rusak, jumlah tidak sesuai, atau produk tidak sesuai, silakan hubungi admin melalui tombol Chat Garansi via WhatsApp.
+                            Pesanan Anda sedang dalam pengiriman. Admin akan memperbarui status setelah pesanan diterima.
+                        </div>
+                    @endif
+
+                    @if ($transaction->status === 'diterima')
+                        <div class="mt-5 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold leading-6 text-amber-800">
+                            Pesanan sudah diterima. Periksa kondisi produk terlebih dahulu. Jika produk sesuai, klik Selesaikan Transaksi. Jika ada kendala seperti cacing mati, rusak, jumlah tidak sesuai, atau produk tidak sesuai, ajukan garansi dan kirim bukti melalui WhatsApp.
                         </div>
 
+                        @if ($transaction->warranty_status === 'diajukan')
+                            <div class="mt-3 rounded-lg bg-gray-50 px-4 py-3 text-sm font-bold text-gray-600">
+                                Garansi sedang diajukan. Lanjutkan chat admin melalui WhatsApp dan kirim foto/video bukti di sana.
+                            </div>
+
+                            @if ($warrantyWhatsappUrl)
+                                <x-button :href="$warrantyWhatsappUrl" target="_blank" rel="noopener" variant="secondary" size="lg" :block="true" class="mt-3">
+                                    Chat Garansi via WhatsApp
+                                </x-button>
+                            @else
+                                <button type="button" disabled
+                                    class="mt-3 inline-flex h-11 w-full cursor-not-allowed items-center justify-center rounded-lg border border-border-strong bg-gray-50 px-5 text-sm font-semibold text-gray-400">
+                                    Nomor WhatsApp admin belum tersedia
+                                </button>
+                            @endif
+                        @endif
+
+                        @if ($canComplete)
                         <form action="{{ route('transactions.complete', $transaction) }}" method="POST"
                             class="complete-transaction-form mt-5">
                             @csrf
                             @method('PATCH')
                             <x-button type="submit" size="lg" :block="true">
-                                Konfirmasi Selesai
+                                Selesaikan Transaksi
                             </x-button>
                         </form>
+                        @endif
 
-                        @if ($warrantyWhatsappUrl)
-                            <x-button :href="$warrantyWhatsappUrl" target="_blank" rel="noopener" variant="secondary" size="lg" :block="true" class="mt-3">
-                                Chat Garansi via WhatsApp
-                            </x-button>
-                        @else
+                        @if ($canClaimWarranty)
+                            <form action="{{ route('transactions.warranty', $transaction) }}" method="POST"
+                                class="claim-warranty-form mt-3">
+                                @csrf
+                                @method('PATCH')
+                                <x-button type="submit" variant="secondary" size="lg" :block="true">
+                                    Ajukan Garansi
+                                </x-button>
+                            </form>
+                        @elseif ($transaction->warranty_status === 'tidak_ada' && $transaction->received_at && $transaction->received_at->lt(now()->subDay()))
+                            <div class="mt-3 rounded-lg bg-gray-50 px-4 py-3 text-sm font-bold text-gray-600">
+                                Masa pengajuan garansi sudah berakhir.
+                            </div>
+                        @elseif (! $warrantyWhatsappUrl && $transaction->warranty_status === 'tidak_ada')
                             <button type="button" disabled
                                 class="mt-3 inline-flex h-11 w-full cursor-not-allowed items-center justify-center rounded-lg border border-border-strong bg-gray-50 px-5 text-sm font-semibold text-gray-400">
                                 Nomor WhatsApp admin belum tersedia
                             </button>
+                        @endif
+
+                        @if (in_array($transaction->warranty_status, ['diterima', 'ditolak'], true))
+                            <div class="mt-3 rounded-lg bg-gray-50 px-4 py-3 text-sm font-bold text-gray-600">
+                                Status garansi: {{ ucfirst($transaction->warranty_status) }}
+                                @if ($transaction->warranty_resolved_at)
+                                    ({{ $transaction->warranty_resolved_at->format('d M Y H:i:s') }})
+                                @endif
+                            </div>
                         @endif
                     @endif
 
@@ -337,6 +424,25 @@
                     title: 'Konfirmasi pesanan selesai?',
                     showCancelButton: true,
                     confirmButtonText: 'Ya, selesai',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: themeColor('primary'),
+                    cancelButtonColor: themeColor('danger'),
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+
+        document.querySelectorAll('.claim-warranty-form').forEach((form) => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Apakah Anda yakin ingin mengajukan garansi?',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, ajukan',
                     cancelButtonText: 'Batal',
                     confirmButtonColor: themeColor('primary'),
                     cancelButtonColor: themeColor('danger'),

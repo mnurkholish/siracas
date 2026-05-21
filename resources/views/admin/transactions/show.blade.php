@@ -2,7 +2,7 @@
     $adminStatusOptions = match ($transaction->status) {
         'dibayar' => ['diproses'],
         'diproses' => ['dikirim'],
-        'dikirim' => ['selesai'],
+        'dikirim' => ['diterima'],
         default => [],
     };
     $statusLabels = [
@@ -10,6 +10,7 @@
         'dibayar' => 'Dibayar',
         'diproses' => 'Diproses',
         'dikirim' => 'Dikirim',
+        'diterima' => 'Diterima',
         'selesai' => 'Selesai',
         'dibatalkan' => 'Dibatalkan',
         'kedaluwarsa' => 'Kedaluwarsa',
@@ -18,6 +19,7 @@
     $ongkir = (float) $transaction->ongkir;
     $refundAmount = $transaction->refundAmount();
     $canUpdateOngkir = $transaction->status === 'menunggu_pembayaran';
+    $canProcessWarranty = $transaction->status === 'diterima' && $transaction->warranty_status === 'diajukan';
 @endphp
 
 <x-layouts.admin title="Detail Transaksi #{{ $transaction->id }}"
@@ -144,33 +146,71 @@
                         <dt class="font-bold text-black">Pendapatan Bersih</dt>
                         <dd class="font-bold text-success">Rp{{ number_format($transaction->pendapatanBersih(), 0, ',', '.') }}</dd>
                     </div>
+                    <div class="flex items-center justify-between gap-4">
+                        <dt class="font-semibold text-gray-500">Status Garansi</dt>
+                        <dd><x-badge :status="$transaction->warranty_status" /></dd>
+                    </div>
                 </dl>
             </div>
 
-            <form action="{{ route('admin.transactions.refund', $transaction) }}" method="POST"
-                class="update-refund-form mt-6 border-t border-gray-100 pt-5">
-                @csrf
-                @method('PATCH')
+            <div class="mt-6 border-t border-gray-100 pt-5">
                 <p class="text-xs font-bold uppercase tracking-[0.25em] text-gray-400">Pengembalian / Garansi</p>
 
-                <label for="refund_amount" class="mt-4 block text-sm font-bold text-black">Nominal Pengembalian</label>
-                <input type="number" id="refund_amount" name="refund_amount" min="0" step="100"
-                    max="{{ $transaction->totalAkhir() }}"
-                    value="{{ old('refund_amount', (int) $refundAmount) }}" class="form-control input-control mt-2">
+                <dl class="mt-3 space-y-2 text-sm">
+                    <div class="flex items-start justify-between gap-4">
+                        <dt class="text-gray-500">Diterima Pada</dt>
+                        <dd class="text-right font-bold text-black">{{ $transaction->received_at?->format('d M Y H:i:s') ?? '-' }}</dd>
+                    </div>
+                    <div class="flex items-start justify-between gap-4">
+                        <dt class="text-gray-500">Garansi Diajukan</dt>
+                        <dd class="text-right font-bold text-black">{{ $transaction->warranty_claimed_at?->format('d M Y H:i:s') ?? '-' }}</dd>
+                    </div>
+                    <div class="flex items-start justify-between gap-4">
+                        <dt class="text-gray-500">Garansi Selesai</dt>
+                        <dd class="text-right font-bold text-black">{{ $transaction->warranty_resolved_at?->format('d M Y H:i:s') ?? '-' }}</dd>
+                    </div>
+                    <div class="flex items-start justify-between gap-4">
+                        <dt class="text-gray-500">Tanggal Pengembalian</dt>
+                        <dd class="text-right font-bold text-black">{{ $transaction->refunded_at?->format('d M Y H:i:s') ?? '-' }}</dd>
+                    </div>
+                    <div class="flex items-start justify-between gap-4">
+                        <dt class="text-gray-500">Catatan</dt>
+                        <dd class="text-right font-bold text-black">{{ $transaction->refund_note ?: '-' }}</dd>
+                    </div>
+                </dl>
 
-                <label for="refund_note" class="mt-4 block text-sm font-bold text-black">Catatan Pengembalian</label>
-                <textarea id="refund_note" name="refund_note" rows="3"
-                    class="form-control textarea-control mt-2"
-                    placeholder="Catatan hasil garansi lewat WhatsApp">{{ old('refund_note', $transaction->refund_note) }}</textarea>
+                @if ($canProcessWarranty)
+                    <form action="{{ route('admin.transactions.warranty', $transaction) }}" method="POST"
+                        class="process-warranty-form mt-4">
+                        @csrf
+                        @method('PATCH')
 
-                <div class="mt-3 rounded-lg bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-600">
-                    Tanggal Pengembalian: {{ $transaction->refunded_at?->format('d M Y H:i:s') ?? '-' }}
-                </div>
+                        <label for="decision" class="block text-sm font-bold text-black">Keputusan Garansi</label>
+                        <select id="decision" name="decision" class="form-control input-control mt-2">
+                            <option value="diterima" @selected(old('decision') === 'diterima')>Terima Garansi</option>
+                            <option value="ditolak" @selected(old('decision') === 'ditolak')>Tolak Garansi</option>
+                        </select>
 
-                <x-button type="submit" size="lg" :block="true" class="mt-4">
-                    Simpan Pengembalian
-                </x-button>
-            </form>
+                        <label for="refund_amount" class="mt-4 block text-sm font-bold text-black">Nominal Pengembalian</label>
+                        <input type="number" id="refund_amount" name="refund_amount" min="0" step="100"
+                            max="{{ $transaction->totalAkhir() }}"
+                            value="{{ old('refund_amount', (int) $refundAmount) }}" class="form-control input-control mt-2">
+
+                        <label for="refund_note" class="mt-4 block text-sm font-bold text-black">Catatan Pengembalian</label>
+                        <textarea id="refund_note" name="refund_note" rows="3"
+                            class="form-control textarea-control mt-2"
+                            placeholder="Catatan hasil garansi atau alasan penolakan">{{ old('refund_note', $transaction->refund_note) }}</textarea>
+
+                        <x-button type="submit" size="lg" :block="true" class="mt-4">
+                            Proses Garansi
+                        </x-button>
+                    </form>
+                @else
+                    <div class="mt-4 rounded-lg bg-gray-50 px-4 py-3 text-sm font-semibold text-gray-600">
+                        Garansi hanya bisa diproses saat transaksi berstatus diterima dan status garansi diajukan.
+                    </div>
+                @endif
+            </div>
 
             @if ($canUpdateOngkir)
                 <form action="{{ route('admin.transactions.shipping', $transaction) }}" method="POST"
@@ -257,14 +297,14 @@
             });
         });
 
-        document.querySelectorAll('.update-refund-form').forEach((form) => {
+        document.querySelectorAll('.process-warranty-form').forEach((form) => {
             form.addEventListener('submit', function(event) {
                 event.preventDefault();
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Simpan data pengembalian?',
+                    title: 'Proses keputusan garansi?',
                     showCancelButton: true,
-                    confirmButtonText: 'Ya, simpan',
+                    confirmButtonText: 'Ya, proses',
                     cancelButtonText: 'Batal',
                     confirmButtonColor: themeColor('primary'),
                     cancelButtonColor: themeColor('danger'),

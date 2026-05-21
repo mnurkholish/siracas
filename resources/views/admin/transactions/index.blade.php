@@ -23,7 +23,8 @@
     </x-slot:actions>
 
     <section class="table-wrap">
-        <div class="flex flex-col gap-4 border-b border-gray-100 bg-white px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
+        <div
+            class="flex flex-col gap-4 border-b border-gray-100 bg-white px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
             <div class="flex flex-wrap gap-2">
                 @php
                     $baseFilter = array_filter([
@@ -31,9 +32,8 @@
                         'tanggal' => request('tanggal'),
                     ]);
                     $allActive = blank(request('status'));
-                    $allUrl = $baseFilter === []
-                        ? url()->current()
-                        : url()->current() . '?' . http_build_query($baseFilter);
+                    $allUrl =
+                        $baseFilter === [] ? url()->current() : url()->current() . '?' . http_build_query($baseFilter);
                 @endphp
 
                 <a href="{{ $allUrl }}"
@@ -58,7 +58,8 @@
                 @endforeach
             </div>
 
-            <form method="GET" action="{{ url()->current() }}" class="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <form method="GET" action="{{ url()->current() }}"
+                class="flex flex-col gap-2 sm:flex-row sm:items-center">
                 @if (request('search'))
                     <input type="hidden" name="search" value="{{ request('search') }}">
                 @endif
@@ -86,6 +87,7 @@
                         <th>Tanggal</th>
                         <th>Status</th>
                         <th>Total Bayar</th>
+                        <th>Status Garansi</th>
                         <th>Pengembalian</th>
                         <th>Pendapatan Bersih</th>
                         <th class="text-right">Aksi</th>
@@ -104,6 +106,9 @@
                             <td class="font-semibold text-muted-dark">
                                 Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}
                             </td>
+                            <td>
+                                <x-badge :status="$transaction->warranty_status" />
+                            </td>
                             <td class="font-semibold text-danger">
                                 Rp{{ number_format($transaction->refundAmount(), 0, ',', '.') }}
                             </td>
@@ -118,7 +123,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="py-12 text-center text-gray-500">
+                            <td colspan="8" class="py-12 text-center text-gray-500">
                                 {{ $emptyMessage ?? 'Belum ada transaksi.' }}
                             </td>
                         </tr>
