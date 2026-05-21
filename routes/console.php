@@ -24,4 +24,5 @@ Artisan::command('transactions:auto-complete-received', function () {
     $this->info("{$updated} transaksi otomatis diselesaikan.");
 })->purpose('Selesaikan transaksi diterima yang melewati batas garansi 1 hari.');
 
-Schedule::command('transactions:auto-complete-received')->hourly();
+// Schedule::command('transactions:auto-complete-received')->hourly();
+Schedule::command('transactions:auto-complete-received')->everyMinute();

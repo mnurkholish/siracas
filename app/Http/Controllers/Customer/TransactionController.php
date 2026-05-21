@@ -7,6 +7,7 @@ use App\Models\Address;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Notifications\AdminTransactionNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -85,6 +86,8 @@ class TransactionController extends Controller
             return $transaction;
         });
 
+        $this->notifyAdmins($transaction, 'created');
+
         return redirect()
             ->route('transactions.show', $transaction)
             ->with('success', 'Pesanan berhasil!');
@@ -145,6 +148,8 @@ class TransactionController extends Controller
 
             return $transaction;
         });
+
+        $this->notifyAdmins($transaction, 'created');
 
         return redirect()
             ->route('transactions.show', $transaction)
@@ -373,6 +378,8 @@ class TransactionController extends Controller
             'warranty_claimed_at' => now(),
         ]);
 
+        $this->notifyAdmins($transaction, 'warranty');
+
         return redirect()
             ->route('transactions.show', $transaction)
             ->with('success', 'Pengajuan garansi berhasil dibuat. Silakan lanjutkan chat admin melalui WhatsApp.');
@@ -441,6 +448,19 @@ class TransactionController extends Controller
         } while (Transaction::query()->where('order_id', $orderId)->exists());
 
         return $orderId;
+    }
+
+    private function notifyAdmins(Transaction $transaction, string $action): void
+    {
+        $transaction->loadMissing('user');
+
+        User::query()
+            ->where('role', 'admin')
+            ->chunkById(100, function ($admins) use ($transaction, $action) {
+                foreach ($admins as $admin) {
+                    $admin->notify(new AdminTransactionNotification($transaction, $action));
+                }
+            });
     }
 
     private function adminWhatsappUrl(): ?string

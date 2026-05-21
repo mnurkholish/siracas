@@ -5,7 +5,7 @@
 ])
 
 <x-layouts.public :title="$title ? $title . ' - SIRACAS' : 'Admin - SIRACAS'">
-    <div x-data="{ sidebarOpen: false }" @keydown.escape.window="sidebarOpen = false"
+    <div x-data="{ sidebarOpen: false }" x-on:keydown.escape.window="sidebarOpen = false"
         class="min-h-screen bg-background text-black">
         @php
             $menus = [
@@ -47,9 +47,13 @@
                 ['name' => 'Chat', 'route' => 'home', 'icon' => 'chat'],
                 ['name' => 'Laporan Operasional', 'route' => 'home', 'icon' => 'laporan'],
             ];
+
+            $adminNotificationCount = auth()->check() && auth()->user()->role === 'admin'
+                ? auth()->user()->unreadNotifications()->count()
+                : 0;
         @endphp
 
-        <div x-show="sidebarOpen" x-cloak x-transition.opacity @click="sidebarOpen = false"
+        <div x-show="sidebarOpen" x-cloak x-transition.opacity x-on:click="sidebarOpen = false"
             class="fixed inset-0 z-40 bg-black/35 lg:hidden"></div>
 
         <aside
@@ -62,14 +66,27 @@
                     <h1 class="truncate text-2xl font-bold tracking-wide">SIRACAS</h1>
                 </a>
 
-                <button type="button" @click="sidebarOpen = false"
-                    class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-white/80 transition hover:bg-white/15 hover:text-white lg:hidden"
-                    aria-label="Tutup menu">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                <div class="flex shrink-0 items-center gap-1">
+                    <a href="{{ route('admin.notifications.index') }}" title="Notifikasi"
+                        class="relative inline-flex h-9 w-9 items-center justify-center rounded-lg text-white/80 transition hover:bg-white/15 hover:text-white">
+                        <x-icons.bell />
+                        @if ($adminNotificationCount > 0)
+                            <span
+                                class="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-black leading-none text-white">
+                                {{ $adminNotificationCount > 99 ? '99+' : $adminNotificationCount }}
+                            </span>
+                        @endif
+                    </a>
+
+                    <button type="button" x-on:click="sidebarOpen = false"
+                        class="inline-flex h-9 w-9 items-center justify-center rounded-lg text-white/80 transition hover:bg-white/15 hover:text-white lg:hidden"
+                        aria-label="Tutup menu">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <div class="mb-4 px-3 text-sm text-white/95">
@@ -85,7 +102,7 @@
                     @endphp
 
                     <a href="{{ route($menu['route']) ?? '/' }}" title="{{ $menu['name'] }}"
-                        @click="sidebarOpen = false"
+                        x-on:click="sidebarOpen = false"
                         class="group flex min-h-10 items-center justify-start gap-3 rounded-md px-4 py-2 transition-all duration-200 {{ $active ? 'bg-white/25 font-semibold text-white' : 'text-white/95 hover:bg-white/15 hover:text-white' }}">
                         <span class="flex h-6 w-6 shrink-0 items-center justify-center">
                             <x-dynamic-component :component="'icons.menus.' . $menu['icon']" />
@@ -128,7 +145,7 @@
         <div class="lg:pl-[260px]">
             <header
                 class="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border-soft bg-white/95 px-4 backdrop-blur lg:hidden">
-                <button type="button" @click="sidebarOpen = true"
+                <button type="button" x-on:click="sidebarOpen = true"
                     class="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border-soft text-text-body transition hover:bg-primary-soft"
                     aria-label="Buka menu admin">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -172,5 +189,7 @@
                 </div>
             </main>
         </div>
+
+        <x-notifications.floating-popup />
     </div>
 </x-layouts.public>

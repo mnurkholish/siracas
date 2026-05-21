@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminTransactionController;
+use App\Http\Controllers\Admin\AdminNotificationController;
 use App\Http\Controllers\Admin\CustomerAccountController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NotificationCampaignController;
@@ -60,6 +61,11 @@ Route::middleware('auth')->group(function () {
     // -- Admin Routes --
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+        Route::patch('/notifications/{notification}/read', [AdminNotificationController::class, 'read'])->name('notifications.read');
+        Route::patch('/notifications/read-all', [AdminNotificationController::class, 'readAll'])->name('notifications.read-all');
+        Route::delete('/notifications/{notification}', [AdminNotificationController::class, 'destroy'])->name('notifications.destroy');
+        Route::delete('/notifications', [AdminNotificationController::class, 'destroyAll'])->name('notifications.clear');
 
         Route::get('/customers', [CustomerAccountController::class, 'index'])->name('customers.index');
         Route::get('/customers/{id}', [CustomerAccountController::class, 'show'])->name('customers.show');

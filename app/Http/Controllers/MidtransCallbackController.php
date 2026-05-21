@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\User;
+use App\Notifications\AdminTransactionNotification;
 use App\Notifications\OrderPaidNotification;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -67,10 +69,22 @@ class MidtransCallbackController extends Controller
         if ($status === 'dibayar' && $previousStatus !== 'dibayar') {
             $transaction->loadMissing('user');
             $transaction->user?->notify(new OrderPaidNotification($transaction));
+            $this->notifyAdmins($transaction, 'paid');
         }
 
         return response()->json([
             'message' => 'Callback processed.',
         ]);
+    }
+
+    private function notifyAdmins(Transaction $transaction, string $action): void
+    {
+        User::query()
+            ->where('role', 'admin')
+            ->chunkById(100, function ($admins) use ($transaction, $action) {
+                foreach ($admins as $admin) {
+                    $admin->notify(new AdminTransactionNotification($transaction, $action));
+                }
+            });
     }
 }
