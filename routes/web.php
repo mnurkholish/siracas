@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CustomerAccountController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\NotificationCampaignController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -61,6 +62,8 @@ Route::middleware('auth')->group(function () {
     // -- Admin Routes --
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('/laporan/export', [ReportController::class, 'export'])->name('reports.export');
         Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
         Route::patch('/notifications/{notification}/read', [AdminNotificationController::class, 'read'])->name('notifications.read');
         Route::patch('/notifications/read-all', [AdminNotificationController::class, 'readAll'])->name('notifications.read-all');

@@ -44,7 +44,12 @@
                     'icon' => 'notifikasi',
                     'active' => ['admin.campaigns.*'],
                 ],
-                ['name' => 'Laporan Operasional', 'route' => 'home', 'icon' => 'laporan'],
+                [
+                    'name' => 'Laporan',
+                    'route' => 'admin.reports.index',
+                    'icon' => 'laporan',
+                    'active' => ['admin.reports.*'],
+                ],
             ];
 
             $adminNotificationCount = auth()->check() && auth()->user()->role === 'admin'
