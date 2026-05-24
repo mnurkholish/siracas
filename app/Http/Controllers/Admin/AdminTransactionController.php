@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Transaction;
 use App\Notifications\OrderCompletedNotification;
 use App\Notifications\OrderShippedNotification;
+use App\Notifications\ShippingCostUpdatedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -128,11 +129,19 @@ class AdminTransactionController extends Controller
             'ongkir.max' => 'Ongkir terlalu besar.',
         ]);
 
+        $previousOngkir = (float) $transaction->ongkir;
+        $newOngkir = (float) $validated['ongkir'];
+
         $transaction->update([
             'ongkir' => $validated['ongkir'],
             'order_id' => null,
             'snap_token' => null,
         ]);
+
+        if ($newOngkir > 0 && $previousOngkir !== $newOngkir) {
+            $transaction->loadMissing('user');
+            $transaction->user?->notify(new ShippingCostUpdatedNotification($transaction));
+        }
 
         return redirect()
             ->route('admin.transactions.show', $transaction)
