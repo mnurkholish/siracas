@@ -60,6 +60,8 @@ class Transaction extends Model
     protected function casts(): array
     {
         return [
+            'user_id' => 'integer',
+            'address_id' => 'integer',
             'tanggal' => 'datetime',
             'paid_at' => 'datetime',
             'completed_at' => 'datetime',

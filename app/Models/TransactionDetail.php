@@ -22,6 +22,8 @@ class TransactionDetail extends Model
     protected function casts(): array
     {
         return [
+            'transaction_id' => 'integer',
+            'product_id' => 'integer',
             'quantity' => 'integer',
             'harga_saat_transaksi' => 'decimal:2',
         ];

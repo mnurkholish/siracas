@@ -22,7 +22,11 @@ class Review extends Model
     protected function casts(): array
     {
         return [
+            'user_id' => 'integer',
+            'product_id' => 'integer',
+            'transaction_detail_id' => 'integer',
             'rating' => 'integer',
+            'admin_replied_by' => 'integer',
             'admin_replied_at' => 'datetime',
         ];
     }

@@ -62,8 +62,8 @@ class ReviewController extends Controller
 
     public function store(Request $request, Transaction $transaction, TransactionDetail $transactionDetail)
     {
-        abort_unless($transaction->user_id === Auth::id(), 403);
-        abort_unless($transactionDetail->transaction_id === $transaction->id, 404);
+        abort_unless((int) $transaction->user_id === (int) Auth::id(), 403);
+        abort_unless((int) $transactionDetail->transaction_id === (int) $transaction->id, 404);
 
         if ($transaction->status !== 'selesai') {
             throw ValidationException::withMessages([
@@ -155,7 +155,7 @@ class ReviewController extends Controller
 
     private function authorizeReviewOwner(Review $review): void
     {
-        abort_unless($review->user_id === Auth::id(), 403);
+        abort_unless((int) $review->user_id === (int) Auth::id(), 403);
     }
 
     private function ensureReviewIsEditable(Review $review): void

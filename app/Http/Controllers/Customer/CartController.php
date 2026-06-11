@@ -107,6 +107,6 @@ class CartController extends Controller
     {
         $cartItem->loadMissing('cart');
 
-        abort_unless($cartItem->cart->user_id === Auth::id(), 403);
+        abort_unless((int) $cartItem->cart->user_id === (int) Auth::id(), 403);
     }
 }

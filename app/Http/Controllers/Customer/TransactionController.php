@@ -417,7 +417,7 @@ class TransactionController extends Controller
 
     private function authorizeCustomerTransaction(Transaction $transaction): void
     {
-        abort_unless($transaction->user_id === Auth::id(), 403);
+        abort_unless((int) $transaction->user_id === (int) Auth::id(), 403);
     }
 
     private function filteredTransactions(Request $request, array $allowedStatuses)
