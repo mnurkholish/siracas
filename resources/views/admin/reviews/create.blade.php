@@ -1,5 +1,4 @@
-<x-layouts.admin title="{{ filled($review->admin_reply) ? 'Edit Balasan' : 'Balas Review' }}"
-    subtitle="Tulis balasan admin untuk review customer.">
+<x-layouts.admin title="{{ filled($review->admin_reply) ? 'Edit Balasan' : 'Balas Review' }}">
     <section class="grid gap-6 lg:grid-cols-[1fr_420px]">
         <article class="card p-5">
             <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
@@ -9,8 +8,10 @@
 
                 <div class="min-w-0">
                     <div class="flex flex-wrap items-center gap-3">
-                        <h2 class="font-black text-muted-dark">{{ $review->product?->nama_produk ?? 'Produk tidak tersedia' }}</h2>
-                        <span class="rounded-full {{ filled($review->admin_reply) ? 'bg-success-soft text-success' : 'bg-warning-soft text-warning' }} px-3 py-1 text-xs font-bold">
+                        <h2 class="font-black text-muted-dark">
+                            {{ $review->product?->nama_produk ?? 'Produk tidak tersedia' }}</h2>
+                        <span
+                            class="rounded-full {{ filled($review->admin_reply) ? 'bg-success-soft text-success' : 'bg-warning-soft text-warning' }} px-3 py-1 text-xs font-bold">
                             {{ filled($review->admin_reply) ? 'Sudah dibalas' : 'Belum dibalas' }}
                         </span>
                     </div>
@@ -54,7 +55,8 @@
                     <p class="text-xs font-black uppercase tracking-[0.25em] text-primary">Balasan saat ini</p>
                     <p class="mt-2 text-sm leading-7 text-muted-dark">{{ $review->admin_reply }}</p>
                     <p class="mt-2 text-xs font-semibold text-muted">
-                        {{ $review->adminReplier?->username ?? 'Admin' }} • {{ $review->admin_replied_at?->format('d M Y H:i') }}
+                        {{ $review->adminReplier?->username ?? 'Admin' }} •
+                        {{ $review->admin_replied_at?->format('d M Y H:i') }}
                     </p>
                 </div>
             @endif

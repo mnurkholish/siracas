@@ -95,7 +95,7 @@
                     </button>
                     <button form="logout-form" type="submit"
                         class="h-10 rounded-lg bg-danger px-6 text-sm font-semibold text-white transition hover:bg-danger-dark focus:outline-none focus:ring-2 focus:ring-red-200">
-                        Keluar
+                        Logout
                     </button>
                 </div>
             </div>

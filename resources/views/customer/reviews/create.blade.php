@@ -16,7 +16,7 @@
                 <div>
                     <p class="eyebrow">Review</p>
                     <h1 class="page-title">Produk yang Bisa Dinilai</h1>
-                    <p class="mt-2 text-sm text-muted">Produk hanya muncul jika transaksi selesai, masih dalam 20 hari, dan belum pernah dinilai.</p>
+                    <p class="mt-2 text-sm text-muted">Produk hanya muncul 20 hari setelah transaksi diselesaikan.</p>
                 </div>
                 <x-button :href="route('reviews.index')" variant="secondary" size="lg">
                     Review Saya
@@ -32,7 +32,8 @@
             @if ($details->isEmpty())
                 <div class="empty-state mt-8">
                     <p class="text-lg font-black text-muted-dark">Tidak ada produk yang bisa dinilai.</p>
-                    <p class="mt-2 text-sm text-muted">Produk yang sudah dinilai atau melewati masa 20 hari tidak ditampilkan.</p>
+                    <p class="mt-2 text-sm text-muted">Produk yang sudah dinilai atau melewati masa 20 hari tidak
+                        ditampilkan.</p>
                 </div>
             @else
                 <div class="table-wrap mt-8">

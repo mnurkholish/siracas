@@ -83,7 +83,7 @@
                     </button>
                     <button form="logout-form" type="submit"
                         class="h-10 rounded-lg bg-danger px-6 text-sm font-semibold text-white transition hover:bg-danger-dark focus:outline-none focus:ring-2 focus:ring-red-200">
-                        Keluar
+                        Logout
                     </button>
                 </div>
             </div>
@@ -96,7 +96,8 @@
         <div x-show="activeModal === 'edit'" x-cloak
             class="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8"
             x-transition.opacity>
-            <div @click.outside="activeModal = ''" class="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8"
+            <div @click.outside="activeModal = ''"
+                class="max-h-[calc(100vh-3rem)] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8"
                 x-transition:enter="transition ease-out duration-200"
                 x-transition:enter-start="opacity-0 translate-y-3 scale-95"
                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"
@@ -244,7 +245,8 @@
         <div x-show="activeModal === 'password'" x-cloak
             class="fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/35 px-4 py-8"
             x-transition.opacity>
-            <div @click.outside="activeModal = ''" class="max-h-[calc(100vh-3rem)] w-full max-w-lg overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8"
+            <div @click.outside="activeModal = ''"
+                class="max-h-[calc(100vh-3rem)] w-full max-w-lg overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8"
                 x-transition:enter="transition ease-out duration-200"
                 x-transition:enter-start="opacity-0 translate-y-3 scale-95"
                 x-transition:enter-end="opacity-100 translate-y-0 scale-100"

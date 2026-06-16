@@ -3,20 +3,24 @@
     $oldCampaignId = old('campaign_id');
     $campaignRows = $campaigns
         ->getCollection()
-        ->map(fn ($campaign) => [
-            'id' => $campaign->id,
-            'type' => $campaign->type,
-                            'title' => $campaign->title,
-                            'message' => $campaign->message,
-                            'url' => $campaign->url,
-                            'update_url' => route('admin.campaigns.update', $campaign),
-                        ])
+        ->map(
+            fn($campaign) => [
+                'id' => $campaign->id,
+                'type' => $campaign->type,
+                'title' => $campaign->title,
+                'message' => $campaign->message,
+                'url' => $campaign->url,
+                'update_url' => route('admin.campaigns.update', $campaign),
+            ],
+        )
         ->values();
 @endphp
 
-<x-layouts.admin title="Kampanye Notifikasi" subtitle="Kelola promo, produk baru, dan pengumuman in-app untuk customer.">
+<x-layouts.admin title="Kampanye Notifikasi"
+    subtitle="Kelola notifikasi promo, produk baru, dan pengumuman in-app untuk customer.">
     <x-slot:actions>
-        <form action="{{ route('admin.campaigns.index') }}" method="GET" class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+        <form action="{{ route('admin.campaigns.index') }}" method="GET"
+            class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari kampanye"
                 class="h-11 w-full rounded-lg border border-border-strong bg-white px-4 text-sm outline-none focus:ring-2 focus:ring-border-soft sm:w-72">
             <select name="type"
@@ -44,8 +48,7 @@
 
         <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-                <h2 class="text-xl font-bold text-black">Daftar Kampanye</h2>
-                <p class="mt-1 text-sm text-gray-500">Kampanye admin bisa dipublish ke seluruh customer aktif.</p>
+                <h2 class="text-xl font-bold text-black">Daftar Kampanye Notofikasi</h2>
             </div>
             <x-button type="button" @click="openCreate()" size="lg">
                 Tambah Kampanye
@@ -72,7 +75,8 @@
                                     <p class="mt-1 line-clamp-1 text-xs text-gray-500">{{ $campaign->message }}</p>
                                     @if ($campaign->url)
                                         <a href="{{ $campaign->url }}" target="_blank" rel="noopener"
-                                            class="mt-1 inline-flex text-xs font-semibold text-primary-dark">Tautan kampanye</a>
+                                            class="mt-1 inline-flex text-xs font-semibold text-primary-dark">Tautan
+                                            kampanye</a>
                                     @endif
                                 </td>
                                 <td>{{ $campaign->typeLabel() }}</td>
@@ -84,28 +88,34 @@
                                 <td>{{ $campaign->published_at?->format('d M Y H:i') ?? '-' }}</td>
                                 <td>
                                     <div class="flex flex-wrap items-center justify-center gap-2">
-                                        <x-button type="button" @click="openEdit({{ $campaign->id }})" variant="secondary" size="sm">
+                                        <x-button type="button" @click="openEdit({{ $campaign->id }})"
+                                            variant="secondary" size="sm">
                                             Ubah
                                         </x-button>
 
                                         @if ($campaign->is_active)
-                                            <form action="{{ route('admin.campaigns.unpublish', $campaign) }}" method="POST">
+                                            <form action="{{ route('admin.campaigns.unpublish', $campaign) }}"
+                                                method="POST">
                                                 @csrf
                                                 @method('PATCH')
-                                                <x-button type="submit" variant="secondary" size="sm">Unpublish</x-button>
+                                                <x-button type="submit" variant="secondary"
+                                                    size="sm">Unpublish</x-button>
                                             </form>
                                         @else
-                                            <form action="{{ route('admin.campaigns.publish', $campaign) }}" method="POST">
+                                            <form action="{{ route('admin.campaigns.publish', $campaign) }}"
+                                                method="POST">
                                                 @csrf
                                                 @method('PATCH')
                                                 <x-button type="submit" size="sm">Publish</x-button>
                                             </form>
                                         @endif
 
-                                        <form action="{{ route('admin.campaigns.destroy', $campaign) }}" method="POST" class="delete-campaign-form">
+                                        <form action="{{ route('admin.campaigns.destroy', $campaign) }}" method="POST"
+                                            class="delete-campaign-form">
                                             @csrf
                                             @method('DELETE')
-                                            <x-button type="submit" variant="danger-soft" size="sm">Hapus</x-button>
+                                            <x-button type="submit" variant="danger-soft"
+                                                size="sm">Hapus</x-button>
                                         </form>
                                     </div>
                                 </td>
@@ -132,13 +142,18 @@
             <div @click.outside="closeModal()" class="modal-panel max-w-2xl">
                 <div class="mb-6 flex items-start justify-between gap-4">
                     <h2 class="text-lg font-bold text-black">Tambah Kampanye</h2>
-                    <button type="button" @click="closeModal()" class="text-2xl leading-none text-gray-400 hover:text-gray-700">&times;</button>
+                    <button type="button" @click="closeModal()"
+                        class="text-2xl leading-none text-gray-400 hover:text-gray-700">&times;</button>
                 </div>
 
-                <form action="{{ route('admin.campaigns.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <form action="{{ route('admin.campaigns.store') }}" method="POST" enctype="multipart/form-data"
+                    class="space-y-4">
                     @csrf
                     <input type="hidden" name="form_context" value="create">
-                    @include('admin.notification-campaigns.partials.form-fields', ['types' => $types, 'mode' => 'create'])
+                    @include('admin.notification-campaigns.partials.form-fields', [
+                        'types' => $types,
+                        'mode' => 'create',
+                    ])
                 </form>
             </div>
         </div>
@@ -147,7 +162,8 @@
             <div @click.outside="closeModal()" class="modal-panel max-w-2xl">
                 <div class="mb-6 flex items-start justify-between gap-4">
                     <h2 class="text-lg font-bold text-black">Ubah Kampanye</h2>
-                    <button type="button" @click="closeModal()" class="text-2xl leading-none text-gray-400 hover:text-gray-700">&times;</button>
+                    <button type="button" @click="closeModal()"
+                        class="text-2xl leading-none text-gray-400 hover:text-gray-700">&times;</button>
                 </div>
 
                 <template x-if="selected">
@@ -156,7 +172,10 @@
                         @method('PUT')
                         <input type="hidden" name="form_context" value="edit">
                         <input type="hidden" name="campaign_id" :value="selected.id">
-                        @include('admin.notification-campaigns.partials.form-fields', ['types' => $types, 'mode' => 'edit'])
+                        @include('admin.notification-campaigns.partials.form-fields', [
+                            'types' => $types,
+                            'mode' => 'edit',
+                        ])
                     </form>
                 </template>
             </div>

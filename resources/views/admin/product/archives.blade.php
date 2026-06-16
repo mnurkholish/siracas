@@ -1,7 +1,7 @@
 <x-layouts.admin title="Arsip Produk">
     <x-slot:actions>
         <form action="{{ route('admin.products.archives') }}" method="GET" class="relative w-full sm:w-[430px]">
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk yang dihapus"
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari produk"
                 class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-border-strong sm:px-8 sm:text-base">
             <button type="submit"
                 class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-primary-dark"
@@ -24,7 +24,7 @@
     <section class="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <h2 class="text-xl font-bold text-black">Produk Dihapus</h2>
-            <p class="mt-1 text-sm text-gray-500">Lihat produk yang sudah dihapus dan kembalikan jika dibutuhkan.</p>
+            <p class="mt-1 text-sm text-gray-500">Daftar produk yang telah diarsipkan.</p>
         </div>
 
         <a href="{{ route('admin.products.index') }}"
@@ -62,7 +62,8 @@
                                         alt="Foto {{ $product->nama_produk }}"
                                         class="h-12 w-12 rounded-md border border-gray-200 object-cover">
                                     <div class="min-w-0">
-                                        <p class="truncate font-semibold text-muted-dark">{{ $product->nama_produk }}</p>
+                                        <p class="truncate font-semibold text-muted-dark">{{ $product->nama_produk }}
+                                        </p>
                                         <p class="line-clamp-1 text-xs text-gray-500">
                                             {{ $product->deskripsi ?: 'Belum ada deskripsi' }}
                                         </p>

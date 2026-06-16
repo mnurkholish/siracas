@@ -12,7 +12,7 @@
                 placeholder="Masukkan password" />
 
             <x-auth.button type="submit">
-                Masuk
+                Login
             </x-auth.button>
         </form>
 

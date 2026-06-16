@@ -10,9 +10,8 @@
         $cartItemsCount = $cart ? $cart->cartItems()->sum('quantity') : 0;
     }
 
-    $unreadNotificationsCount = auth()->check() && auth()->user()->role === 'customer'
-        ? auth()->user()->unreadNotifications()->count()
-        : 0;
+    $unreadNotificationsCount =
+        auth()->check() && auth()->user()->role === 'customer' ? auth()->user()->unreadNotifications()->count() : 0;
 
     $isNavActive = function (string $route): bool {
         $linkPath = trim(parse_url($route, PHP_URL_PATH) ?: $route, '/');
@@ -62,7 +61,8 @@
                     aria-label="Keranjang">
                     <x-icons.cart class="h-5 w-5 text-muted-dark" />
                     @if ($cartItemsCount > 0)
-                        <span class="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-bold leading-none text-white">
+                        <span
+                            class="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1.5 text-[11px] font-bold leading-none text-white">
                             {{ $cartItemsCount > 99 ? '99+' : $cartItemsCount }}
                         </span>
                     @endif
@@ -73,7 +73,8 @@
                     aria-label="Notifikasi">
                     <x-icons.bell class="h-5 w-5 text-muted-dark" />
                     @if ($unreadNotificationsCount > 0)
-                        <span class="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1.5 text-[11px] font-bold leading-none text-white">
+                        <span
+                            class="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-danger px-1.5 text-[11px] font-bold leading-none text-white">
                             {{ $unreadNotificationsCount > 99 ? '99+' : $unreadNotificationsCount }}
                         </span>
                     @endif
@@ -110,7 +111,8 @@
 
                             <div class="border-b border-gray-100 px-4 py-3">
                                 <p class="text-sm text-gray-500">Masuk sebagai</p>
-                                <p class="truncate text-sm font-medium text-gray-900">{{ auth()->user()->username ?? 'User' }}
+                                <p class="truncate text-sm font-medium text-gray-900">
+                                    {{ auth()->user()->username ?? 'User' }}
                                 </p>
                             </div>
 
@@ -135,11 +137,11 @@
                     <div class="flex items-center gap-2">
                         <a href="/register"
                             class="hidden rounded-full px-4 py-2 text-sm font-semibold text-text-body transition hover:bg-primary-soft hover:text-primary sm:inline-flex">
-                            Daftar
+                            Register
                         </a>
                         <a href="/login"
                             class="inline-flex items-center justify-center rounded-full border border-border-strong px-4 py-2 text-sm font-semibold text-muted-dark shadow-sm transition hover:border-primary hover:bg-primary-soft focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1">
-                            Masuk
+                            Login
                         </a>
                     </div>
                 @endauth

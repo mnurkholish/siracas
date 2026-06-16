@@ -1,4 +1,4 @@
-<x-layouts.admin title="Ulasan" subtitle="Kelola review customer dan berikan balasan admin.">
+<x-layouts.admin title="Review" subtitle="Daftar review customer.">
     <x-slot:actions>
         <form method="GET" action="{{ route('admin.reviews.index') }}" class="relative w-full sm:w-[430px]">
             @if (request('reply_status'))
@@ -8,7 +8,8 @@
                 <input type="hidden" name="rating" value="{{ request('rating') }}">
             @endif
 
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari customer, produk, atau review"
+            <input type="text" name="search" value="{{ request('search') }}"
+                placeholder="Cari customer, produk, atau isi review"
                 class="h-12 w-full rounded-full border-0 bg-white px-6 pr-14 text-sm text-gray-700 shadow-sm outline-none placeholder:text-gray-500 focus:ring-2 focus:ring-border-strong sm:px-8 sm:text-base">
             <button type="submit"
                 class="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 transition hover:text-primary-dark"
@@ -19,16 +20,18 @@
     </x-slot:actions>
 
     <section class="table-wrap">
-        <div class="flex flex-col gap-4 border-b border-gray-100 bg-white px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
+        <div
+            class="flex flex-col gap-4 border-b border-gray-100 bg-white px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
             <div class="flex flex-wrap gap-2">
                 @php
                     $baseFilter = array_filter([
                         'search' => request('search'),
                         'rating' => request('rating'),
                     ]);
-                    $allUrl = $baseFilter === []
-                        ? route('admin.reviews.index')
-                        : route('admin.reviews.index') . '?' . http_build_query($baseFilter);
+                    $allUrl =
+                        $baseFilter === []
+                            ? route('admin.reviews.index')
+                            : route('admin.reviews.index') . '?' . http_build_query($baseFilter);
                 @endphp
 
                 <a href="{{ $allUrl }}"
@@ -51,7 +54,8 @@
                 @endforeach
             </div>
 
-            <form method="GET" action="{{ route('admin.reviews.index') }}" class="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <form method="GET" action="{{ route('admin.reviews.index') }}"
+                class="flex flex-col gap-2 sm:flex-row sm:items-center">
                 @if (request('search'))
                     <input type="hidden" name="search" value="{{ request('search') }}">
                 @endif
@@ -88,13 +92,16 @@
 
                             <div class="min-w-0">
                                 <div class="flex flex-wrap items-center gap-3">
-                                    <h2 class="font-black text-muted-dark">{{ $review->product?->nama_produk ?? 'Produk tidak tersedia' }}</h2>
-                                    <span class="rounded-full {{ filled($review->admin_reply) ? 'bg-success-soft text-success' : 'bg-warning-soft text-warning' }} px-3 py-1 text-xs font-bold">
+                                    <h2 class="font-black text-muted-dark">
+                                        {{ $review->product?->nama_produk ?? 'Produk tidak tersedia' }}</h2>
+                                    <span
+                                        class="rounded-full {{ filled($review->admin_reply) ? 'bg-success-soft text-success' : 'bg-warning-soft text-warning' }} px-3 py-1 text-xs font-bold">
                                         {{ filled($review->admin_reply) ? 'Sudah dibalas' : 'Belum dibalas' }}
                                     </span>
                                 </div>
                                 <p class="mt-1 text-sm font-semibold text-muted">
-                                    {{ $review->user?->username ?? 'Customer' }} • {{ $review->created_at->format('d M Y H:i') }}
+                                    {{ $review->user?->username ?? 'Customer' }} •
+                                    {{ $review->created_at->format('d M Y H:i') }}
                                 </p>
                                 <div class="mt-2 flex items-center gap-1 text-accent">
                                     @for ($star = 1; $star <= 5; $star++)
@@ -111,10 +118,13 @@
 
                                 @if (filled($review->admin_reply))
                                     <div class="mt-4 rounded-lg border border-border-soft bg-surface px-4 py-3">
-                                        <p class="text-xs font-black uppercase tracking-[0.25em] text-primary">Balasan saat ini</p>
-                                        <p class="mt-2 text-sm leading-7 text-muted-dark">{{ $review->admin_reply }}</p>
+                                        <p class="text-xs font-black uppercase tracking-[0.25em] text-primary">Balasan
+                                            saat ini</p>
+                                        <p class="mt-2 text-sm leading-7 text-muted-dark">{{ $review->admin_reply }}
+                                        </p>
                                         <p class="mt-2 text-xs font-semibold text-muted">
-                                            {{ $review->adminReplier?->username ?? 'Admin' }} • {{ $review->admin_replied_at?->format('d M Y H:i') }}
+                                            {{ $review->adminReplier?->username ?? 'Admin' }} •
+                                            {{ $review->admin_replied_at?->format('d M Y H:i') }}
                                         </p>
                                     </div>
                                 @endif

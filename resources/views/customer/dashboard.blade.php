@@ -5,8 +5,7 @@
         <x-home.hero-section />
 
         <section class="bg-secondary-soft px-6 py-10 lg:px-10">
-            <div
-                class="mx-auto flex max-w-7xl flex-col gap-4 rounded-lg border border-border bg-white px-5 py-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_34px_rgba(145,117,97,0.12)] sm:flex-row sm:items-center sm:justify-between sm:px-7"
+            <div class="mx-auto flex max-w-7xl flex-col gap-4 rounded-lg border border-border bg-white px-5 py-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-[0_18px_34px_rgba(145,117,97,0.12)] sm:flex-row sm:items-center sm:justify-between sm:px-7"
                 data-reveal>
                 <div class="min-w-0">
                     <p class="text-xs font-bold uppercase tracking-[0.35em] text-muted-light">Halo,
@@ -34,14 +33,14 @@
                         </div>
                         <span
                             class="flex h-11 w-11 items-center justify-center rounded-full bg-accent-soft text-primary-dark transition group-hover:bg-primary group-hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M20.25 7.5 12 3 3.75 7.5m16.5 0L12 12m8.25-4.5v9L12 21m0-9L3.75 7.5m8.25 4.5v9m-8.25-13.5v9L12 21" />
                             </svg>
                         </span>
                     </div>
-                    <p class="mt-4 text-sm leading-6 text-muted">Cari cacing, kascing, dan olahan organik yang tersedia.</p>
+                    <p class="mt-4 text-sm leading-6 text-muted">Cari segala produk organik yang tersedia.</p>
                 </a>
 
                 <a href="{{ route('cart.index') }}" @mouseenter="active = 'keranjang'"
@@ -57,7 +56,8 @@
                             <x-icons.cart class="h-5 w-5" />
                         </span>
                     </div>
-                    <p class="mt-4 text-sm leading-6 text-muted">Simpan produk pilihan dan atur jumlah pesanan sebelum checkout.</p>
+                    <p class="mt-4 text-sm leading-6 text-muted">Mulai belanja secara praktis dan simpan produk
+                        pesananmu di keranjang.</p>
                 </a>
 
                 <a href="{{ route('profile') }}" @mouseenter="active = 'akun'"
@@ -73,7 +73,7 @@
                             <x-icons.user class="h-5 w-5" />
                         </span>
                     </div>
-                    <p class="mt-4 text-sm leading-6 text-muted">Periksa data diri agar proses transaksi nanti lebih lancar.</p>
+                    <p class="mt-4 text-sm leading-6 text-muted">Periksa informasi akun anda di sini.</p>
                 </a>
             </div>
         </section>

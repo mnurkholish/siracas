@@ -39,7 +39,7 @@ class AdminTransactionController extends Controller
         return view('admin.transactions.index', [
             'transactions' => $transactions,
             'title' => 'Transaksi',
-            'subtitle' => 'Kelola pesanan customer yang masih aktif.',
+            'subtitle' => 'Daftar pesanan yang perlu ditangani.',
             'emptyMessage' => 'Belum ada transaksi aktif.',
             'statusOptions' => $statusOptions,
             'resetRoute' => route('admin.transactions.index'),

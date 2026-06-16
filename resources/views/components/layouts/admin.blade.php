@@ -33,7 +33,7 @@
                     'active' => ['admin.transactions.history'],
                 ],
                 [
-                    'name' => 'Ulasan',
+                    'name' => 'Review',
                     'route' => 'admin.reviews.index',
                     'icon' => 'ulasan',
                     'active' => ['admin.reviews.*'],
@@ -52,9 +52,10 @@
                 ],
             ];
 
-            $adminNotificationCount = auth()->check() && auth()->user()->role === 'admin'
-                ? auth()->user()->unreadNotifications()->count()
-                : 0;
+            $adminNotificationCount =
+                auth()->check() && auth()->user()->role === 'admin'
+                    ? auth()->user()->unreadNotifications()->count()
+                    : 0;
         @endphp
 
         <div x-show="sidebarOpen" x-cloak x-transition.opacity x-on:click="sidebarOpen = false"

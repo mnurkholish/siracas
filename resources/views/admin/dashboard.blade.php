@@ -43,7 +43,8 @@
                             <p class="text-xs font-bold uppercase text-gray-500">{{ $card['label'] }}</p>
                             <p class="mt-4 break-words text-2xl font-black text-black">{{ $card['value'] }}</p>
                         </div>
-                        <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg {{ $card['tone'] }}">
+                        <span
+                            class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg {{ $card['tone'] }}">
                             <i class="bi {{ $card['icon'] }}"></i>
                         </span>
                     </div>
@@ -54,7 +55,7 @@
         <section class="rounded-lg border border-border bg-white p-5 shadow-sm">
             <div class="mb-4 flex flex-col gap-1">
                 <h2 class="text-lg font-bold text-black">Penjualan 7 Hari Terakhir</h2>
-                <p class="text-sm text-gray-500">Total pendapatan bersih dari transaksi valid.</p>
+                <p class="text-sm text-gray-500">Total pendapatan bersih.</p>
             </div>
             <div class="h-72">
                 <canvas id="dashboardSalesChart"></canvas>
@@ -63,10 +64,12 @@
 
         <section class="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
             <div class="rounded-lg border border-border bg-white shadow-sm">
-                <div class="flex flex-col gap-3 border-b border-border-soft px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+                <div
+                    class="flex flex-col gap-3 border-b border-border-soft px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h2 class="text-lg font-bold text-black">Transaksi Perlu Ditindaklanjuti</h2>
-                        <p class="mt-1 text-sm text-gray-500">Pesanan dibayar, diproses, atau garansi diajukan.</p>
+                        <p class="mt-1 text-sm text-gray-500">Tangani pesanan yang telah dibayar, diproses, atau
+                            mengajukan garansi.</p>
                     </div>
                     <x-button :href="route('admin.transactions.index')" variant="secondary" size="sm">
                         Lihat Semua
@@ -100,7 +103,8 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="font-bold text-success">Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}</td>
+                                    <td class="font-bold text-success">
+                                        Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}</td>
                                     <td class="text-gray-600">{{ $transaction->tanggal->format('d M Y H:i') }}</td>
                                     <td class="text-right">
                                         <x-button :href="route('admin.transactions.show', $transaction)" size="sm">
@@ -119,10 +123,11 @@
             </div>
 
             <div class="rounded-lg border border-border bg-white shadow-sm">
-                <div class="flex flex-col gap-3 border-b border-border-soft px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
+                <div
+                    class="flex flex-col gap-3 border-b border-border-soft px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <h2 class="text-lg font-bold text-black">Produk Stok Rendah</h2>
-                        <p class="mt-1 text-sm text-gray-500">Stok kurang dari atau sama dengan {{ $lowStockLimit }}.</p>
+                        <p class="mt-1 text-sm text-gray-500">Stok produk menipis.</p>
                     </div>
                     <x-button :href="route('admin.products.index')" variant="secondary" size="sm">
                         Lihat Semua
@@ -134,7 +139,9 @@
                         <div class="flex items-center justify-between gap-4 px-5 py-4">
                             <div class="min-w-0">
                                 <p class="truncate font-semibold text-black">{{ $product->nama_produk }}</p>
-                                <p class="mt-1 text-xs text-gray-500">{{ \App\Models\Product::SATUAN[$product->satuan] ?? $product->satuan ?? '-' }}</p>
+                                <p class="mt-1 text-xs text-gray-500">
+                                    {{ \App\Models\Product::SATUAN[$product->satuan] ?? ($product->satuan ?? '-') }}
+                                </p>
                             </div>
                             <span class="rounded-full bg-danger-soft px-3 py-1 text-xs font-black text-red-700">
                                 {{ number_format($product->stok, 0, ',', '.') }} stok
@@ -168,10 +175,12 @@
                     <tbody>
                         @forelse ($latestTransactions as $transaction)
                             <tr>
-                                <td class="font-semibold text-muted-dark">{{ $transaction->order_id ?: '#' . $transaction->id }}</td>
+                                <td class="font-semibold text-muted-dark">
+                                    {{ $transaction->order_id ?: '#' . $transaction->id }}</td>
                                 <td>{{ $transaction->user?->username ?? '-' }}</td>
                                 <td><x-badge :status="$transaction->status" /></td>
-                                <td class="font-bold text-success">Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}</td>
+                                <td class="font-bold text-success">
+                                    Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}</td>
                                 <td class="text-gray-600">{{ $transaction->tanggal->format('d M Y H:i') }}</td>
                                 <td class="text-right">
                                     <x-button :href="route('admin.transactions.show', $transaction)" size="sm">

@@ -52,7 +52,7 @@
         <section class="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h2 class="text-xl font-bold text-black">Daftar Produk</h2>
-                <p class="mt-1 text-sm text-gray-500">Kelola produk yang tampil dan dipakai dalam transaksi SIRACAS.</p>
+                <p class="mt-1 text-sm text-gray-500">Kelola produk-produk SIRACAS.</p>
             </div>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -99,7 +99,8 @@
                                             alt="Foto {{ $product->nama_produk }}"
                                             class="h-12 w-12 rounded-md border border-gray-200 object-cover">
                                         <div class="min-w-0">
-                                            <p class="truncate font-semibold text-muted-dark">{{ $product->nama_produk }}
+                                            <p class="truncate font-semibold text-muted-dark">
+                                                {{ $product->nama_produk }}
                                             </p>
                                             <p class="line-clamp-1 text-xs text-gray-500">
                                                 {{ $product->deskripsi ?: 'Belum ada deskripsi' }}
@@ -256,8 +257,7 @@
         </section>
 
         <div x-show="activeModal === 'create'" x-cloak class="modal-backdrop" x-transition.opacity>
-            <div @click.outside="closeModal()"
-                class="modal-panel max-w-2xl">
+            <div @click.outside="closeModal()" class="modal-panel max-w-2xl">
                 <h2 class="mb-6 text-lg font-bold text-black">Tambah Produk</h2>
                 <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -268,8 +268,7 @@
         </div>
 
         <div x-show="activeModal === 'detail'" x-cloak class="modal-backdrop" x-transition.opacity>
-            <div @click.outside="closeModal()"
-                class="modal-panel max-w-2xl">
+            <div @click.outside="closeModal()" class="modal-panel max-w-2xl">
                 <div class="mb-6 flex items-start justify-between gap-4">
                     <h2 class="text-lg font-bold text-black">Detail Produk</h2>
                     <button type="button" @click="closeModal()"
@@ -318,8 +317,7 @@
         </div>
 
         <div x-show="activeModal === 'edit'" x-cloak class="modal-backdrop" x-transition.opacity>
-            <div @click.outside="closeModal()"
-                class="modal-panel max-w-2xl">
+            <div @click.outside="closeModal()" class="modal-panel max-w-2xl">
                 <h2 class="mb-6 text-lg font-bold text-black">Ubah Produk</h2>
                 <template x-if="selected">
                     <form :action="selected.update_url" method="POST" enctype="multipart/form-data">
