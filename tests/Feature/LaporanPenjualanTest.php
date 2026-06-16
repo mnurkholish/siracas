@@ -1,7 +1,8 @@
 <?php
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Services\ReportService;
+use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
@@ -39,6 +40,38 @@ it('menghitung total laporan penjualan dari status transaksi yang valid', functi
         ->and((float) $summary['shipping_revenue'])->toBe(5000.0)
         ->and((float) $summary['refund_total'])->toBe(2000.0)
         ->and((float) $summary['net_revenue'])->toBe(23000.0);
+});
+
+it('mengestimasi pendapatan bulan berjalan dengan weekday-adjusted EWMA', function () {
+    Carbon::setTestNow(Carbon::parse('2026-06-17 12:00:00'));
+
+    try {
+        $customer = customerUser();
+        $address = testAddressFor($customer);
+        $product = testProduct(['harga' => 1000]);
+
+        foreach (range(1, 17) as $day) {
+            $date = Carbon::create(2026, 6, $day, 10);
+            $dailyRevenue = $date->dayOfWeekIso * 100;
+
+            testTransactionWithDetail($customer, $product, [
+                'address' => $address,
+                'status' => 'selesai',
+                'tanggal' => $date,
+                'completed_at' => $date,
+            ], [
+                'quantity' => 1,
+                'harga_saat_transaksi' => $dailyRevenue,
+            ]);
+        }
+
+        $summary = app(ReportService::class)->build(6, 2026)['summary'];
+
+        expect((float) $summary['net_revenue'])->toBe(6200.0)
+            ->and((float) $summary['estimated_revenue'])->toBe(11500.0);
+    } finally {
+        Carbon::setTestNow();
+    }
 });
 
 it('mencegah customer mengakses laporan penjualan', function () {

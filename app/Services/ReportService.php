@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\DB;
 
 class ReportService
 {
+    private const EWMA_ALPHA = 0.3;
+
     public const VALID_TRANSACTION_STATUSES = [
         'dibayar',
         'diproses',
@@ -113,10 +115,7 @@ class ReportService
     private function summary(array $period, Collection $dailySales): array
     {
         $netRevenue = (float) $dailySales->sum('net_revenue');
-        $elapsedDays = max(1, (int) $period['elapsedDays']);
-        $estimatedRevenue = $period['isCurrentMonth']
-            ? ($netRevenue / $elapsedDays) * (int) $period['daysInMonth']
-            : $netRevenue;
+        $estimatedRevenue = $this->weekdayAdjustedEwmaEstimate($period, $dailySales, $netRevenue);
 
         return [
             'product_revenue' => (float) $dailySales->sum('product_revenue'),
@@ -127,6 +126,58 @@ class ReportService
             'refund_total' => (float) $dailySales->sum('refund_total'),
             'estimated_revenue' => max(0, $estimatedRevenue),
         ];
+    }
+
+    private function weekdayAdjustedEwmaEstimate(array $period, Collection $dailySales, float $netRevenue): float
+    {
+        if (! $period['isCurrentMonth']) {
+            return $netRevenue;
+        }
+
+        $elapsedDays = max(1, (int) $period['elapsedDays']);
+        $actualSales = $dailySales
+            ->take($elapsedDays)
+            ->map(function (array $sale) {
+                $date = Carbon::parse($sale['date']);
+
+                return [
+                    'weekday' => $date->dayOfWeekIso,
+                    'net_revenue' => (float) $sale['net_revenue'],
+                ];
+            });
+
+        if ($actualSales->isEmpty()) {
+            return $netRevenue;
+        }
+
+        $overallEwma = $this->ewma($actualSales->pluck('net_revenue')->all());
+        $weekdayForecasts = $actualSales
+            ->groupBy('weekday')
+            ->map(fn (Collection $sales) => $this->ewma($sales->pluck('net_revenue')->all()));
+
+        $remainingRevenue = $dailySales
+            ->slice($elapsedDays)
+            ->sum(function (array $sale) use ($weekdayForecasts, $overallEwma) {
+                $weekday = Carbon::parse($sale['date'])->dayOfWeekIso;
+
+                return (float) ($weekdayForecasts->get($weekday) ?? $overallEwma);
+            });
+
+        return $netRevenue + (float) $remainingRevenue;
+    }
+
+    private function ewma(array $values): float
+    {
+        $forecast = null;
+
+        foreach ($values as $value) {
+            $value = (float) $value;
+            $forecast = $forecast === null
+                ? $value
+                : (self::EWMA_ALPHA * $value) + ((1 - self::EWMA_ALPHA) * $forecast);
+        }
+
+        return (float) ($forecast ?? 0);
     }
 
     private function dailySales(array $period): Collection
