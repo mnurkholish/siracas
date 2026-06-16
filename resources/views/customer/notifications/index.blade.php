@@ -66,7 +66,7 @@
 
                             <div class="flex shrink-0 flex-wrap gap-2">
                                 @if ($detailUrl !== '')
-                                    <x-button :href="$detailUrl" variant="secondary" size="sm">
+                                    <x-button :href="route('notifications.detail', $notification)" variant="secondary" size="sm">
                                         Detail
                                     </x-button>
                                 @endif

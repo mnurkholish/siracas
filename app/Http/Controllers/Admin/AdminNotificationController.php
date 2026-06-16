@@ -26,6 +26,18 @@ class AdminNotificationController extends Controller
         return back()->with('success', 'Notifikasi ditandai sudah dibaca');
     }
 
+    public function detail(DatabaseNotification $notification)
+    {
+        $this->authorizeNotification($notification);
+        $notification->markAsRead();
+
+        $detailUrl = trim((string) ($notification->data['url'] ?? ''));
+
+        return $detailUrl !== ''
+            ? redirect()->to($detailUrl)
+            : redirect()->route('admin.notifications.index');
+    }
+
     public function readAll()
     {
         Auth::user()->unreadNotifications->markAsRead();

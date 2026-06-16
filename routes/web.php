@@ -65,6 +65,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
         Route::get('/laporan/export', [ReportController::class, 'export'])->name('reports.export');
         Route::get('/notifications', [AdminNotificationController::class, 'index'])->name('notifications.index');
+        Route::get('/notifications/{notification}/detail', [AdminNotificationController::class, 'detail'])->name('notifications.detail');
         Route::patch('/notifications/{notification}/read', [AdminNotificationController::class, 'read'])->name('notifications.read');
         Route::patch('/notifications/read-all', [AdminNotificationController::class, 'readAll'])->name('notifications.read-all');
         Route::delete('/notifications/{notification}', [AdminNotificationController::class, 'destroy'])->name('notifications.destroy');
@@ -138,6 +139,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/transactions/{transaction}/details/{transactionDetail}/reviews', [ReviewController::class, 'store'])->name('transactions.details.reviews.store');
 
         Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+        Route::get('/notifications/{notification}/detail', [NotificationController::class, 'detail'])->name('notifications.detail');
         Route::patch('/notifications/{notification}/read', [NotificationController::class, 'read'])->name('notifications.read');
         Route::patch('/notifications/read-all', [NotificationController::class, 'readAll'])->name('notifications.read-all');
         Route::delete('/notifications/{notification}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
