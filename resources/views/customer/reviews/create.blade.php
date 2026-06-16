@@ -50,7 +50,7 @@
                             <tbody>
                                 @foreach ($details as $detail)
                                     <tr>
-                                        <td>
+                                        <td data-label="Produk">
                                             <div class="flex items-center gap-4">
                                                 <img src="{{ $detail->product?->foto ? asset('storage/' . $detail->product->foto) : asset('images/banners/banner-2.webp') }}"
                                                     alt="{{ $detail->product?->nama_produk ?? 'Produk' }}"
@@ -60,11 +60,11 @@
                                                 </span>
                                             </div>
                                         </td>
-                                        <td class="font-semibold text-muted-dark">#{{ $detail->transaction_id }}</td>
-                                        <td class="text-muted">
+                                        <td data-label="Transaksi" class="font-semibold text-muted-dark">#{{ $detail->transaction_id }}</td>
+                                        <td data-label="Tanggal Selesai" class="text-muted">
                                             {{ $detail->transaction?->completed_at?->format('d M Y') }}
                                         </td>
-                                        <td class="text-right">
+                                        <td data-label="Aksi" class="text-right">
                                             <x-button :href="route('reviews.show', $detail)" size="sm">
                                                 Nilai
                                             </x-button>

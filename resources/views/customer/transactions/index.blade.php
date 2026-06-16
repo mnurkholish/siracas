@@ -66,16 +66,16 @@
                         <tbody>
                             @forelse ($transactions as $transaction)
                                 <tr>
-                                    <td class="font-semibold text-muted-dark">{{ $transaction->ringkasanProduk() }}</td>
-                                    <td class="text-muted">{{ $transaction->totalQuantity() }}</td>
-                                    <td class="font-black text-accent">
+                                    <td data-label="Produk" class="font-semibold text-muted-dark">{{ $transaction->ringkasanProduk() }}</td>
+                                    <td data-label="Quantity" class="text-muted">{{ $transaction->totalQuantity() }}</td>
+                                    <td data-label="Total Harga" class="font-black text-accent">
                                         Rp{{ number_format($transaction->totalHarga(), 0, ',', '.') }}
                                     </td>
-                                    <td class="text-muted">{{ $transaction->tanggal->format('d M Y') }}</td>
-                                    <td>
+                                    <td data-label="Tanggal" class="text-muted">{{ $transaction->tanggal->format('d M Y') }}</td>
+                                    <td data-label="Status">
                                         <x-badge :status="$transaction->status" />
                                     </td>
-                                    <td class="text-right">
+                                    <td data-label="Aksi" class="text-right">
                                         <div class="inline-flex flex-wrap justify-end gap-2">
                                             <x-button :href="route('transactions.show', $transaction)" size="sm">
                                                 Detail

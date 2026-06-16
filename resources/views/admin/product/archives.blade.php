@@ -37,26 +37,26 @@
         </a>
     </section>
 
-    <section class="overflow-hidden rounded-md bg-white shadow-sm">
+    <section class="table-wrap">
         <div class="overflow-x-auto">
-            <table class="w-full min-w-[920px] border-collapse text-left text-black">
+            <table class="admin-table min-w-[920px]">
                 <thead>
-                    <tr class="bg-secondary text-sm">
-                        <th class="w-20 px-6 py-5 text-center font-semibold">No.</th>
-                        <th class="px-6 py-5 font-semibold">Produk</th>
-                        <th class="px-6 py-5 font-semibold">Harga</th>
-                        <th class="px-6 py-5 font-semibold">Stok</th>
-                        <th class="px-6 py-5 font-semibold">Dihapus Pada</th>
-                        <th class="px-6 py-5 text-center font-semibold">Aksi</th>
+                    <tr>
+                        <th class="w-20 text-center">No.</th>
+                        <th>Produk</th>
+                        <th>Harga</th>
+                        <th>Stok</th>
+                        <th>Dihapus Pada</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200 text-sm">
+                <tbody>
                     @forelse ($products as $product)
-                        <tr class="transition hover:bg-gray-50">
-                            <td class="px-6 py-4 text-center">
+                        <tr>
+                            <td data-label="No." class="text-center">
                                 {{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}
                             </td>
-                            <td class="px-6 py-4">
+                            <td data-label="Produk">
                                 <div class="flex items-center gap-3">
                                     <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('images/logo.png') }}"
                                         alt="Foto {{ $product->nama_produk }}"
@@ -70,12 +70,12 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="px-6 py-4">Rp{{ number_format((float) $product->harga, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4">{{ $product->stok }} {{ strtoupper($product->satuan) }}</td>
-                            <td class="px-6 py-4">
+                            <td data-label="Harga">Rp{{ number_format((float) $product->harga, 0, ',', '.') }}</td>
+                            <td data-label="Stok">{{ $product->stok }} {{ strtoupper($product->satuan) }}</td>
+                            <td data-label="Dihapus Pada">
                                 {{ $product->deleted_at?->format('d/m/Y H:i') ?? '-' }}
                             </td>
-                            <td class="px-6 py-4">
+                            <td data-label="Aksi">
                                 <form action="{{ route('admin.products.restore', $product->id) }}" method="POST"
                                     class="flex justify-center">
                                     @csrf

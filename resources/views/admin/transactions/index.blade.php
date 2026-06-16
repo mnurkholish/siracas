@@ -96,26 +96,26 @@
                 <tbody>
                     @forelse ($transactions as $transaction)
                         <tr>
-                            <td class="font-semibold text-muted-dark">
+                            <td data-label="Customer" class="font-semibold text-muted-dark">
                                 {{ $transaction->user?->username ?? '-' }}
                             </td>
-                            <td class="text-gray-600">{{ $transaction->tanggal->format('d M Y H:i:s') }}</td>
-                            <td>
+                            <td data-label="Tanggal" class="text-gray-600">{{ $transaction->tanggal->format('d M Y H:i:s') }}</td>
+                            <td data-label="Status">
                                 <x-badge :status="$transaction->status" />
                             </td>
-                            <td class="font-semibold text-muted-dark">
+                            <td data-label="Total Bayar" class="font-semibold text-muted-dark">
                                 Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}
                             </td>
-                            <td>
+                            <td data-label="Status Garansi">
                                 <x-badge :status="$transaction->warranty_status" />
                             </td>
-                            <td class="font-semibold text-danger">
+                            <td data-label="Pengembalian" class="font-semibold text-danger">
                                 Rp{{ number_format($transaction->refundAmount(), 0, ',', '.') }}
                             </td>
-                            <td class="font-bold text-success">
+                            <td data-label="Pendapatan Bersih" class="font-bold text-success">
                                 Rp{{ number_format($transaction->pendapatanBersih(), 0, ',', '.') }}
                             </td>
-                            <td class="text-right">
+                            <td data-label="Aksi" class="text-right">
                                 <x-button :href="route('admin.transactions.show', $transaction)" size="sm">
                                     Detail
                                 </x-button>

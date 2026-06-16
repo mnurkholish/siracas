@@ -62,8 +62,8 @@
             </div>
         </section>
 
-        <section class="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
-            <div class="rounded-lg border border-border bg-white shadow-sm">
+        <section class="grid min-w-0 max-w-full gap-6 xl:grid-cols-[1.4fr_0.9fr]">
+            <div class="w-full min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-white shadow-sm">
                 <div
                     class="flex flex-col gap-3 border-b border-border-soft px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -76,7 +76,62 @@
                     </x-button>
                 </div>
 
-                <div class="overflow-x-auto">
+                <div class="grid max-w-full gap-3 p-3 sm:hidden">
+                    @forelse ($followUpTransactions as $transaction)
+                        <article class="max-w-full overflow-hidden rounded-lg border border-border-soft bg-white p-4 shadow-sm">
+                            <div class="grid gap-3">
+                                <div class="min-w-0 max-w-full">
+                                    <p class="text-xs font-bold uppercase text-muted">Order ID</p>
+                                    <p class="mt-1 break-words font-semibold text-muted-dark [overflow-wrap:anywhere]">
+                                        {{ $transaction->order_id ?: '#' . $transaction->id }}
+                                    </p>
+                                </div>
+                                <x-button :href="route('admin.transactions.show', $transaction)" size="sm" class="w-full">
+                                    Detail
+                                </x-button>
+                            </div>
+
+                            <div class="mt-4 grid gap-3 text-sm">
+                                <div class="grid min-w-0 gap-1">
+                                    <span class="font-bold text-muted">Customer</span>
+                                    <span class="min-w-0 break-words text-black [overflow-wrap:anywhere]">
+                                        {{ $transaction->user?->username ?? '-' }}
+                                    </span>
+                                </div>
+
+                                <div class="grid min-w-0 gap-1">
+                                    <span class="font-bold text-muted">Status</span>
+                                    <span class="flex min-w-0 flex-wrap gap-2">
+                                        <x-badge :status="$transaction->status" />
+                                        @if ($transaction->warranty_status === 'diajukan')
+                                            <x-badge status="diajukan">Garansi Diajukan</x-badge>
+                                        @endif
+                                    </span>
+                                </div>
+
+                                <div class="grid min-w-0 gap-1">
+                                    <span class="font-bold text-muted">Total</span>
+                                    <span class="min-w-0 break-words font-bold text-success">
+                                        Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}
+                                    </span>
+                                </div>
+
+                                <div class="grid min-w-0 gap-1">
+                                    <span class="font-bold text-muted">Tanggal</span>
+                                    <span class="min-w-0 break-words text-gray-600">
+                                        {{ $transaction->tanggal->format('d M Y H:i') }}
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+                    @empty
+                        <div class="rounded-lg border border-dashed border-border-strong bg-white px-4 py-8 text-center text-sm text-gray-500">
+                            Belum ada data
+                        </div>
+                    @endforelse
+                </div>
+
+                <div class="hidden overflow-x-auto sm:block">
                     <table class="admin-table min-w-[760px]">
                         <thead>
                             <tr>
@@ -91,11 +146,11 @@
                         <tbody>
                             @forelse ($followUpTransactions as $transaction)
                                 <tr>
-                                    <td class="font-semibold text-muted-dark">
+                                    <td data-label="Order ID" class="font-semibold text-muted-dark">
                                         {{ $transaction->order_id ?: '#' . $transaction->id }}
                                     </td>
-                                    <td>{{ $transaction->user?->username ?? '-' }}</td>
-                                    <td>
+                                    <td data-label="Customer">{{ $transaction->user?->username ?? '-' }}</td>
+                                    <td data-label="Status">
                                         <div class="flex flex-wrap gap-2">
                                             <x-badge :status="$transaction->status" />
                                             @if ($transaction->warranty_status === 'diajukan')
@@ -103,10 +158,10 @@
                                             @endif
                                         </div>
                                     </td>
-                                    <td class="font-bold text-success">
+                                    <td data-label="Total" class="font-bold text-success">
                                         Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}</td>
-                                    <td class="text-gray-600">{{ $transaction->tanggal->format('d M Y H:i') }}</td>
-                                    <td class="text-right">
+                                    <td data-label="Tanggal" class="text-gray-600">{{ $transaction->tanggal->format('d M Y H:i') }}</td>
+                                    <td data-label="Aksi" class="text-right">
                                         <x-button :href="route('admin.transactions.show', $transaction)" size="sm">
                                             Detail
                                         </x-button>
@@ -122,7 +177,7 @@
                 </div>
             </div>
 
-            <div class="rounded-lg border border-border bg-white shadow-sm">
+            <div class="w-full min-w-0 max-w-full overflow-hidden rounded-lg border border-border bg-white shadow-sm">
                 <div
                     class="flex flex-col gap-3 border-b border-border-soft px-5 py-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -134,16 +189,16 @@
                     </x-button>
                 </div>
 
-                <div class="divide-y divide-border-soft">
+                <div class="max-w-full divide-y divide-border-soft">
                     @forelse ($lowStockProducts as $product)
-                        <div class="flex items-center justify-between gap-4 px-5 py-4">
-                            <div class="min-w-0">
-                                <p class="truncate font-semibold text-black">{{ $product->nama_produk }}</p>
+                        <div class="grid min-w-0 max-w-full gap-3 px-5 py-4 sm:flex sm:items-center sm:justify-between sm:gap-4">
+                            <div class="min-w-0 max-w-full">
+                                <p class="whitespace-normal break-words font-semibold text-black [overflow-wrap:anywhere]">{{ $product->nama_produk }}</p>
                                 <p class="mt-1 text-xs text-gray-500">
                                     {{ \App\Models\Product::SATUAN[$product->satuan] ?? ($product->satuan ?? '-') }}
                                 </p>
                             </div>
-                            <span class="rounded-full bg-danger-soft px-3 py-1 text-xs font-black text-red-700">
+                            <span class="w-fit rounded-full bg-danger-soft px-3 py-1 text-xs font-black text-red-700 sm:shrink-0">
                                 {{ number_format($product->stok, 0, ',', '.') }} stok
                             </span>
                         </div>
@@ -175,14 +230,14 @@
                     <tbody>
                         @forelse ($latestTransactions as $transaction)
                             <tr>
-                                <td class="font-semibold text-muted-dark">
+                                <td data-label="Order ID" class="font-semibold text-muted-dark">
                                     {{ $transaction->order_id ?: '#' . $transaction->id }}</td>
-                                <td>{{ $transaction->user?->username ?? '-' }}</td>
-                                <td><x-badge :status="$transaction->status" /></td>
-                                <td class="font-bold text-success">
+                                <td data-label="Customer">{{ $transaction->user?->username ?? '-' }}</td>
+                                <td data-label="Status"><x-badge :status="$transaction->status" /></td>
+                                <td data-label="Total" class="font-bold text-success">
                                     Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}</td>
-                                <td class="text-gray-600">{{ $transaction->tanggal->format('d M Y H:i') }}</td>
-                                <td class="text-right">
+                                <td data-label="Tanggal" class="text-gray-600">{{ $transaction->tanggal->format('d M Y H:i') }}</td>
+                                <td data-label="Aksi" class="text-right">
                                     <x-button :href="route('admin.transactions.show', $transaction)" size="sm">
                                         Detail
                                     </x-button>

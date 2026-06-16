@@ -70,7 +70,7 @@
                     <tbody>
                         @forelse ($campaigns as $campaign)
                             <tr>
-                                <td>
+                                <td data-label="Judul">
                                     <p class="font-semibold text-muted-dark">{{ $campaign->title }}</p>
                                     <p class="mt-1 line-clamp-1 text-xs text-gray-500">{{ $campaign->message }}</p>
                                     @if ($campaign->url)
@@ -79,14 +79,14 @@
                                             kampanye</a>
                                     @endif
                                 </td>
-                                <td>{{ $campaign->typeLabel() }}</td>
-                                <td>
+                                <td data-label="Tipe">{{ $campaign->typeLabel() }}</td>
+                                <td data-label="Status">
                                     <x-badge :variant="$campaign->is_active ? 'success' : 'muted'">
                                         {{ $campaign->is_active ? 'Aktif' : 'Nonaktif' }}
                                     </x-badge>
                                 </td>
-                                <td>{{ $campaign->published_at?->format('d M Y H:i') ?? '-' }}</td>
-                                <td>
+                                <td data-label="Waktu Publish">{{ $campaign->published_at?->format('d M Y H:i') ?? '-' }}</td>
+                                <td data-label="Aksi">
                                     <div class="flex flex-wrap items-center justify-center gap-2">
                                         <x-button type="button" @click="openEdit({{ $campaign->id }})"
                                             variant="secondary" size="sm">
