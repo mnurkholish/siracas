@@ -1,5 +1,6 @@
 <?php
 
+use App\Exports\ReportExport;
 use App\Services\ReportService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -72,6 +73,28 @@ it('mengestimasi pendapatan bulan berjalan dengan weekday-adjusted EWMA', functi
     } finally {
         Carbon::setTestNow();
     }
+});
+
+it('mengisi jumlah terjual dan total omzet pada sheet produk export laporan', function () {
+    $customer = customerUser();
+    $product = testProduct(['nama_produk' => 'Produk Export', 'harga' => 15000, 'stok' => 1]);
+
+    testTransactionWithDetail($customer, $product, [
+        'status' => 'selesai',
+        'tanggal' => now(),
+        'completed_at' => now(),
+    ], [
+        'quantity' => 3,
+        'harga_saat_transaksi' => 15000,
+    ]);
+
+    $report = app(ReportService::class)->build(now()->month, now()->year);
+    $productSheet = (new ReportExport($report))->sheets()[3]->array();
+    $productRow = collect($productSheet)->first(fn (array $row) => $row[0] === 'Produk Export');
+
+    expect($productRow)->not->toBeNull()
+        ->and($productRow[1])->toBe(3)
+        ->and((float) $productRow[2])->toBe(45000.0);
 });
 
 it('mencegah customer mengakses laporan penjualan', function () {

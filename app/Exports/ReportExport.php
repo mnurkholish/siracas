@@ -6,9 +6,7 @@ use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
 class ReportExport implements WithMultipleSheets
 {
-    public function __construct(private readonly array $report)
-    {
-    }
+    public function __construct(private readonly array $report) {}
 
     public function sheets(): array
     {
@@ -91,15 +89,43 @@ class ReportExport implements WithMultipleSheets
     private function productSheet(): array
     {
         $stats = $this->report['productStats'];
-        $products = collect()
-            ->merge($stats['bestSelling'])
-            ->merge($stats['highestRevenue'])
-            ->merge($stats['lowStock'])
-            ->merge($stats['lowRating'])
-            ->keyBy(fn ($product) => (int) data_get($product, 'id', 0))
-            ->filter(fn ($product, int $id) => $id > 0);
+        $products = collect([
+            ...collect($stats['bestSelling'])->all(),
+            ...collect($stats['highestRevenue'])->all(),
+            ...collect($stats['lowStock'])->all(),
+            ...collect($stats['lowRating'])->all(),
+        ])
+            ->reduce(function (array $products, $product) {
+                $id = (int) data_get($product, 'id', 0);
 
-        return $products
+                if ($id <= 0) {
+                    return $products;
+                }
+
+                $current = $products[$id] ?? [
+                    'id' => $id,
+                    'name' => '-',
+                    'quantity_sold' => 0,
+                    'total_revenue' => 0,
+                    'stock' => 0,
+                    'average_rating' => null,
+                    'reviews_count' => 0,
+                ];
+
+                $products[$id] = [
+                    'id' => $id,
+                    'name' => data_get($product, 'name', $current['name']),
+                    'quantity_sold' => max((int) $current['quantity_sold'], (int) data_get($product, 'quantity_sold', 0)),
+                    'total_revenue' => max((float) $current['total_revenue'], (float) data_get($product, 'total_revenue', 0)),
+                    'stock' => data_get($product, 'stock', $current['stock']),
+                    'average_rating' => data_get($product, 'average_rating', $current['average_rating']),
+                    'reviews_count' => max((int) $current['reviews_count'], (int) data_get($product, 'reviews_count', 0)),
+                ];
+
+                return $products;
+            }, []);
+
+        return collect($products)
             ->map(function ($product) use ($stats) {
                 $id = (int) data_get($product, 'id');
                 $notes = collect([
