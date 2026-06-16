@@ -146,8 +146,8 @@
         </div>
 
         @if ($reviews->hasPages())
-            <div class="border-t border-gray-100 bg-white px-6 py-4">
-                {{ $reviews->links() }}
+            <div class="border-t border-gray-100 bg-white px-4 py-6">
+                <x-pagination :paginator="$reviews" />
             </div>
         @endif
     </section>

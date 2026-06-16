@@ -163,8 +163,8 @@
                 </div>
 
                 @if ($products->hasPages())
-                    <div class="mt-8 rounded-lg border border-border bg-white px-4 py-4 shadow-sm">
-                        {{ $products->links() }}
+                    <div class="mt-8 rounded-lg border border-border bg-white px-4 py-6 shadow-sm">
+                        <x-pagination :paginator="$products" />
                     </div>
                 @endif
             </div>

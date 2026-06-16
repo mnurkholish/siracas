@@ -100,8 +100,8 @@
             </div>
 
             @if ($notifications->hasPages())
-                <div class="mt-6 rounded-lg border border-border bg-white px-5 py-4 shadow-sm">
-                    {{ $notifications->links() }}
+                <div class="mt-6 rounded-lg border border-border bg-white px-4 py-6 shadow-sm">
+                    <x-pagination :paginator="$notifications" />
                 </div>
             @endif
         </section>

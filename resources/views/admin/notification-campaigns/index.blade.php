@@ -132,8 +132,8 @@
             </div>
 
             @if ($campaigns->hasPages())
-                <div class="border-t border-gray-100 px-5 py-4">
-                    {{ $campaigns->links() }}
+                <div class="border-t border-gray-100 px-4 py-6">
+                    <x-pagination :paginator="$campaigns" />
                 </div>
             @endif
         </section>

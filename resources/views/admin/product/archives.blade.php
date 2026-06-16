@@ -105,7 +105,7 @@
 
         @if ($products->hasPages())
             <div class="border-t border-gray-100 px-4 py-6">
-                {{ $products->links() }}
+                <x-pagination :paginator="$products" />
             </div>
         @endif
     </section>

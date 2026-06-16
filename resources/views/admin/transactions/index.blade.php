@@ -133,8 +133,8 @@
         </div>
 
         @if ($transactions->hasPages())
-            <div class="border-t border-gray-100 px-6 py-4">
-                {{ $transactions->links() }}
+            <div class="border-t border-gray-100 px-4 py-6">
+                <x-pagination :paginator="$transactions" />
             </div>
         @endif
     </section>

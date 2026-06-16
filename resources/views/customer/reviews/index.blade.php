@@ -74,7 +74,7 @@
 
                 @if ($reviews->hasPages())
                     <div class="mt-6">
-                        {{ $reviews->links() }}
+                        <x-pagination :paginator="$reviews" />
                     </div>
                 @endif
             @endif
