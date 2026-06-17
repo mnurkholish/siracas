@@ -131,25 +131,25 @@
                     @endforelse
                 </div>
 
-                <div class="hidden overflow-x-auto sm:block">
-                    <table class="admin-table min-w-[760px]">
+                <div class="hidden sm:block">
+                    <table class="admin-table table-fixed [&_td]:px-4 [&_th]:px-4">
                         <thead>
                             <tr>
-                                <th>Order ID</th>
-                                <th>Customer</th>
-                                <th>Status</th>
-                                <th>Total</th>
-                                <th>Tanggal</th>
-                                <th class="text-right">Aksi</th>
+                                <th class="w-[24%]">Order ID</th>
+                                <th class="w-[14%]">Customer</th>
+                                <th class="w-[18%]">Status</th>
+                                <th class="w-[14%]">Total</th>
+                                <th class="w-[16%]">Tanggal</th>
+                                <th class="w-[14%] text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($followUpTransactions as $transaction)
                                 <tr>
-                                    <td data-label="Order ID" class="font-semibold text-muted-dark">
+                                    <td data-label="Order ID" class="break-words font-semibold text-muted-dark [overflow-wrap:anywhere]">
                                         {{ $transaction->order_id ?: '#' . $transaction->id }}
                                     </td>
-                                    <td data-label="Customer">{{ $transaction->user?->username ?? '-' }}</td>
+                                    <td data-label="Customer" class="break-words [overflow-wrap:anywhere]">{{ $transaction->user?->username ?? '-' }}</td>
                                     <td data-label="Status">
                                         <div class="flex flex-wrap gap-2">
                                             <x-badge :status="$transaction->status" />
@@ -160,7 +160,7 @@
                                     </td>
                                     <td data-label="Total" class="font-bold text-success">
                                         Rp{{ number_format($transaction->totalAkhir(), 0, ',', '.') }}</td>
-                                    <td data-label="Tanggal" class="text-gray-600">{{ $transaction->tanggal->format('d M Y H:i') }}</td>
+                                    <td data-label="Tanggal" class="break-words text-gray-600">{{ $transaction->tanggal->format('d M Y H:i') }}</td>
                                     <td data-label="Aksi" class="text-right">
                                         <x-button :href="route('admin.transactions.show', $transaction)" size="sm">
                                             Detail
