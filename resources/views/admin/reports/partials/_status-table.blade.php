@@ -16,11 +16,11 @@
             <tbody>
                 @forelse ($statusCounts as $status)
                     <tr>
-                        <td>
+                        <td data-label="Status">
                             <x-badge :status="$status['status']" />
                         </td>
-                        <td class="font-bold text-black">{{ number_format($status['count'], 0, ',', '.') }}</td>
-                        <td class="text-gray-500">
+                        <td data-label="Jumlah Transaksi" class="font-bold text-black">{{ number_format($status['count'], 0, ',', '.') }}</td>
+                        <td data-label="Keterangan" class="text-gray-500">
                             {{ in_array($status['status'], $validStatuses, true) ? 'Masuk perhitungan pendapatan' : 'Tidak masuk perhitungan pendapatan' }}
                         </td>
                     </tr>

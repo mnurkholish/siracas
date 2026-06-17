@@ -71,22 +71,22 @@
                 <tbody>
                     @forelse($customers as $customer)
                         <tr>
-                            <td>{{ $customer->username }}</td>
-                            <td>
+                            <td data-label="Username">{{ $customer->username }}</td>
+                            <td data-label="Foto Profil">
                                 <div class="flex justify-center">
                                     <img src="{{ $customer->foto_profil ? asset('storage/' . $customer->foto_profil) : asset('images/default-avatar.png') }}"
                                         alt="Foto profil {{ $customer->username }}"
                                         class="h-8 w-8 rounded-full object-cover">
                                 </div>
                             </td>
-                            <td>{{ $customer->email }}</td>
-                            <td>
+                            <td data-label="Email">{{ $customer->email }}</td>
+                            <td data-label="Status">
                                 <span
                                     class="inline-flex rounded-full px-3 py-1 text-xs font-bold {{ $customer->is_active ? 'bg-success-soft text-success' : 'bg-danger-soft text-danger' }}">
                                     {{ $customer->is_active ? 'Aktif' : 'Nonaktif' }}
                                 </span>
                             </td>
-                            <td>
+                            <td data-label="Aksi">
                                 <div class="flex items-center justify-center gap-2">
                                     <button type="button" onclick="openModal({{ $customer->id }})"
                                         class="inline-flex h-9 w-9 items-center justify-center rounded-full text-indigo-600 transition hover:bg-indigo-50 hover:text-indigo-700"

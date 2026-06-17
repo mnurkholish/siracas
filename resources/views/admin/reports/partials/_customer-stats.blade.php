@@ -39,9 +39,9 @@
                 <tbody>
                     @forelse ($customerStats['topBuyers'] as $customer)
                         <tr>
-                            <td class="font-semibold text-muted-dark">{{ $customer->name }}</td>
-                            <td>{{ number_format((int) $customer->transaction_count, 0, ',', '.') }}</td>
-                            <td class="font-bold text-success">Rp{{ number_format((float) $customer->total_spent, 0, ',', '.') }}</td>
+                            <td data-label="Customer" class="font-semibold text-muted-dark">{{ $customer->name }}</td>
+                            <td data-label="Transaksi">{{ number_format((int) $customer->transaction_count, 0, ',', '.') }}</td>
+                            <td data-label="Total Pembelian" class="font-bold text-success">Rp{{ number_format((float) $customer->total_spent, 0, ',', '.') }}</td>
                         </tr>
                     @empty
                         <tr>

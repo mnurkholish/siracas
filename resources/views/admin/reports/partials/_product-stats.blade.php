@@ -7,18 +7,18 @@
     ];
 @endphp
 
-<section class="rounded-lg border border-border bg-white p-5 shadow-sm">
+<section class="max-w-full overflow-hidden rounded-lg border border-border bg-white p-4 shadow-sm sm:p-5">
     <div class="mb-5 flex flex-col gap-1">
         <h2 class="text-lg font-bold text-black">Statistik Produk</h2>
         <p class="text-sm text-gray-500">Top 5 produk untuk setiap kategori pada periode laporan.</p>
     </div>
 
-    <div class="grid gap-4 lg:grid-cols-2">
+    <div class="grid min-w-0 max-w-full gap-4 lg:grid-cols-2">
         @foreach ($productSections as $section)
-            <div class="rounded-lg border border-border-soft bg-surface p-4">
-                <h3 class="mb-4 text-sm font-black uppercase text-muted-dark">{{ $section['title'] }}</h3>
+            <div class="min-w-0 max-w-full rounded-lg border border-border-soft bg-surface p-3 sm:p-4">
+                <h3 class="mb-4 break-words text-sm font-black uppercase text-muted-dark">{{ $section['title'] }}</h3>
 
-                <div class="space-y-3">
+                <div class="min-w-0 space-y-3">
                     @forelse ($section['items'] as $product)
                         @php
                             $metric = data_get($product, $section['metric'], 0);
@@ -26,9 +26,9 @@
                                 ? 'Rp' . number_format((float) $metric, 0, ',', '.')
                                 : number_format((float) $metric, (string) $section['metric'] === 'average_rating' ? 1 : 0, ',', '.') . ' ' . ($section['suffix'] ?? '');
                         @endphp
-                        <div class="flex items-center justify-between gap-4 rounded-lg bg-white px-4 py-3 shadow-sm">
-                            <div class="min-w-0">
-                                <p class="truncate font-semibold text-black">{{ data_get($product, 'name', '-') }}</p>
+                        <div class="flex min-w-0 max-w-full flex-col items-start gap-3 rounded-lg bg-white px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+                            <div class="min-w-0 max-w-full">
+                                <p class="whitespace-normal break-words font-semibold leading-6 text-black [overflow-wrap:anywhere]">{{ data_get($product, 'name', '-') }}</p>
                                 <p class="mt-1 text-xs text-gray-500">
                                     Stok {{ number_format((int) data_get($product, 'stock', 0), 0, ',', '.') }}
                                     @if (data_get($product, 'reviews_count') !== null)
@@ -37,7 +37,7 @@
                                     @endif
                                 </p>
                             </div>
-                            <span class="shrink-0 text-sm font-black text-primary-dark">{{ $metricText }}</span>
+                            <span class="max-w-full break-words text-sm font-black text-primary-dark [overflow-wrap:anywhere] sm:shrink-0 sm:text-right">{{ $metricText }}</span>
                         </div>
                     @empty
                         <div class="rounded-lg border border-dashed border-border-strong bg-white px-4 py-8 text-center text-sm text-gray-500">

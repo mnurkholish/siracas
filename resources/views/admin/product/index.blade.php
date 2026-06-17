@@ -90,10 +90,10 @@
                     <tbody>
                         @forelse ($products as $product)
                             <tr>
-                                <td class="text-center">
+                                <td data-label="No." class="text-center">
                                     {{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}
                                 </td>
-                                <td>
+                                <td data-label="Produk">
                                     <div class="flex items-center gap-3">
                                         <img src="{{ $product->foto ? asset('storage/' . $product->foto) : asset('images/logo.png') }}"
                                             alt="Foto {{ $product->nama_produk }}"
@@ -108,10 +108,10 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>Rp{{ number_format((float) $product->harga, 0, ',', '.') }}</td>
-                                <td>{{ $product->stok }}</td>
-                                <td>{{ strtoupper($product->satuan) }}</td>
-                                <td>
+                                <td data-label="Harga">Rp{{ number_format((float) $product->harga, 0, ',', '.') }}</td>
+                                <td data-label="Stok">{{ $product->stok }}</td>
+                                <td data-label="Satuan">{{ strtoupper($product->satuan) }}</td>
+                                <td data-label="Aksi">
                                     <div class="flex items-center justify-center gap-2">
                                         <button type="button" @click="openDetail({{ $product->id }})"
                                             class="inline-flex h-9 w-9 items-center justify-center rounded-full text-indigo-600 transition hover:bg-indigo-50"

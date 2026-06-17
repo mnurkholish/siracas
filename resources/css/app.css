@@ -218,3 +218,116 @@
         @apply max-h-[calc(100vh-3rem)] w-full overflow-y-auto rounded-lg bg-white p-5 shadow-2xl sm:p-8;
     }
 }
+
+@media (max-width: 639px) {
+    main,
+    section,
+    article,
+    .card {
+        max-width: 100%;
+    }
+
+    .table-wrap {
+        overflow: visible;
+    }
+
+    .overflow-x-auto:has(> .admin-table),
+    .overflow-x-auto:has(> .data-table) {
+        overflow-x: visible;
+    }
+
+    .admin-table,
+    .data-table {
+        box-sizing: border-box;
+        min-width: 0 !important;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .admin-table thead,
+    .data-table thead {
+        display: none;
+    }
+
+    .admin-table,
+    .admin-table tbody,
+    .admin-table tr,
+    .admin-table td,
+    .data-table,
+    .data-table tbody,
+    .data-table tr,
+    .data-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .admin-table tbody,
+    .data-table tbody {
+        display: grid;
+        gap: 0.75rem;
+        padding: 0.625rem;
+    }
+
+    .admin-table tr,
+    .data-table tr {
+        box-sizing: border-box;
+        overflow: hidden;
+        border: 1px solid var(--color-border-soft);
+        border-radius: 0.5rem;
+        background: white;
+        box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+    }
+
+    .admin-table tbody tr:hover,
+    .data-table tbody tr:hover {
+        background: white;
+    }
+
+    .admin-table td,
+    .data-table td {
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        border-bottom: 1px solid var(--color-border-soft);
+        padding: 0.875rem 1rem !important;
+        text-align: right;
+    }
+
+    .admin-table td:last-child,
+    .data-table td:last-child {
+        border-bottom: 0;
+    }
+
+    .admin-table td::before,
+    .data-table td::before {
+        content: attr(data-label);
+        max-width: 45%;
+        flex: 0 0 auto;
+        text-align: left;
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: var(--color-muted);
+    }
+
+    .admin-table td:not([data-label]),
+    .admin-table td[colspan],
+    .data-table td:not([data-label]),
+    .data-table td[colspan] {
+        display: block;
+        text-align: center;
+    }
+
+    .admin-table td:not([data-label])::before,
+    .admin-table td[colspan]::before,
+    .data-table td:not([data-label])::before,
+    .data-table td[colspan]::before {
+        content: none;
+    }
+
+    .admin-table td > *,
+    .data-table td > * {
+        min-width: 0;
+    }
+}
