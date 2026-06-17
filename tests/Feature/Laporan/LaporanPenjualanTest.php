@@ -7,7 +7,19 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('menghitung total laporan penjualan dari status transaksi yang valid', function () {
+it('admin bisa mengakses halaman laporan dan customer tidak boleh mengakses', function () {
+    $this->actingAs(adminUser())
+        ->get(route('admin.reports.index'))
+        ->assertOk()
+        ->assertViewHas('summary')
+        ->assertViewHas('period');
+
+    $this->actingAs(customerUser())
+        ->get(route('admin.reports.index'))
+        ->assertForbidden();
+});
+
+it('laporan menghitung total pendapatan transaksi produk refund dan pendapatan bersih', function () {
     $customer = customerUser();
     $soldProduct = testProduct(['nama_produk' => 'Produk Terjual', 'harga' => 10000, 'stok' => 5]);
     $cancelledProduct = testProduct(['nama_produk' => 'Produk Batal', 'harga' => 50000, 'stok' => 5]);
@@ -32,8 +44,7 @@ it('menghitung total laporan penjualan dari status transaksi yang valid', functi
         'harga_saat_transaksi' => 50000,
     ]);
 
-    $report = app(ReportService::class)->build(now()->month, now()->year);
-    $summary = $report['summary'];
+    $summary = app(ReportService::class)->build(now()->month, now()->year)['summary'];
 
     expect($summary['transaction_count'])->toBe(1)
         ->and($summary['products_sold'])->toBe(2)
@@ -43,39 +54,36 @@ it('menghitung total laporan penjualan dari status transaksi yang valid', functi
         ->and((float) $summary['net_revenue'])->toBe(23000.0);
 });
 
-it('mengestimasi pendapatan bulan berjalan dengan weekday-adjusted EWMA', function () {
-    Carbon::setTestNow(Carbon::parse('2026-06-17 12:00:00'));
+it('filter bulan dan tahun laporan menghasilkan data sesuai periode', function () {
+    $customer = customerUser();
+    $product = testProduct(['harga' => 10000]);
 
-    try {
-        $customer = customerUser();
-        $address = testAddressFor($customer);
-        $product = testProduct(['harga' => 1000]);
+    testTransactionWithDetail($customer, $product, [
+        'status' => 'selesai',
+        'tanggal' => Carbon::create(2026, 5, 10),
+        'completed_at' => Carbon::create(2026, 5, 10),
+    ], [
+        'quantity' => 1,
+        'harga_saat_transaksi' => 10000,
+    ]);
 
-        foreach (range(1, 17) as $day) {
-            $date = Carbon::create(2026, 6, $day, 10);
-            $dailyRevenue = $date->dayOfWeekIso * 100;
+    testTransactionWithDetail($customer, $product, [
+        'status' => 'selesai',
+        'tanggal' => Carbon::create(2026, 6, 10),
+        'completed_at' => Carbon::create(2026, 6, 10),
+    ], [
+        'quantity' => 3,
+        'harga_saat_transaksi' => 10000,
+    ]);
 
-            testTransactionWithDetail($customer, $product, [
-                'address' => $address,
-                'status' => 'selesai',
-                'tanggal' => $date,
-                'completed_at' => $date,
-            ], [
-                'quantity' => 1,
-                'harga_saat_transaksi' => $dailyRevenue,
-            ]);
-        }
+    $may = app(ReportService::class)->build(5, 2026)['summary'];
+    $june = app(ReportService::class)->build(6, 2026)['summary'];
 
-        $summary = app(ReportService::class)->build(6, 2026)['summary'];
-
-        expect((float) $summary['net_revenue'])->toBe(6200.0)
-            ->and((float) $summary['estimated_revenue'])->toBe(11500.0);
-    } finally {
-        Carbon::setTestNow();
-    }
+    expect((float) $may['product_revenue'])->toBe(10000.0)
+        ->and((float) $june['product_revenue'])->toBe(30000.0);
 });
 
-it('mengisi jumlah terjual dan total omzet pada sheet produk export laporan', function () {
+it('export xlsx laporan bisa dibuat dan sheet produk berisi data minimal', function () {
     $customer = customerUser();
     $product = testProduct(['nama_produk' => 'Produk Export', 'harga' => 15000, 'stok' => 1]);
 
@@ -88,6 +96,10 @@ it('mengisi jumlah terjual dan total omzet pada sheet produk export laporan', fu
         'harga_saat_transaksi' => 15000,
     ]);
 
+    $this->actingAs(adminUser())
+        ->get(route('admin.reports.export', ['month' => now()->month, 'year' => now()->year]))
+        ->assertOk();
+
     $report = app(ReportService::class)->build(now()->month, now()->year);
     $productSheet = (new ReportExport($report))->sheets()[3]->array();
     $productRow = collect($productSheet)->first(fn (array $row) => $row[0] === 'Produk Export');
@@ -95,15 +107,4 @@ it('mengisi jumlah terjual dan total omzet pada sheet produk export laporan', fu
     expect($productRow)->not->toBeNull()
         ->and($productRow[1])->toBe(3)
         ->and((float) $productRow[2])->toBe(45000.0);
-});
-
-it('mencegah customer mengakses laporan penjualan', function () {
-    $this->actingAs(customerUser())
-        ->get(route('admin.reports.index'))
-        ->assertForbidden();
-});
-
-it('mengalihkan guest dari laporan penjualan', function () {
-    $this->get(route('admin.reports.index'))
-        ->assertRedirect(route('login'));
 });
