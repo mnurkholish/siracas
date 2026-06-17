@@ -19,21 +19,6 @@ pest()->extend(TestCase::class)
 
 /*
 |--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
-
-/*
-|--------------------------------------------------------------------------
 | Functions
 |--------------------------------------------------------------------------
 |
@@ -50,11 +35,6 @@ function adminUser(array $attributes = []): App\Models\User
         'is_active' => true,
         ...$attributes,
     ]);
-}
-
-function validPassword(): string
-{
-    return 'Valid123!';
 }
 
 function customerUser(array $attributes = []): App\Models\User
@@ -141,30 +121,4 @@ function testTransactionWithDetail(
     ]);
 
     return [$transaction, $detail];
-}
-
-function testReview(
-    App\Models\User $user,
-    App\Models\Product $product,
-    App\Models\TransactionDetail $detail,
-    array $attributes = [],
-): App\Models\Review {
-    return App\Models\Review::create([
-        'user_id' => $user->id,
-        'product_id' => $product->id,
-        'transaction_detail_id' => $detail->id,
-        'rating' => 4,
-        'isi' => 'Review test.',
-        ...$attributes,
-    ]);
-}
-
-function testNotificationCampaign(array $attributes = []): App\Models\NotificationCampaign
-{
-    return App\Models\NotificationCampaign::create([
-        'type' => 'promo',
-        'title' => 'Promo Test',
-        'message' => 'Diskon khusus testing.',
-        ...$attributes,
-    ]);
 }
