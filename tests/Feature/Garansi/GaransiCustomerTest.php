@@ -62,7 +62,7 @@ it('customer tidak bisa mengajukan garansi untuk transaksi milik customer lain',
         ->assertForbidden();
 });
 
-it('link WhatsApp garansi tersedia pada detail transaksi diterima jika admin memiliki nomor HP', function () {
+it('link WhatsApp garansi tersedia pada detail transaksi', function () {
     adminUser(['nomor_hp' => '081111111111']);
     $customer = customerUser();
     [$transaction] = testTransactionWithDetail($customer, testProduct(), [
