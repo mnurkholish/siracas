@@ -32,6 +32,15 @@
             $payload = $popupNotification->data;
             $popupTitle = $payload['title'] ?? 'Notifikasi';
             $popupMessage = $payload['message'] ?? '-';
+            $popupImageUrl = trim((string) ($payload['image_url'] ?? ''));
+
+            if ($popupImageUrl === '' && isset($payload['campaign_id'])) {
+                $campaignImage = \App\Models\NotificationCampaign::query()
+                    ->whereKey($payload['campaign_id'])
+                    ->value('image');
+
+                $popupImageUrl = $campaignImage ? asset('storage/' . $campaignImage) : '';
+            }
 
             if ($user->role === 'admin') {
                 $popupTitle = 'Notifikasi Transaksi';
@@ -48,7 +57,12 @@
             <div class="flex items-start gap-4 p-4">
                 <div
                     class="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-soft/80 text-primary-dark">
-                    <x-icons.bell class="h-5 w-5" />
+                    @if ($popupImageUrl !== '')
+                        <img src="{{ $popupImageUrl }}" alt="{{ $popupTitle }}"
+                            class="h-10 w-10 rounded-md object-cover">
+                    @else
+                        <x-icons.bell class="h-5 w-5" />
+                    @endif
                 </div>
 
                 <div class="min-w-0 flex-1">

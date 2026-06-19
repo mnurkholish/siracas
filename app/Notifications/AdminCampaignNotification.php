@@ -26,6 +26,7 @@ class AdminCampaignNotification extends Notification
             'title' => $this->campaign->title,
             'message' => $this->campaign->message,
             'url' => filled($this->campaign->url) ? $this->campaign->url : null,
+            'image_url' => $this->campaign->image ? asset('storage/' . $this->campaign->image) : null,
             'type' => $this->campaign->type,
         ];
     }

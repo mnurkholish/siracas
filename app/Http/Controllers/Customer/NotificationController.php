@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Models\NotificationCampaign;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +16,19 @@ class NotificationController extends Controller
             ->notifications()
             ->latest()
             ->paginate(10);
+        $campaignIds = $notifications
+            ->getCollection()
+            ->map(fn (DatabaseNotification $notification) => $notification->data['campaign_id'] ?? null)
+            ->filter()
+            ->unique()
+            ->values();
+        $campaignImages = NotificationCampaign::query()
+            ->whereKey($campaignIds)
+            ->whereNotNull('image')
+            ->pluck('image', 'id')
+            ->map(fn (string $image) => asset('storage/' . $image));
 
-        return view('customer.notifications.index', compact('notifications'));
+        return view('customer.notifications.index', compact('notifications', 'campaignImages'));
     }
 
     public function read(DatabaseNotification $notification)

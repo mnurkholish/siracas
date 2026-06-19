@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\NotificationCampaign;
+use App\Models\Product;
 use App\Models\User;
 use App\Notifications\AdminCampaignNotification;
 use Illuminate\Http\Request;
@@ -30,9 +31,14 @@ class NotificationCampaignController extends Controller
             ->latest()
             ->paginate(8)
             ->withQueryString();
+        $products = Product::query()
+            ->latest()
+            ->limit(10)
+            ->get(['id', 'nama_produk']);
 
         return view('admin.notification-campaigns.index', [
             'campaigns' => $campaigns,
+            'products' => $products,
             'types' => NotificationCampaign::TYPES,
         ]);
     }
@@ -127,6 +133,7 @@ class NotificationCampaignController extends Controller
             'type' => ['required', Rule::in(array_keys(NotificationCampaign::TYPES))],
             'title' => ['required', 'string', 'max:160'],
             'message' => ['required', 'string', 'max:1000'],
+            'product_id' => ['nullable', 'required_if:type,product', 'integer', 'exists:products,id'],
             'url' => ['nullable', 'string', 'max:255'],
             'image' => ['sometimes', 'nullable', 'image', 'max:2048'],
         ], [
@@ -134,11 +141,20 @@ class NotificationCampaignController extends Controller
             'type.in' => 'Tipe notifikasi tidak valid.',
             'title.required' => 'Judul wajib diisi.',
             'message.required' => 'Pesan wajib diisi.',
+            'product_id.required_if' => 'Produk wajib dipilih untuk notifikasi produk baru.',
+            'product_id.exists' => 'Produk tidak valid.',
             'image.image' => 'Gambar harus berupa file gambar.',
             'image.max' => 'Ukuran gambar maksimal 2 MB.',
         ]);
 
-        $data['url'] = filled($data['url'] ?? null) ? trim($data['url']) : null;
+        if ($data['type'] === 'product') {
+            $product = Product::query()->findOrFail($data['product_id']);
+            $data['url'] = route('products.show', $product, absolute: false);
+        } else {
+            $data['url'] = filled($data['url'] ?? null) ? trim($data['url']) : null;
+        }
+
+        unset($data['product_id']);
 
         return $data;
     }

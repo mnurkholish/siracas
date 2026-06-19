@@ -43,6 +43,10 @@
                         $payload = $notification->data;
                         $isUnread = is_null($notification->read_at);
                         $detailUrl = trim((string) ($payload['url'] ?? ''));
+                        $imageUrl = trim((string) ($payload['image_url'] ?? ''));
+                        $imageUrl = $imageUrl !== ''
+                            ? $imageUrl
+                            : (string) ($campaignImages[(int) ($payload['campaign_id'] ?? 0)] ?? '');
                     @endphp
 
                     <article class="rounded-lg border {{ $isUnread ? 'border-primary bg-white shadow-sm' : 'border-border bg-white/75' }} p-5">
@@ -59,6 +63,16 @@
 
                                 <h2 class="mt-3 text-lg font-black text-text-body">{{ $payload['title'] ?? 'Notifikasi' }}</h2>
                                 <p class="mt-2 text-sm leading-6 text-muted">{{ $payload['message'] ?? '-' }}</p>
+
+                                @if ($imageUrl !== '')
+                                    <div class="mt-3 overflow-hidden rounded-md border border-border"
+                                        style="width: 56px; height: 56px; aspect-ratio: 1 / 1;">
+                                        <img src="{{ $imageUrl }}" alt="{{ $payload['title'] ?? 'Notifikasi' }}"
+                                            class="block"
+                                            style="width: 56px; height: 56px; object-fit: cover; aspect-ratio: 1 / 1;">
+                                    </div>
+                                @endif
+
                                 <p class="mt-3 text-xs font-semibold text-muted-light">
                                     {{ $notification->created_at->format('d M Y H:i') }}
                                 </p>

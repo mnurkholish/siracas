@@ -1,6 +1,15 @@
 @php
     $oldContext = old('form_context');
     $oldCampaignId = old('campaign_id');
+    $productRows = $products
+        ->map(
+            fn($product) => [
+                'id' => $product->id,
+                'name' => $product->nama_produk,
+                'url' => route('products.show', $product, absolute: false),
+            ],
+        )
+        ->values();
     $campaignRows = $campaigns
         ->getCollection()
         ->map(
@@ -10,6 +19,7 @@
                 'title' => $campaign->title,
                 'message' => $campaign->message,
                 'url' => $campaign->url,
+                'image_url' => $campaign->image ? asset('storage/' . $campaign->image) : null,
                 'update_url' => route('admin.campaigns.update', $campaign),
             ],
         )
@@ -36,6 +46,7 @@
 
     <div x-data="notificationCampaignAdmin({
         campaigns: @js($campaignRows),
+        products: @js($productRows),
         activeModal: @js($oldContext ?: ''),
         oldCampaignId: @js($oldCampaignId),
         oldValues: @js(old()),
@@ -71,13 +82,22 @@
                         @forelse ($campaigns as $campaign)
                             <tr>
                                 <td data-label="Judul">
-                                    <p class="font-semibold text-muted-dark">{{ $campaign->title }}</p>
-                                    <p class="mt-1 line-clamp-1 text-xs text-gray-500">{{ $campaign->message }}</p>
-                                    @if ($campaign->url)
-                                        <a href="{{ $campaign->url }}" target="_blank" rel="noopener"
-                                            class="mt-1 inline-flex text-xs font-semibold text-primary-dark">Tautan
-                                            kampanye</a>
-                                    @endif
+                                    <div class="min-w-0">
+                                        <p class="font-semibold text-muted-dark">{{ $campaign->title }}</p>
+                                        <p class="mt-1 line-clamp-1 text-xs text-gray-500">{{ $campaign->message }}</p>
+
+                                        @if ($campaign->image)
+                                            <img src="{{ asset('storage/' . $campaign->image) }}"
+                                                alt="Gambar {{ $campaign->title }}"
+                                                class="mt-2 h-12 w-12 rounded-md border border-gray-200 object-cover">
+                                        @endif
+
+                                        @if ($campaign->url)
+                                            <a href="{{ $campaign->url }}" target="_blank" rel="noopener"
+                                                class="mt-1 inline-flex text-xs font-semibold text-primary-dark">Tautan
+                                                kampanye</a>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td data-label="Tipe">{{ $campaign->typeLabel() }}</td>
                                 <td data-label="Status">
@@ -152,6 +172,7 @@
                     <input type="hidden" name="form_context" value="create">
                     @include('admin.notification-campaigns.partials.form-fields', [
                         'types' => $types,
+                        'products' => $products,
                         'mode' => 'create',
                     ])
                 </form>
@@ -174,6 +195,7 @@
                         <input type="hidden" name="campaign_id" :value="selected.id">
                         @include('admin.notification-campaigns.partials.form-fields', [
                             'types' => $types,
+                            'products' => $products,
                             'mode' => 'edit',
                         ])
                     </form>
@@ -186,14 +208,20 @@
         function notificationCampaignAdmin(config) {
             return {
                 campaigns: config.campaigns,
+                products: config.products,
                 activeModal: config.activeModal,
                 selected: null,
                 oldValues: config.oldValues || {},
+                createForm: {
+                    type: config.oldValues?.type || '',
+                    product_id: Number(config.oldValues?.product_id || 0) || '',
+                },
                 init() {
                     if (this.activeModal === 'edit' && config.oldCampaignId) {
                         this.openEdit(Number(config.oldCampaignId));
                         Object.assign(this.selected, {
                             type: this.oldValues.type ?? this.selected.type,
+                            product_id: Number(this.oldValues.product_id || 0) || this.selected.product_id,
                             title: this.oldValues.title ?? this.selected.title,
                             message: this.oldValues.message ?? this.selected.message,
                             url: this.oldValues.url ?? this.selected.url,
@@ -208,7 +236,14 @@
                     this.selected = {
                         ...this.campaigns.find((campaign) => campaign.id === id)
                     };
+                    this.selected.product_id = this.productIdFromUrl(this.selected.url);
                     this.activeModal = 'edit';
+                },
+                currentType(mode) {
+                    return mode === 'create' ? this.createForm.type : this.selected?.type;
+                },
+                productIdFromUrl(url) {
+                    return this.products.find((product) => product.url === url)?.id || '';
                 },
                 closeModal() {
                     this.activeModal = '';
