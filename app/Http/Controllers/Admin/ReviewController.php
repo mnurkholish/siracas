@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class ReviewController extends Controller
 {
@@ -55,13 +57,37 @@ class ReviewController extends Controller
 
     public function reply(Request $request, Review $review)
     {
-        $validated = $request->validate([
-            'admin_reply' => ['nullable', 'string', 'max:2000'],
+        if ($request->input('reply_action') === 'delete') {
+            if (blank($review->admin_reply)) {
+                return $this->noChangesResponse();
+            }
+
+            $review->fill([
+                'admin_reply' => null,
+                'admin_replied_at' => null,
+                'admin_replied_by' => null,
+            ])->save();
+
+            return redirect()
+                ->route('admin.reviews.index', $request->query())
+                ->with('success', 'Balasan review berhasil dihapus.');
+        }
+
+        $validated = Validator::make($request->all(), [
+            'admin_reply' => ['required', 'string', 'max:2000'],
         ], [
+            'admin_reply.required' => 'Balasan admin wajib diisi.',
             'admin_reply.max' => 'Balasan maksimal 2000 karakter.',
-        ]);
+        ])->validate();
 
         $reply = trim((string) ($validated['admin_reply'] ?? ''));
+
+        if ($reply === '') {
+            throw ValidationException::withMessages([
+                'admin_reply' => 'Balasan admin wajib diisi.',
+            ]);
+        }
+
         $currentReply = trim((string) ($review->admin_reply ?? ''));
 
         if ($currentReply === $reply) {
@@ -78,6 +104,6 @@ class ReviewController extends Controller
 
         return redirect()
             ->route('admin.reviews.index', $request->query())
-            ->with('success', $reply !== '' ? 'Balasan review berhasil disimpan.' : 'Balasan review berhasil dikosongkan.');
+            ->with('success', 'Balasan review berhasil disimpan.');
     }
 }

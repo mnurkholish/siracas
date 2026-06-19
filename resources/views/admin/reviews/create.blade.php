@@ -48,7 +48,6 @@
             <label for="admin-reply-{{ $review->id }}" class="form-label">Balasan Admin</label>
             <textarea id="admin-reply-{{ $review->id }}" name="admin_reply" class="form-control textarea-control bg-white"
                 placeholder="Tulis balasan untuk customer...">{{ old('admin_reply', $review->admin_reply) }}</textarea>
-            <p class="mt-2 text-xs font-semibold text-muted">Kosongkan lalu simpan untuk menghapus balasan.</p>
 
             @if (filled($review->admin_reply))
                 <div class="mt-4 rounded-lg border border-border-soft bg-surface px-4 py-3">
@@ -66,10 +65,9 @@
                     Simpan Balasan
                 </x-button>
                 @if (filled($review->admin_reply))
-                    <button type="submit"
-                        class="inline-flex h-11 items-center justify-center rounded-lg border border-red-200 bg-white px-5 text-sm font-semibold text-red-600 transition hover:bg-red-50"
-                        onclick="document.getElementById('admin-reply-{{ $review->id }}').value = ''">
-                        Hapus Balasan
+                    <button type="submit" name="reply_action" value="delete"
+                        class="inline-flex h-11 items-center justify-center rounded-lg border border-red-200 bg-white px-5 text-sm font-semibold text-red-600 transition hover:bg-red-50">
+                        Hapus
                     </button>
                 @endif
                 <x-button :href="route('admin.reviews.index', request()->query())" variant="secondary" size="lg">
