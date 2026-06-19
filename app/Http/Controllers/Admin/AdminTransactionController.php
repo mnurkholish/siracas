@@ -132,6 +132,10 @@ class AdminTransactionController extends Controller
         $previousOngkir = (float) $transaction->ongkir;
         $newOngkir = (float) $validated['ongkir'];
 
+        if (abs($previousOngkir - $newOngkir) < 0.01) {
+            return $this->noChangesResponse();
+        }
+
         $transaction->update([
             'ongkir' => $validated['ongkir'],
             'order_id' => null,

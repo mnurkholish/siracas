@@ -55,14 +55,25 @@ class NotificationCampaignController extends Controller
     {
         $data = $this->validatedCampaign($request);
 
+        $oldImage = $notificationCampaign->image;
+
         if ($request->hasFile('image')) {
-            $this->deleteImage($notificationCampaign->image);
             $data['image'] = $this->storeImage($request);
         } else {
             unset($data['image']);
         }
 
-        $notificationCampaign->update($data);
+        $notificationCampaign->fill($data);
+
+        if (! $notificationCampaign->isDirty()) {
+            return $this->noChangesResponse();
+        }
+
+        $notificationCampaign->save();
+
+        if (array_key_exists('image', $data)) {
+            $this->deleteImage($oldImage);
+        }
 
         return redirect()
             ->route('admin.campaigns.index')

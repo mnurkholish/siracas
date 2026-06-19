@@ -115,7 +115,13 @@ class ProductController extends Controller
             }
         }
 
-        $product->update($data);
+        $product->fill($data);
+
+        if (! $product->isDirty()) {
+            return $this->noChangesResponse();
+        }
+
+        $product->save();
 
         return redirect()
             ->route('admin.products.index')

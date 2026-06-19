@@ -62,9 +62,15 @@ class CustomerAccountController extends Controller
             'status' => ['required', Rule::in(['aktif', 'nonaktif'])],
         ]);
 
-        $user->update([
+        $user->fill([
             'is_active' => $validated['status'] === 'aktif',
         ]);
+
+        if (! $user->isDirty()) {
+            return $this->noChangesResponse();
+        }
+
+        $user->save();
 
         return redirect()
             ->route('admin.customers.index', $request->query())

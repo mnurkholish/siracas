@@ -29,6 +29,15 @@
                     width: 300,
                     padding: "1em",
                 });
+            @elseif (session('info'))
+                Swal.fire({
+                    icon: "info",
+                    title: "{{ session('info') }}",
+                    showConfirmButton: false,
+                    timer: 1500,
+                    width: 300,
+                    padding: "1em",
+                });
             @elseif (session('error_alert'))
                 Swal.fire({
                     icon: "error",

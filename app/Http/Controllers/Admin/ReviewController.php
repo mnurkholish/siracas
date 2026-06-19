@@ -62,12 +62,19 @@ class ReviewController extends Controller
         ]);
 
         $reply = trim((string) ($validated['admin_reply'] ?? ''));
+        $currentReply = trim((string) ($review->admin_reply ?? ''));
 
-        $review->update([
+        if ($currentReply === $reply) {
+            return $this->noChangesResponse();
+        }
+
+        $review->fill([
             'admin_reply' => $reply !== '' ? $reply : null,
             'admin_replied_at' => $reply !== '' ? now() : null,
             'admin_replied_by' => $reply !== '' ? Auth::id() : null,
         ]);
+
+        $review->save();
 
         return redirect()
             ->route('admin.reviews.index', $request->query())

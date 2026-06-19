@@ -38,7 +38,7 @@ class RegisteredUserController extends Controller
             'nomor_hp' => ['required', 'regex:/^08[0-9]{8,11}$/', 'unique:users'],
             'password' => PasswordValidation::rules(),
             'jenis_kelamin' => ['required', 'in:laki-laki,perempuan'],
-            'tanggal_lahir' => ['date', 'before_or_equal:' . Carbon::now()->subYears(17)->format('Y-m-d'),],
+            'tanggal_lahir' => ['required', 'date', 'before_or_equal:' . Carbon::now()->subYears(17)->format('Y-m-d'),],
         ], [
             'username.required' => 'Username tidak boleh kosong',
             'username.unique' => 'Username sudah dipakai, gunakan yang lain',

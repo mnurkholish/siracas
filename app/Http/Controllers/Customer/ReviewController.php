@@ -114,23 +114,29 @@ class ReviewController extends Controller
         $validated = $request->validate($this->reviewRules(), $this->reviewMessages());
 
         $removePhoto = $request->boolean('remove_photo');
+        $oldPhoto = $review->foto;
 
         if ($request->hasFile('foto')) {
-            if ($review->foto) {
-                Storage::disk('public')->delete($review->foto);
-            }
-
             $validated['foto'] = $request->file('foto')->store('reviews', 'public');
         } elseif ($removePhoto && $review->foto) {
-            Storage::disk('public')->delete($review->foto);
             $validated['foto'] = null;
         }
 
-        $review->update([
+        $review->fill([
             'isi' => $validated['isi'] ?? '',
             'rating' => $validated['rating'],
             'foto' => array_key_exists('foto', $validated) ? $validated['foto'] : $review->foto,
         ]);
+
+        if (! $review->isDirty()) {
+            return $this->noChangesResponse();
+        }
+
+        $review->save();
+
+        if ($oldPhoto && array_key_exists('foto', $validated)) {
+            Storage::disk('public')->delete($oldPhoto);
+        }
 
         return redirect()
             ->route('reviews.index')

@@ -105,6 +105,10 @@ class ProfileController extends Controller
             'nomor_hp' => $validated['nomor_hp'],
         ]);
 
+        if (! $user->isDirty()) {
+            return $this->noChangesResponse();
+        }
+
         $user->save();
 
         return back()->with('success', 'Data berhasil diperbarui!');
