@@ -196,10 +196,18 @@ class AdminTransactionController extends Controller
             $refundAmount = 0;
         }
 
-        if ($validated['decision'] === 'diterima' && $refundAmount > 0 && $refundNote === '') {
-            return back()->withErrors([
-                'refund_note' => 'Catatan pengembalian wajib diisi jika ada nominal refund.',
-            ])->withInput();
+        if ($validated['decision'] === 'diterima') {
+            if ($refundAmount <= 0) {
+                return back()->withErrors([
+                    'refund_amount' => 'Nominal pengembalian wajib lebih dari 0 jika garansi diterima.',
+                ])->withInput();
+            }
+
+            if ($refundNote === '') {
+                return back()->withErrors([
+                    'refund_note' => 'Catatan pengembalian wajib diisi jika garansi diterima.',
+                ])->withInput();
+            }
         }
 
         $transaction->update([
