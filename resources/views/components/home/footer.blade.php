@@ -13,7 +13,7 @@
             <h3 class="text-xs font-black uppercase tracking-[0.3em] text-text-body">Layanan</h3>
             <div class="mt-4 space-y-2">
                 <p>
-                    @if (! empty($adminWhatsappUrl))
+                    @if (!empty($adminWhatsappUrl))
                         <a href="{{ $adminWhatsappUrl }}" target="_blank" rel="noopener">Hubungi Kami</a>
                     @else
                         Hubungi Kami
@@ -56,8 +56,13 @@
         class="mx-auto mt-12 flex max-w-7xl flex-col gap-4 border-t border-border-strong pt-6 sm:flex-row sm:items-center sm:justify-between">
         <p class="text-xs text-muted">© 2026 Siracas. All rights reserved.</p>
         <div class="flex items-center gap-3 text-xs text-muted">
-            <span>Hubungi kami</span>
-            @if (! empty($adminWhatsappUrl))
+            <span>Connect with us</span>
+            <a href="https://www.instagram.com/budidaya_cacing_jember/" target="_blank"
+                class="rounded-full border border-border-strong p-2 transition hover:bg-white/60"
+                aria-label="Instagram">
+                <x-home.icon name="instagram" alt="Instagram" class="h-4 w-4" />
+            </a>
+            @if (!empty($adminWhatsappUrl))
                 <a href="{{ $adminWhatsappUrl }}" target="_blank" rel="noopener"
                     class="rounded-full border border-border-strong p-2 transition hover:bg-white/60"
                     aria-label="WhatsApp">
