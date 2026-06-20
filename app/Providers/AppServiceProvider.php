@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,6 +29,10 @@ class AppServiceProvider extends ServiceProvider
 
     private function getAdminWhatsappUrl(): ?string
     {
+        if (! Schema::hasTable('users')) {
+            return null;
+        }
+
         $phone = User::query()
             ->where('role', 'admin')
             ->whereNotNull('nomor_hp')
