@@ -37,6 +37,7 @@ class CustomerAccountController extends Controller
     {
         // Cari data customer
         $customer = User::findOrFail($id);
+        abort_unless($customer->role === 'customer', 404);
 
         // Jika foto profil ada, buatkan URL lengkapnya. Jika tidak, kembalikan null/default.
         $fotoUrl = $customer->foto_profil ? asset('storage/' . $customer->foto_profil) : asset('images/default-avatar.png');

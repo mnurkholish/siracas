@@ -90,7 +90,7 @@ class TransactionController extends Controller
 
         return redirect()
             ->route('transactions.show', $transaction)
-            ->with('success', 'Pesanan berhasil!');
+            ->with('success', 'Pesanan berhasil dibuat. Silakan chat admin untuk konfirmasi ongkir.');
     }
 
     public function buyNowForm(Product $product)
@@ -153,7 +153,7 @@ class TransactionController extends Controller
 
         return redirect()
             ->route('transactions.show', $transaction)
-            ->with('success', 'Pesanan berhasil!');
+            ->with('success', 'Pesanan berhasil dibuat. Silakan chat admin untuk konfirmasi ongkir.');
     }
 
     public function index(Request $request)
@@ -207,7 +207,7 @@ class TransactionController extends Controller
 
         return view('customer.transactions.show', [
             'transaction' => $transaction,
-            'adminWhatsappUrl' => $this->adminWhatsappUrl(),
+            'adminWhatsappUrl' => $this->adminWhatsappUrl($transaction),
             'warrantyWhatsappUrl' => $this->warrantyWhatsappUrl($transaction),
         ]);
     }
@@ -463,7 +463,7 @@ class TransactionController extends Controller
             });
     }
 
-    private function adminWhatsappUrl(): ?string
+    private function adminWhatsappUrl(?Transaction $transaction = null): ?string
     {
         $normalizedPhone = $this->adminWhatsappNumber();
 
@@ -471,7 +471,41 @@ class TransactionController extends Controller
             return null;
         }
 
-        $message = rawurlencode('Halo admin, saya ingin menanyakan ongkir untuk pesanan saya. Saya bertempat di <Masukkan alamat anda> dan ingin memesan <Tulis pesanan anda>');
+        if (! $transaction) {
+            $message = rawurlencode('Halo admin, saya ingin menanyakan ongkir untuk pesanan saya. Saya bertempat di <Masukkan alamat anda> dan ingin memesan <Tulis pesanan anda>');
+
+            return "https://wa.me/{$normalizedPhone}?text={$message}";
+        }
+
+        $transaction->loadMissing(['user', 'address.kecamatan.kota.provinsi', 'transactionDetails.product']);
+
+        $productLines = $transaction->transactionDetails
+            ->map(function ($detail) {
+                $productName = $detail->product?->nama_produk ?? 'Produk';
+
+                return '- '.$productName.' x'.$detail->quantity;
+            })
+            ->implode("\n");
+
+        $message = rawurlencode(implode("\n", [
+            'Halo Admin SIRACAS, saya sudah membuat pesanan dan ingin konfirmasi ongkir.',
+            '',
+            'ID Transaksi: #'.$transaction->id,
+            'Nama: '.($transaction->user?->username ?? '-'),
+            'Nomor HP: '.($transaction->user?->nomor_hp ?? '-'),
+            'Tanggal Pesanan: '.$transaction->tanggal->format('d M Y H:i'),
+            '',
+            'Produk:',
+            $productLines !== '' ? $productLines : '-',
+            '',
+            'Alamat Pengiriman:',
+            $transaction->address?->fullAddress() ?: '-',
+            '',
+            'Catatan Pesanan:',
+            $transaction->catatan ?: '-',
+            '',
+            'Mohon bantu hitungkan ongkirnya. Terima kasih.',
+        ]));
 
         return "https://wa.me/{$normalizedPhone}?text={$message}";
     }

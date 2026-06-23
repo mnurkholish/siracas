@@ -204,13 +204,25 @@
     </div>
 
     <script>
+        const customerDetailUrlTemplate = @json(route('admin.customers.show', ['id' => '__CUSTOMER_ID__']));
+
         function openModal(id) {
             const modal = document.getElementById('detailModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
 
-            fetch(`/admin/akun-customer/${id}`)
-                .then(response => response.json())
+            fetch(customerDetailUrlTemplate.replace('__CUSTOMER_ID__', id), {
+                    headers: {
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Customer detail request failed.');
+                    }
+
+                    return response.json();
+                })
                 .then(data => {
                     document.getElementById('modalFoto').src = data.foto_url;
                     document.getElementById('modalUsernameTitle').innerText = data.username;

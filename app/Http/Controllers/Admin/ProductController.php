@@ -166,7 +166,7 @@ class ProductController extends Controller
             'nama_produk' => ['required', 'string', 'max:64'],
             'harga' => ['required', 'numeric', 'min:0', 'max:9999999999.99'],
             'stok' => ['required', 'integer', 'min:0'],
-            'satuan' => ['required', 'string', Rule::in(['kg', 'gram', 'pcs', 'paket', 'karung'])],
+            'satuan' => ['required', 'string'],
             'deskripsi' => ['nullable', 'string'],
             'foto' => ['sometimes', 'nullable', 'image', 'max:2048'],
         ], [
